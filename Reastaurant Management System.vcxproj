@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="chefs.cpp" />
     <ClCompile Include="Classes\orders.cpp" />
     <ClCompile Include="Classes\Resturant.cpp" />
     <ClCompile Include="Classes\scooters.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="ADTs\PriorityQueue.h" />
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
+    <ClInclude Include="chefs.h" />
     <ClInclude Include="Classes\orders.h" />
     <ClInclude Include="Classes\Resturant.h" />
     <ClInclude Include="Classes\scooters.h" />

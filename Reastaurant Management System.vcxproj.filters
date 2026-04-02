@@ -39,6 +39,9 @@
     <ClCompile Include="Classes\tables.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
+    <ClCompile Include="chefs.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="Actions\Actions.h">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="chefs.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
