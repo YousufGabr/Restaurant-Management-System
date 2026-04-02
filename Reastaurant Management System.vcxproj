@@ -127,7 +127,7 @@
     <ClCompile Include="Classes\Resturant.cpp" />
     <ClCompile Include="Classes\scooters.cpp" />
     <ClCompile Include="Classes\tables.cpp" />
-    <ClCompile Include="Reastaurant Management System.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actions\Actions.h" />
