@@ -75,7 +75,7 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="Actions\Actions.h">
-      <Filter>Header Files</Filter>
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
