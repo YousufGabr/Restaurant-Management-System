@@ -74,5 +74,8 @@
     <ClInclude Include="Classes\tables.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\Actions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

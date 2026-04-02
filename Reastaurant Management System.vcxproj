@@ -130,6 +130,7 @@
     <ClCompile Include="Reastaurant Management System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actions\Actions.h" />
     <ClInclude Include="ADTs\ArrayStack.h" />
     <ClInclude Include="ADTs\LinkedQueue.h" />
     <ClInclude Include="ADTs\Linked_list.h" />
