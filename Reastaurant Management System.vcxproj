@@ -128,6 +128,7 @@
     <ClCompile Include="Classes\scooters.cpp" />
     <ClCompile Include="Classes\tables.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actions\Actions.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Classes\Resturant.h" />
     <ClInclude Include="Classes\scooters.h" />
     <ClInclude Include="Classes\tables.h" />
+    <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
