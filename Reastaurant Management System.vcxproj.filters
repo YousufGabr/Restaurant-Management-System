@@ -22,6 +22,9 @@
     <Filter Include="Actions">
       <UniqueIdentifier>{a59f7477-c956-4564-baa7-937b888a661c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{86323dd5-f6ef-4fcf-b480-8c24f05260a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,8 +42,8 @@
     <ClCompile Include="Classes\tables.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="chefs.cpp">
-      <Filter>Classes</Filter>
+    <ClCompile Include="UI\UI.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,8 +83,8 @@
     <ClInclude Include="Actions\Actions.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="chefs.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="UI\UI.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
