@@ -5,7 +5,6 @@
 using namespace std;
 class chefs
 {
-#pragma once
 
 public:
     enum CHFTYPE {
