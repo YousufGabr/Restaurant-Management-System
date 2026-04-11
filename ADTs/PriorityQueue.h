@@ -8,7 +8,7 @@ class PriorityQueue {
 private:
     Node<T>* backPtr;  // Points to the back of the queue
     Node<T>* frontPtr; // Points to the front of the queue
-
+    int count;
 public:
     PriorityQueue() {
         backPtr = nullptr;
@@ -27,6 +27,7 @@ public:
         if (isEmpty() || newEntry > frontPtr->getItem()) {
             newNodePtr->setNext(frontPtr);
             frontPtr = newNodePtr;
+            count++;
             return true;
         }
 
@@ -57,7 +58,7 @@ public:
         // Free memory
         delete nodeToDeletePtr;
         nodeToDeletePtr = nullptr;
-
+        count--;
         return true;
     }
 
@@ -70,10 +71,23 @@ public:
         return T();
     }
 
+    int get_count () const 
+    {
+        return count;
+    }
+
+    void print(PriorityQueue<T>& S)
+    {
+        T Item;
+        while (S.dequeue(Item)) cout << Item << " ";
+    }
+
     ~PriorityQueue() {
         T temp;
         while (dequeue(temp));
     }
+
+    
 };
 
 #endif
