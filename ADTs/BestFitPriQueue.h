@@ -13,8 +13,8 @@ Tables* BestFitPriQueue::getBest(Orders* OD)
 	LinkedQueue<Tables*> Qtemp;
 	Tables* temp = nullptr;
 	Tables* best = nullptr;
-
-	while (dequeue(temp))
+	int x = 1;
+	while (dequeue(temp,x))
 	{
 		if (temp->get_free_Seats() >= OD->getNoOfSeats())
 		{
@@ -24,14 +24,14 @@ Tables* BestFitPriQueue::getBest(Orders* OD)
 		Qtemp.enqueue(temp);
 	}
 
-	while (dequeue(temp))
+	while (dequeue(temp,x))
 	{ 
 		Qtemp.enqueue(temp);
 	}
 
 	while (Qtemp.dequeue(temp))
 	{
-		enqueue(temp);
+		enqueue(temp,x);
 	}
 	temp = nullptr;
 	return best;
