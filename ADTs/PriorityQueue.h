@@ -8,8 +8,9 @@ template <typename T>
 class PriorityQueue
 {
     priNode<T>* head;
+    int count;
 public:
-    PriorityQueue() : head(nullptr) {}
+    PriorityQueue() : head(nullptr) , count(0){}
 
     ~PriorityQueue() {
         T tmp;
@@ -25,6 +26,7 @@ public:
             
             newNode->setNext(head);
             head = newNode;
+            count++;
             return;
         }
        
@@ -33,7 +35,8 @@ public:
             current = current->getNext();
         }
         newNode->setNext( current->getNext());
-        current->setNext( newNode);        
+        current->setNext( newNode);   
+        count++;
     }
 
     bool dequeue(T& topEntry, int& pri) {
@@ -44,6 +47,7 @@ public:
         priNode<T>* temp = head;
         head = head->getNext();
         delete temp;
+        count--;
         return true;
     }
 
@@ -55,6 +59,8 @@ public:
         pri = head->getPri();
         return true;
     }
+
+    int getcount() { return count;}
 
     bool isEmpty() const {
         return head == nullptr;
