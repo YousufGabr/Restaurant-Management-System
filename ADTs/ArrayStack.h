@@ -17,6 +17,7 @@ private:
 	T *items;		// Array of stack items
 	int      top;                   // Index to top of stack
 	const int STACK_SIZE;
+	int count;
 
 public:
 
@@ -43,6 +44,7 @@ public:
 		if (top == STACK_SIZE - 1) return false;	//Stack is FULL
 
 		top++;
+		count++;
 		items[top] = newEntry;
 		return true;
 	}  // end push
@@ -53,6 +55,7 @@ public:
 
 		TopEntry = items[top];
 		top--;
+		count--;
 		return true;
 	}  // end pop
 
@@ -63,6 +66,8 @@ public:
 		TopEntry = items[top];
 		return true;
 	}  // end peek
+
+	int get_count() const { return count; }
 
 	   //Destructor
 	~ArrayStack()
@@ -78,6 +83,7 @@ public:
 			items[i] = S.items[i];
 		top = S.top;
 	}
+
 
 
 }; // end ArrayStack
@@ -141,6 +147,12 @@ bool ReplaceAll(ArrayStack<T> & Source, T value, T newValue)	//Source is passe b
 		Source.push(x);
 
 	return found;
+}
+template <typename T>
+void print(ArrayStack<T>& S)
+{
+	T Item;
+	while (S.pop(Item)) cout << Item << " ";
 }
 
 

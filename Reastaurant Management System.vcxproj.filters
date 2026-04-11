@@ -45,6 +45,15 @@
     <ClCompile Include="UI\UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\chefs.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="CancelAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h">
@@ -85,6 +94,21 @@
     </ClInclude>
     <ClInclude Include="UI\UI.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CancelPriQueue.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\chefs.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="BestFitPriQueue.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CancelAction.h">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
