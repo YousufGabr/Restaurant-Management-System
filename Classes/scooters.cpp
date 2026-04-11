@@ -1,6 +1,8 @@
 #include "scooters.h"
 
-scooters::scooters(int id, int speed, int Main_Dur)
+scooters::scooters(int id, int speed, int Main_Dur, int threshold)
+	: ID(id), Speed(speed), Maintenance_Duration(Main_Dur), Main_Ords_Threshold(threshold),
+	orders_delivered_count(0), finish_time(0), currentOrder(nullptr) // Edited: initialize members
 {
 }
 
@@ -24,14 +26,24 @@ void scooters::set_finish_time(int time)
 	this->finish_time = time;
 }
 
-bool scooters::is_avilable(int currentTimestep) const
+int scooters::get_finish_time() const
 {
-	return false;
+	return this->finish_time;
 }
 
-bool scooters::assignOrder(const orders& OV)
+bool scooters::is_available(int currentTimestep) const
 {
-	return false;
+	return (currentTimestep >= finish_time); // Edited: actual availability check
+}
+
+void scooters::assignOrder(orders* OV, int currentTimestep)
+{
+	currentOrder = OV; // Edited: store pointer
+	int trip_time = OV->getDistance() / Speed; // Edited: calculate travel time
+	OV->setTS(currentTimestep); // Edited: record Service Start Time
+	OV->setTF(currentTimestep + trip_time); // Edited: record Finish Time (delivery)
+	finish_time = currentTimestep + (2 * trip_time); // Edited: scooter returns after round trip
+	orders_delivered_count++; // Edited: increment maintenance counter
 }
 
 ostream& operator<<(ostream& os, const scooters* scooter)
@@ -42,4 +54,3 @@ ostream& operator<<(ostream& os, const scooters* scooter)
 	}
 	return os;
 }
-
