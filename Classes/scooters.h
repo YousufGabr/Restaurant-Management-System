@@ -1,22 +1,22 @@
 #pragma once
 #include <iostream>
 #include <ostream>
-#include "orders.h"
+#include "Orders.h"
 using namespace std;
 
-class scooters
+class Scooters
 {
 private:
 	int ID;
 	int Speed;
 	int Maintenance_Duration;
 	int Main_Ords_Threshold; // Added: to store limit before maintenance
-	int orders_delivered_count; // Added: counter for assigned orders
+	int orders_delivered_count; // Added: counter for assigned Orders
 	int finish_time;
-	orders* currentOrder; // Edited: changed to pointer to follow "Don't Copy" rule
+	Orders* currentOrder; // Edited: changed to pointer to follow "Don't Copy" rule
 
 public:
-	scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
+	Scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
 	int get_Speed() const;
 	int get_Maintenance_Duration() const;
 	int get_ID() const;
@@ -25,7 +25,7 @@ public:
 	int get_finish_time() const; // Added: to check when it returns
 
 	bool is_available(int currentTimestep) const; // Edited: logic to check finish_time
-	void assignOrder(orders* OV, int currentTimestep); // Edited: changed to pointer and added logic
+	void assignOrder(Orders* OV, int currentTimestep); // Edited: changed to pointer and added logic
 
-	friend ostream& operator<<(ostream& os, const scooters* scooter);
+	friend ostream& operator<<(ostream& os, const Scooters* scooter);
 };

@@ -1,8 +1,8 @@
 #pragma once
-#include "ADTs/PriorityQueue.h"
-#include "ADTs/LinkedQueue.h"
-#include "Classes/tables.h"
-#include "Classes/orders.h"
+#include "PriorityQueue.h"
+#include "LinkedQueue.h"
+#include "../Classes/tables.h"
+#include "../Classes/orders.h"
 class BestFitPriQueue : public PriorityQueue<tables *>
 {
 	tables * getBest(orders * OD);

@@ -10,7 +10,7 @@ enum ORD_TYPE {
     TYPE_OVN
 };
 
-class orders {
+class Orders {
 private:
     int ID;
     ORD_TYPE type;
@@ -30,7 +30,7 @@ private:
     int TF;
 
 public:
-    orders(int id, ORD_TYPE t, int tq, int sz, double pr);
+    Orders(int id, ORD_TYPE t, int tq, int sz, double pr);
 
     int getID() const;
     ORD_TYPE getType() const;
@@ -55,5 +55,5 @@ public:
 
     double getPriority() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const orders* ord);
+    friend std::ostream& operator<<(std::ostream& os, const Orders* ord);
 };

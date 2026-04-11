@@ -1,7 +1,7 @@
 #pragma once
-#include "ADTs/PriorityQueue.h"
-#include "ADTs/LinkedQueue.h"
-#include "Classes/orders.h"
+#include "PriorityQueue.h"
+#include "LinkedQueue.h"
+#include "../Classes/orders.h"
 
 class CancelPriQueue :public PriorityQueue<orders *> //class specialization inherited from template class
 {

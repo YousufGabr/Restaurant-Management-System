@@ -1,15 +1,15 @@
-#include "chefs.h"
+#include "Chefs.h"
 #include "orders.h"
 
-chefs::chefs(int id, CHFTYPE t, int spd)
+Chefs::Chefs(int id, CHFTYPE t, int spd)
     : ID(id), type(t), speed(spd), busyTime(0), currentOrd(nullptr), finishTime(0) {
 }
 
-int chefs::getID() const { return ID; }
+int Chefs::getID() const { return ID; }
 
-chefs::CHFTYPE chefs::getType() const { return type; }
+Chefs::CHFTYPE Chefs::getType() const { return type; }
 
-ostream& operator<<(ostream& os, const chefs* pChf) {
+ostream& operator<<(ostream& os, const Chefs* pChf) {
     if (pChf) {
         os << pChf->ID;
     }

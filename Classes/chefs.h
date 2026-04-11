@@ -1,9 +1,9 @@
 #pragma once
-#include "orders.h"
+#include "Orders.h"
 #include <iostream>
 #include <ostream>
 using namespace std;
-class chefs
+class Chefs
 {
 
 public:
@@ -17,20 +17,20 @@ private :
     CHFTYPE type;
     int speed;         
     int busyTime;    
-    orders* currentOrd; 
+    Orders* currentOrd; 
     int finishTime; 
 
 public:
-    chefs(int id, CHFTYPE t, int spd);
+    Chefs(int id, CHFTYPE t, int spd);
 
     int getID() const;
     CHFTYPE getType() const;
     int getSpeed() const;
 
-    void assignOrder(orders* ord, int currentTimestep);
+    void assignOrder(Orders* ord, int currentTimestep);
     bool isAvailable(int currentTimestep) const;
 
-    friend ostream& operator<<(ostream& os, const chefs* pChf);
+    friend ostream& operator<<(ostream& os, const Chefs* pChf);
 
 
 

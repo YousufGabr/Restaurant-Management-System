@@ -15,7 +15,7 @@ RequestAction::RequestAction(int id, ORD_TYPE type, int TQ, int size, int price,
 
 void RequestAction::ACT()
 {
-	orders* newOrder = new orders(ID, type, currentTimestep, size, price);
+	Orders* newOrder = new Orders(ID, type, currentTimestep, size, price);
 	if (type == TYPE_ODG || type == TYPE_ODN)
 	{
 		 
