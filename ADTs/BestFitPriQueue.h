@@ -1,18 +1,18 @@
 #pragma once
 #include "PriorityQueue.h"
 #include "LinkedQueue.h"
-#include "../Classes/tables.h"
-#include "../Classes/orders.h"
-class BestFitPriQueue : public PriorityQueue<tables *>
+#include "../Classes/Tables.h"
+#include "../Classes/Orders.h"
+class BestFitPriQueue : public PriorityQueue<Tables*>
 {
-	tables * getBest(orders * OD);
+	Tables* getBest(Orders* OD);
 };
 
-tables * BestFitPriQueue :: getBest (orders * OD)
+Tables* BestFitPriQueue::getBest(Orders* OD)
 {
-	LinkedQueue<tables*> Qtemp;
-	tables* temp = nullptr;
-	tables* best = nullptr;
+	LinkedQueue<Tables*> Qtemp;
+	Tables* temp = nullptr;
+	Tables* best = nullptr;
 
 	while (dequeue(temp))
 	{

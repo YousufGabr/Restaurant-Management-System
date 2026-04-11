@@ -1,22 +1,22 @@
 #pragma once
 #include "PriorityQueue.h"
 #include "LinkedQueue.h"
-#include "../Classes/orders.h"
+#include "../Classes/Orders.h"
 
-class CancelPriQueue :public PriorityQueue<orders *> //class specialization inherited from template class
+class CancelPriQueue :public PriorityQueue<Orders *> //class specialization inherited from template class
 {
 
 public:
 
-	orders * CancelOrder(int ID);
+	Orders * CancelOrder(int ID);
 };
 
 
-orders* CancelPriQueue::CancelOrder(int ID)
+Orders* CancelPriQueue::CancelOrder(int ID)
 {
-	LinkedQueue<orders*> Qtemp;
-	orders* temp = nullptr;
-	orders* canceled = nullptr;
+	LinkedQueue<Orders*> Qtemp;
+	Orders* temp = nullptr;
+	Orders* canceled = nullptr;
 
 	while (dequeue(temp))
 	{

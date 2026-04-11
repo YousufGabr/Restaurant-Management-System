@@ -1,6 +1,6 @@
 #pragma once
-#include "../Classes/orders.h"
-#include "../Classes/Restaurant.h"
+#include "../Classes/Orders.h"
+class Restaurant;
 
 enum ACT_TYPE {
     Q,  //request
