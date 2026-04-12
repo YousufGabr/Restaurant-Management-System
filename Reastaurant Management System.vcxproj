@@ -123,28 +123,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Classes\chefs.cpp" />
-    <ClCompile Include="Classes\orders.cpp" />
-    <ClCompile Include="Classes\Resturant.cpp" />
-    <ClCompile Include="Classes\scooters.cpp" />
-    <ClCompile Include="Classes\tables.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Actions\CancelAction.cpp" />
+    <ClCompile Include="Actions\RequestAction.cpp" />
+    <ClCompile Include="Classes\Chefs.cpp" />
+    <ClCompile Include="Classes\Orders.cpp" />
+    <ClCompile Include="Classes\Scooters.cpp" />
+    <ClCompile Include="Classes\Tables.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Restaurant\Restaurant.cpp" />
     <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actions\Actions.h" />
+    <ClInclude Include="Actions\CancelAction.h" />
+    <ClInclude Include="Actions\RequestAction.h" />
     <ClInclude Include="ADTs\ArrayStack.h" />
+    <ClInclude Include="ADTs\BestFitPriQueue.h" />
+    <ClInclude Include="ADTs\CancelPriQueue.h" />
     <ClInclude Include="ADTs\LinkedQueue.h" />
-    <ClInclude Include="ADTs\Linked_list.h" />
     <ClInclude Include="ADTs\Node.h" />
+    <ClInclude Include="ADTs\priNode.h" />
     <ClInclude Include="ADTs\PriorityQueue.h" />
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
-    <ClInclude Include="Classes\chefs.h" />
-    <ClInclude Include="Classes\orders.h" />
-    <ClInclude Include="Classes\Resturant.h" />
-    <ClInclude Include="Classes\scooters.h" />
-    <ClInclude Include="Classes\tables.h" />
+    <ClInclude Include="Classes\Chefs.h" />
+    <ClInclude Include="Classes\Orders.h" />
+    <ClInclude Include="Classes\Scooters.h" />
+    <ClInclude Include="Classes\Tables.h" />
+    <ClInclude Include="Restaurant\Restaurant.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

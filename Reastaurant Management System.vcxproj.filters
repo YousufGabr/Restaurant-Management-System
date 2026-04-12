@@ -25,15 +25,15 @@
     <Filter Include="UI">
       <UniqueIdentifier>{86323dd5-f6ef-4fcf-b480-8c24f05260a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Restaurant">
+      <UniqueIdentifier>{2a62afba-b3fc-41b3-916c-41d2b0b5ddca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Classes\orders.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\Resturant.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="Classes\scooters.cpp">
@@ -45,12 +45,21 @@
     <ClCompile Include="UI\UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\chefs.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Actions\RequestAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Actions\CancelAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Restaurant\Restaurant.cpp">
+      <Filter>Restaurant</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h">
-      <Filter>ADTs</Filter>
-    </ClInclude>
-    <ClInclude Include="ADTs\Linked_list.h">
       <Filter>ADTs</Filter>
     </ClInclude>
     <ClInclude Include="ADTs\LinkedQueue.h">
@@ -71,9 +80,6 @@
     <ClInclude Include="Classes\orders.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Resturant.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\scooters.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -85,6 +91,27 @@
     </ClInclude>
     <ClInclude Include="UI\UI.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\chefs.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ADTs\priNode.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="ADTs\BestFitPriQueue.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="ADTs\CancelPriQueue.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\RequestAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CancelAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Restaurant\Restaurant.h">
+      <Filter>Restaurant</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

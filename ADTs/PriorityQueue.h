@@ -1,79 +1,76 @@
-#ifndef _PRIORITY_QUEUE
-#define _PRIORITY_QUEUE
+#pragma once
+#include "priNode.h"
 
-#include "Node.h" // Assuming your Node class is in Node.h
 
+//This class impelements the priority queue as a sorted list (Linked List)
+//The item with highest priority is at the front of the queue
 template <typename T>
-class PriorityQueue {
-private:
-    Node<T>* backPtr;  // Points to the back of the queue
-    Node<T>* frontPtr; // Points to the front of the queue
-
+class PriorityQueue
+{
+    priNode<T>* head;
+    int count;
 public:
-    PriorityQueue() {
-        backPtr = nullptr;
-        frontPtr = nullptr;
-    }
-
-    bool isEmpty() const {
-        return (frontPtr == nullptr);
-    }
-
-    // Inserts items in a sorted manner (Highest priority at the front)
-    bool enqueue(const T& newEntry) {
-        Node<T>* newNodePtr = new Node<T>(newEntry);
-
-        // Case 1: Queue is empty or newEntry has higher priority than the current front
-        if (isEmpty() || newEntry > frontPtr->getItem()) {
-            newNodePtr->setNext(frontPtr);
-            frontPtr = newNodePtr;
-            return true;
-        }
-
-        // Case 2: Traverse the list to find the correct insertion point
-        Node<T>* prev = frontPtr;
-        Node<T>* curr = frontPtr->getNext();
-
-        while (curr != nullptr && !(newEntry > curr->getItem())) {
-            prev = curr;
-            curr = curr->getNext();
-        }
-
-        // Insert the node between prev and curr
-        newNodePtr->setNext(curr);
-        prev->setNext(newNodePtr);
-
-        return true;
-    }
-
-    // Removes the highest priority item from the front
-    bool dequeue(T& frntEntry) {
-        if (isEmpty()) return false;
-
-        Node<T>* nodeToDeletePtr = frontPtr;
-        frntEntry = frontPtr->getItem();
-        frontPtr = frontPtr->getNext();
-
-        // Free memory
-        delete nodeToDeletePtr;
-        nodeToDeletePtr = nullptr;
-
-        return true;
-    }
-
-    // Peek at the highest priority item
-    T peek() const {
-        if (!isEmpty()) {
-            return frontPtr->getItem();
-        }
-        // Handle empty queue case as needed
-        return T();
-    }
+    PriorityQueue() : head(nullptr) , count(0){}
 
     ~PriorityQueue() {
+        T tmp;
+        int p;
+        while (dequeue(tmp,p));
+    }
+
+    //insert the new node in its correct position according to its priority
+    void enqueue(const T& data, int priority) {
+        priNode<T>* newNode = new priNode<T>(data, priority);
+
+        if (head == nullptr || priority > head->getPri()) {
+            
+            newNode->setNext(head);
+            head = newNode;
+            count++;
+            return;
+        }
+       
+        priNode<T>* current = head;        
+        while (current->getNext() && priority <= current->getNext()->getPri()) {
+            current = current->getNext();
+        }
+        newNode->setNext( current->getNext());
+        current->setNext( newNode);   
+        count++;
+    }
+
+    bool dequeue(T& topEntry, int& pri) {
+        if (isEmpty())
+            return false;
+
+        topEntry = head->getItem(pri);
+        priNode<T>* temp = head;
+        head = head->getNext();
+        delete temp;
+        count--;
+        return true;
+    }
+    // to be revised
+    bool peek(T& topEntry, int& pri) {
+        if (isEmpty())
+            return false;
+        int PRI = 0;
+        topEntry = head->getItem(PRI);
+        pri = PRI;
+        return true;
+    }
+
+    int getcount() { return count;}
+
+    bool isEmpty() const {
+        return head == nullptr;
+    }
+
+    void print() const
+    {
         T temp;
-        while (dequeue(temp));
+        int pri;
+        PriorityQueue<T> PQ = *this; // Create a copy of the priority queue 
+        while (PQ.dequeue(temp, pri)) cout << temp << " (Priority: " << pri << ") ";
     }
 };
-
-#endif

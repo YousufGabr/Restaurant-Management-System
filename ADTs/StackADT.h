@@ -1,6 +1,6 @@
 //	This is an updated version of code originally
 //  created by Frank M. Carrano and Timothy M. Henry.
-///  Copyright (c) 2017 Pearson Education, Hoboken, New Jersey.
+//  Copyright (c) 2017 Pearson Education, Hoboken, New Jersey.
 
 /** @file StackADT.h */
 
@@ -11,7 +11,7 @@ template<typename T>
 class StackADT
 {
 public:
-   /** checks whether this stack is empty.///
+   /** checks whether this stack is empty.
     @return  True if the stack is empty, or false if not. */
    virtual bool isEmpty() const = 0;
    
