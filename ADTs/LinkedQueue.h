@@ -138,9 +138,12 @@ bool LinkedQueue<T>:: peek(T& frntEntry) const
 template <typename T>
 void LinkedQueue<T>::print() const
 {
-	LinkedQueue<T> Qtemp = *this; // Create a copy of the queue to print without modifying the original
-	T temp;
-	while (Qtemp.dequeue(temp)) cout << temp << " ";
+	Node<T>* current = frontPtr;
+	while (current)
+	{
+		cout << current->getItem() << " ";
+		current = current->getNext();
+	}
 }
 ///////////////////////////////////////////////////////////////////////////////////
 /*

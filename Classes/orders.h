@@ -30,7 +30,7 @@ private:
     Chefs* assignedChef;
 
 public:
-    Orders(int id, ORD_TYPE t, int tq, int sz, double pr);
+    Orders(ORD_TYPE t, int tq, int id, int sz, double pr);
 
     int getID() const;
     ORD_TYPE getType() const;

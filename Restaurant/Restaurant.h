@@ -5,14 +5,15 @@
 #include "../ADTs/BestFitPriQueue.h"
 #include "../ADTs/CancelPriQueue.h"
 #include "../Classes/Chefs.h"
-#include "../Classes/tables.h"
-#include "../Classes/orders.h"
+//#include "../Classes/Tables.h"
+//#include "../Classes/Orders.h"
 #include "../Classes/Scooters.h"
 #include "../UI/UI.h"
 
 class Restaurant
 {
 private:
+	UI ui;
 	//Action
 	LinkedQueue<Actions*> Request; //All Request actions in the input file
 	LinkedQueue<Actions*> Cancel;  //All cancel actions in the input file
@@ -52,7 +53,16 @@ private:
 
 public:
 	Restaurant();
+	void GenerateRandomOrders();
 
+	// Simulation runner implementing your random-sim algorithm
+	void RunPhase1Simulator();
+	void AddOrder(Orders* ord);
+	void CancelOVC(int orderID);
+	void PrintCurrentState(int timestep);
+	void randomAssignToChef(int currentTimestep);
+	void randomMoveToReady();
+	void randomServeOrder(int currentTimestep);
 
 };
 

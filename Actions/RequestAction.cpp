@@ -16,7 +16,7 @@ RequestAction::RequestAction(Restaurant * r,int id, ORD_TYPE type, int TQ, int s
 
 void RequestAction::ACT()
 {
-	Orders* newOrder = new Orders(ID, type, currentTimestep, size, price);
+	Orders* newOrder = new Orders(type, currentTimestep, ID, size, price);
 	if (type == TYPE_ODG || type == TYPE_ODN)
 	{
 		 
