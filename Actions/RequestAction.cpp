@@ -1,7 +1,8 @@
 #include "RequestAction.h"
 
-RequestAction::RequestAction(int id, ORD_TYPE type, int TQ, int size, int price, int seats, int duration, int distance, bool sharable)
+RequestAction::RequestAction(Restaurant * r,int id, ORD_TYPE type, int TQ, int size, int price, int seats, int duration, int distance, bool sharable)
 {
+	this->RestPtr = r;
 	this->ID = id;
 	this->type = type;
 	this->currentTimestep = TQ;
