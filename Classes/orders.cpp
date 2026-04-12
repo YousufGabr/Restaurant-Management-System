@@ -2,7 +2,8 @@
 
 Orders::Orders(int id, ORD_TYPE t, int tq, int sz, double pr)
     : ID(id), type(t), TQ(tq), size(sz), price(pr),
-    TA(-1), TR(-1), TS(-1), TF(-1), distance(0), noOfSeats(0), canShare(false), orderDuration(0) {
+    TA(-1), TR(-1), TS(-1), TF(-1), distance(0), noOfSeats(0),
+    canShare(false), orderDuration(0), assignedChef(nullptr) {
 }
 
 void Orders::setDineInInfo(int seats, int duration, bool share) {
@@ -20,6 +21,10 @@ void Orders::setTR(int t) { TR = t; }
 void Orders::setTS(int t) { TS = t; }
 void Orders::setTF(int t) { TF = t; }
 
+// --- Link the chef to the order ---
+void Orders::setAssignedChef(Chefs* chf) { assignedChef = chf; }
+Chefs* Orders::getAssignedChef() const { return assignedChef; }
+
 int Orders::getCookPeriod() const { return TR - TA; }
 int Orders::getServiceDuration() const { return TF - TS; }
 int Orders::getWaitTime() const {
@@ -28,7 +33,9 @@ int Orders::getWaitTime() const {
 
 double Orders::getPriority() const {
     if (type != TYPE_OVG) return 0;
+    // Weighted priority equation for OVG
     return (price * 0.5) / (size * 0.3 + distance * 0.2 + 1);
+    //======== NEED TO IMPROVE DEPENDING ON THE TYPE. ===============
 }
 
 int Orders::getID() const { return ID; }
@@ -41,8 +48,6 @@ int Orders::getNoOfSeats() const { return noOfSeats; }
 int Orders::getOrderDuration() const { return orderDuration; }
 
 std::ostream& operator<<(std::ostream& os, const Orders* ord) {
-    if (ord) {
-        os << ord->ID;
-    }
+    if (ord) os << ord->ID;
     return os;
 }
