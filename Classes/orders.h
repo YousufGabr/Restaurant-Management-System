@@ -1,16 +1,14 @@
 #pragma once
 #include <iostream>
 
+// Forward declaration
+class Chefs;
+
 enum ORD_TYPE {
-    TYPE_ODG,
-    TYPE_ODN,
-    TYPE_OT,
-    TYPE_OVC,
-    TYPE_OVG,
-    TYPE_OVN
+    TYPE_ODG, TYPE_ODN, TYPE_OT, TYPE_OVC, TYPE_OVG, TYPE_OVN
 };
 
-class orders {
+class Orders {
 private:
     int ID;
     ORD_TYPE type;
@@ -21,7 +19,6 @@ private:
     int noOfSeats;
     int orderDuration;
     bool canShare;
-
     int distance;
 
     int TA;
@@ -29,8 +26,11 @@ private:
     int TS;
     int TF;
 
+    // --- Added pointer to fulfill cancellation requirement ---
+    Chefs* assignedChef;
+
 public:
-    orders(int id, ORD_TYPE t, int tq, int sz, double pr);
+    Orders(int id, ORD_TYPE t, int tq, int sz, double pr);
 
     int getID() const;
     ORD_TYPE getType() const;
@@ -49,11 +49,15 @@ public:
     void setTS(int t);
     void setTF(int t);
 
+    // --- Added Getter/Setter for the Chef ---
+    void setAssignedChef(Chefs* chf);
+    Chefs* getAssignedChef() const;
+
     int getCookPeriod() const;
     int getWaitTime() const;
     int getServiceDuration() const;
 
     double getPriority() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const orders* ord);
+    friend std::ostream& operator<<(std::ostream& os, const Orders* ord);
 };
