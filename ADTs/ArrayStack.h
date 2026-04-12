@@ -39,7 +39,7 @@ public:
 
 		top++;
 		items[top] = newEntry;
-		count ++
+		count++; 
 		return true;
 	}  // end push
 

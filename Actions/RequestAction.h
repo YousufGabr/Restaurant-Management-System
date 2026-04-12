@@ -12,7 +12,7 @@ private :
 	int distance;
 	bool canshare;
 public:
-	RequestAction(int id, ORD_TYPE type, int TQ, int size, int price,
+	RequestAction(Restaurant* r ,int id, ORD_TYPE type, int TQ, int size, int price,
 		int seats = -1, int duration = -1, int distance = -1, bool sharable = false) ;
 
 	virtual void ACT();
