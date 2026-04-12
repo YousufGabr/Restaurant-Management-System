@@ -8,12 +8,12 @@ class UI
 	public:
 
 		template <typename T>
-		void print_stack(ArrayStack<T>& S) { S.print(); }
+		void print_stack(ArrayStack<T>& S);
 
 		template <typename T>
-		void print_queue(LinkedQueue<T>& Q) { Q.print(); }
+		void print_queue(LinkedQueue<T>& Q);
 
 		template <typename T>
-		void print_pqueue(PriorityQueue<T>& PQ) { PQ.print(); }
+		void print_pqueue(PriorityQueue<T>& PQ);
 };
 

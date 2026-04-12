@@ -11,26 +11,26 @@ public:
 	Orders * CancelOrder(int ID);
 };
 
-
+//If not Found function will return nullptr 
 Orders* CancelPriQueue::CancelOrder(int ID)
 {
-	LinkedQueue<Orders*> Qtemp;
+	PriorityQueue<Orders*> Qtemp; // Qtemp should be priotized to store the values of prioritires
 	Orders* temp = nullptr;
 	Orders* canceled = nullptr;
-	int x = 1;
+	int pri = 0;
 
-	while (dequeue(temp,x))
+	while (dequeue(temp,pri))
 	{
 		if (temp->getID() == ID)
 		{
 			canceled = temp;
 			continue;
 		}
-		Qtemp.enqueue(temp);
+		Qtemp.enqueue(temp , pri);
 	}
-	while (Qtemp.dequeue(temp))
+	while (Qtemp.dequeue(temp , pri))
 	{
-		enqueue(temp,x);
+		enqueue(temp,pri);
 	}
 	temp = nullptr;
 	return canceled;

@@ -50,13 +50,13 @@ public:
         count--;
         return true;
     }
-
+    // to be revised
     bool peek(T& topEntry, int& pri) {
         if (isEmpty())
             return false;
-
-        topEntry = head->getItem();
-        pri = head->getPri();
+        int PRI = 0;
+        topEntry = head->getItem(PRI);
+        pri = PRI;
         return true;
     }
 

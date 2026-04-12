@@ -10,28 +10,28 @@ class BestFitPriQueue : public PriorityQueue<Tables*>
 
 Tables* BestFitPriQueue::getBest(Orders* OD)
 {
-	LinkedQueue<Tables*> Qtemp;
+	PriorityQueue<Tables*> Qtemp; // to store the priority value
 	Tables* temp = nullptr;
 	Tables* best = nullptr;
-	int x = 1;
-	while (dequeue(temp,x))
+	int PRI = 0;
+	while (dequeue(temp,PRI))
 	{
 		if (temp->get_free_Seats() >= OD->getNoOfSeats())
 		{
 			best = temp;
 			break;
 		}
-		Qtemp.enqueue(temp);
+		Qtemp.enqueue(temp , PRI);
 	}
 
-	while (dequeue(temp,x))
+	while (dequeue(temp,PRI))
 	{ 
-		Qtemp.enqueue(temp);
+		Qtemp.enqueue(temp , PRI);
 	}
 
-	while (Qtemp.dequeue(temp))
+	while (Qtemp.dequeue(temp , PRI))
 	{
-		enqueue(temp,x);
+		enqueue(temp,PRI);
 	}
 	temp = nullptr;
 	return best;
