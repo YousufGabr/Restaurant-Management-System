@@ -1,17 +1,23 @@
-#include "chefs.h"
-#include "orders.h"
-
-chefs::chefs(int id, CHFTYPE t, int spd)
-    : ID(id), type(t), speed(spd), busyTime(0), currentOrd(nullptr), finishTime(0) {
+#include "Chefs.h"
+using namespace std;
+Chefs::Chefs(int id, CHFTYPE t, int spd)
+    : ID(id), type(t), speed(spd), busyTime(0), finishTime(0) {
 }
 
-int chefs::getID() const { return ID; }
+int Chefs::getID() const { return ID; }
+Chefs::CHFTYPE Chefs::getType() const { return type; }
+int Chefs::getSpeed() const { return speed; }
 
-chefs::CHFTYPE chefs::getType() const { return type; }
+void Chefs::setFinishTime(int time) { finishTime = time; }
 
-ostream& operator<<(ostream& os, const chefs* pChf) {
-    if (pChf) {
-        os << pChf->ID;
-    }
+// Chef is available if the current timestep has reached or passed their finishTime
+bool Chefs::isAvailable(int currentTimestep) const {
+    return currentTimestep >= finishTime;
+}
+
+void Chefs::makeAvailable() { finishTime = 0; }
+
+ostream& operator<<(std::ostream& os, const Chefs* pChf) {
+    if (pChf) os << pChf->ID;
     return os;
 }
