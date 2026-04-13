@@ -4,7 +4,7 @@ class priNode
 {
 private :
 	T item;		// A data item
-	double pri;	//priority of the item
+	int pri;	//priority of the item
 	priNode<T>* next; // Pointer to next node
 public :
 	priNode(const T& r_Item, int PRI)

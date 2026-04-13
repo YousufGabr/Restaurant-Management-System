@@ -21,14 +21,17 @@ Restaurant::Restaurant()
 
     // Initialize Scooters
     for (int i = 1; i <= 20; i++)
-        Free_Scooters.enqueue(new Scooters(i, 150, 23, 8));
+    {
+        Scooters* S = new Scooters(i, 150, 23, 8);
+        Free_Scooters.enqueue(S, S->getPriority());
+    }
 
     // Initialize Tables
     int caps[] = { 3,3,4,4,5,5,5,5,5,6,6,6,7,7,7,7,7,8,8,8 };
     for (int i = 0; i < 20; i++)
     {
         Tables* t = new Tables(i + 1, caps[i]);
-        Free_Tables.enqueue(t, caps[i]);
+        Free_Tables.enqueue(t, t->getPriority());
     }
 }
 
@@ -124,7 +127,7 @@ void Restaurant::PrintCurrentState(int timestep)
     cout << READY_OV.getcount() << " OV: "; ui.print_pqueue(READY_OV); cout << endl;
 
     cout << "------------- Available scooters IDs ----------------------" << endl;
-    cout << Free_Scooters.getcount() << " Scooters : "; ui.print_queue(Free_Scooters); cout << endl;
+    cout << Free_Scooters.getcount() << " Scooters : "; ui.print_pqueue(Free_Scooters); cout << endl;
 
     cout << "------------- Available tables [ID, capacity, free seats] ----------------------" << endl;
     cout << Free_Tables.getcount() << " tables : "; ui.print_pqueue(Free_Tables); cout << endl;
@@ -136,7 +139,7 @@ void Restaurant::PrintCurrentState(int timestep)
     cout << Maint_Scooters.getcount() << " scooters: "; ui.print_queue(Maint_Scooters); cout << endl;
 
     cout << "------------- Scooters Back to Restaurant IDs ----------------------" << endl;
-    cout << Back_Scooters.getcount() << " scooters: "; ui.print_queue(Back_Scooters); cout << endl;
+    cout << Back_Scooters.getcount() << " scooters: "; ui.print_pqueue(Back_Scooters); cout << endl;
 
     cout << "------------- Cancelled Orders IDs ----------------------" << endl;
     cout << Canceled_Orders.getcount() << " cancelled: "; ui.print_stack(Canceled_Orders); cout << endl;
@@ -221,14 +224,19 @@ void Restaurant::RunPhase1Simulator()
                 Tables* tbl = Free_Tables.getBest(ord);
                 if (tbl) {
                     tbl->assign_order(ord, timestep);
-                    Busy_NonSharable.enqueue(tbl, tbl->get_capacity());
+                    Busy_NonSharable.enqueue(tbl, tbl->getPriority());
                     ord->setTS(timestep); InServ_Orders.enqueue(ord);
                 }
             }
             else if (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
                 READY_OV.dequeue(ord, p);
-                Scooters* sc = nullptr; Free_Scooters.dequeue(sc);
+                Scooters* sc = nullptr; Free_Scooters.dequeue(sc, p);
                 if (sc) {
+                    // ==========================================================
+                    // FIXED LOGIC: Update the scooter's total distance correctly
+                    // ==========================================================
+                    sc->setTotalDistance(ord->getDistance());
+
                     sc->assignOrder(ord, timestep);
                     ord->setAssignedScooter(sc);
                     ord->setTS(timestep); InServ_Orders.enqueue(ord);
@@ -236,7 +244,7 @@ void Restaurant::RunPhase1Simulator()
             }
         }
 
-        // 3.7: Service Finish - FIXED: Scooter MUST go to Back_Scooters FIRST
+        // 3.7: Service Finish - Scooter MUST go to Back_Scooters FIRST
         if ((rand() % 100) < 25 && !InServ_Orders.isEmpty())
         {
             Orders* ord = nullptr; InServ_Orders.dequeue(ord);
@@ -245,7 +253,8 @@ void Restaurant::RunPhase1Simulator()
                 if (ord->getType() >= 3) { // Delivery
                     Scooters* sc = ord->getAssignedScooter();
                     if (sc) {
-                        Back_Scooters.enqueue(sc); // Now in transit/returning
+                        // Priority gets recalculated here automatically because of the updated distance!
+                        Back_Scooters.enqueue(sc, sc->getPriority());
                         ord->setAssignedScooter(nullptr);
                     }
                 }
@@ -253,7 +262,7 @@ void Restaurant::RunPhase1Simulator()
                     Tables* tbl = nullptr; int pri = 0; PriorityQueue<Tables*> tempPQ;
                     bool found = false;
                     while (Busy_NonSharable.dequeue(tbl, pri)) {
-                        if (!found && tbl->is_free(timestep)) { Free_Tables.enqueue(tbl, tbl->get_capacity()); found = true; }
+                        if (!found && tbl->is_free(timestep)) { Free_Tables.enqueue(tbl, tbl->getPriority()); found = true; }
                         else tempPQ.enqueue(tbl, pri);
                     }
                     while (tempPQ.dequeue(tbl, pri)) Busy_NonSharable.enqueue(tbl, pri);
@@ -263,16 +272,18 @@ void Restaurant::RunPhase1Simulator()
 
         // 3.8: Returning Scooters (Back -> Maint/Free)
         if (!Back_Scooters.isEmpty() && (rand() % 100 < 50)) {
-            Scooters* sc = nullptr; Back_Scooters.dequeue(sc);
+            int p = 0;
+            Scooters* sc = nullptr; Back_Scooters.dequeue(sc, p);
             // After being in "Back", it either becomes available or needs maintenance
-            if (rand() % 2 == 0) Free_Scooters.enqueue(sc);
+            // 'p' holds the newly updated priority, so re-enqueueing works perfectly.
+            if (rand() % 2 == 0) Free_Scooters.enqueue(sc, p);
             else Maint_Scooters.enqueue(sc);
         }
 
         // 3.9: Maintenance (Maint -> Free)
         if (!Maint_Scooters.isEmpty() && (rand() % 100 < 50)) {
             Scooters* sc = nullptr; Maint_Scooters.dequeue(sc);
-            Free_Scooters.enqueue(sc);
+            Free_Scooters.enqueue(sc, sc->getPriority());
         }
 
         PrintCurrentState(timestep);

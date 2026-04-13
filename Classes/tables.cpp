@@ -39,6 +39,11 @@ void Tables::assign_order(Orders* OD, int currentTimestep)
 	free_Seats -= OD->getNoOfSeats(); // Edited: update seats for sharing logic
 }
 
+int Tables::getPriority()
+{
+	return -1 * free_Seats;
+}
+
 ostream& operator<<(ostream& os, const Tables* table)
 {
 	if (table)
