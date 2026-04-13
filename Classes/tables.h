@@ -23,6 +23,7 @@ public:
 
 	bool is_free(int currentTimestep) const; // Edited: check if finish_time passed
 	void assign_order(Orders* OD, int currentTimestep); // Edited: changed to pointer and added logic
+	int getPriority();
 
 	friend ostream& operator<<(ostream& os, const Tables* table);
 };

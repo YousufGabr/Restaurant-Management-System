@@ -42,8 +42,8 @@ private:
 	ArrayStack<Orders*> Canceled_Orders; //All canceled orders
 
 	//Scooters
-	LinkedQueue<Scooters*> Free_Scooters; //All Free Scooters in the restaurant
-	LinkedQueue<Scooters*> Back_Scooters; //All Scooters currently back from delivery and waiting for maintenance
+	PriorityQueue<Scooters*> Free_Scooters; //All Free Scooters in the restaurant
+	PriorityQueue<Scooters*> Back_Scooters; //All Scooters currently back from delivery and waiting for maintenance
 	LinkedQueue<Scooters*> Maint_Scooters; //All Scooters currently in maintenance
 
 	//Tables

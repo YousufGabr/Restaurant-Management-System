@@ -27,7 +27,7 @@ private:
     int TS;
     int TF;
 
-    // --- Added pointer to fulfill cancellation requirement ---
+    
     Chefs* assignedChef;
     Scooters* AssignedScooter;
 
@@ -51,7 +51,7 @@ public:
     void setTS(int t);
     void setTF(int t);
 
-    // --- Added Getter/Setter for the Chef & Scooter ---
+    
     void setAssignedChef(Chefs* chf);
     Chefs* getAssignedChef() const;
     

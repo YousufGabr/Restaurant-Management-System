@@ -1,9 +1,10 @@
-#include "Orders.h"
+#include "Orders.h" 
 
 Orders::Orders(ORD_TYPE t, int tq, int id, int sz, double pr)
     : ID(id), type(t), TQ(tq), size(sz), price(pr),
     TA(-1), TR(-1), TS(-1), TF(-1), distance(0), noOfSeats(0),
-    canShare(false), orderDuration(0), assignedChef(nullptr) {
+    canShare(false), orderDuration(0), assignedChef(nullptr), AssignedScooter(nullptr) 
+{
 }
 
 void Orders::setDineInInfo(int seats, int duration, bool share) {
