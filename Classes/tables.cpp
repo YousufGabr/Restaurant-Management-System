@@ -15,6 +15,11 @@ int Tables::get_free_Seats() const
 	return this->free_Seats;
 }
 
+void Tables::set_free_Seats(int seats)
+{
+	this->free_Seats = seats;
+}
+
 void Tables::set_finish_time(int time)
 {
 	this->finish_time = time;
@@ -28,15 +33,6 @@ int Tables::get_finish_time() const
 bool Tables::is_free(int currentTimestep) const
 {
 	return (currentTimestep >= finish_time); // Edited: actual free check
-}
-
-void Tables::assign_order(Orders* OD, int currentTimestep)
-{
-	currentOrder = OD; // Edited: store pointer
-	OD->setTS(currentTimestep); // Edited: record Service Start Time
-	finish_time = currentTimestep + OD->getOrderDuration(); // Edited: set when table becomes free
-	OD->setTF(finish_time); // Edited: record Finish Time
-	free_Seats -= OD->getNoOfSeats(); // Edited: update seats for sharing logic
 }
 
 int Tables::getPriority()

@@ -4,6 +4,7 @@
 // Forward declaration
 class Chefs;
 class Scooters;
+class Tables;
 
 enum ORD_TYPE {
     TYPE_ODG, TYPE_ODN, TYPE_OT, TYPE_OVC, TYPE_OVG, TYPE_OVN
@@ -30,6 +31,7 @@ private:
     
     Chefs* assignedChef;
     Scooters* AssignedScooter;
+    Tables* AssignedTable;
 
 public:
     Orders(ORD_TYPE t, int tq, int id, int sz, double pr);
@@ -39,6 +41,7 @@ public:
     int getTQ() const;
     int getSize() const;
     double getPrice() const;
+    bool isSharable() const;
 
     void setDineInInfo(int seats, int duration, bool share);
     void setDeliveryDistance(int dist);
@@ -57,6 +60,9 @@ public:
     
     void setAssignedScooter(Scooters* sct);
     Scooters* getAssignedScooter() const;
+
+	void setAssignedTable(Tables* tbl);
+	Tables* getAssignedTable() const;
 
     int getCookPeriod() const;
     int getWaitTime() const;

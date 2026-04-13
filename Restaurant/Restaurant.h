@@ -36,8 +36,8 @@ private:
 	CancelPriQueue READY_OV;  //All Ready Delivery orders
 
 	//Order Status
-	LinkedQueue<Orders*> Cooking_Orders; //All orders currently being cooked
-	LinkedQueue<Orders*> InServ_Orders; //All orders currently being served (table/scooter)
+	CancelPriQueue Cooking_Orders; //All orders currently being cooked
+	PriorityQueue<Orders*> InServ_Orders; //All orders currently being served (table/scooter)
 	ArrayStack<Orders*> Finished_Orders; //All finished orders (served and delivered)
 	ArrayStack<Orders*> Canceled_Orders; //All canceled orders
 
@@ -60,9 +60,5 @@ public:
 	void AddOrder(Orders* ord);
 	void CancelOVC(int orderID);
 	void PrintCurrentState(int timestep);
-	void randomAssignToChef(int currentTimestep);
-	void randomMoveToReady();
-	void randomServeOrder(int currentTimestep);
-
 };
 
