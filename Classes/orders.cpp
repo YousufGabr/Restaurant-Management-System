@@ -25,6 +25,9 @@ void Orders::setTF(int t) { TF = t; }
 void Orders::setAssignedChef(Chefs* chf) { assignedChef = chf; }
 Chefs* Orders::getAssignedChef() const { return assignedChef; }
 
+void Orders::setAssignedScooter(Scooters* sct) { AssignedScooter = sct; }
+Scooters* Orders::getAssignedScooter() const { return AssignedScooter; }
+
 int Orders::getCookPeriod() const { return TR - TA; }
 int Orders::getServiceDuration() const { return TF - TS; }
 int Orders::getWaitTime() const {

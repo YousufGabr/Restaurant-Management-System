@@ -3,6 +3,7 @@
 
 // Forward declaration
 class Chefs;
+class Scooters;
 
 enum ORD_TYPE {
     TYPE_ODG, TYPE_ODN, TYPE_OT, TYPE_OVC, TYPE_OVG, TYPE_OVN
@@ -28,6 +29,7 @@ private:
 
     // --- Added pointer to fulfill cancellation requirement ---
     Chefs* assignedChef;
+    Scooters* AssignedScooter;
 
 public:
     Orders(ORD_TYPE t, int tq, int id, int sz, double pr);
@@ -49,9 +51,12 @@ public:
     void setTS(int t);
     void setTF(int t);
 
-    // --- Added Getter/Setter for the Chef ---
+    // --- Added Getter/Setter for the Chef & Scooter ---
     void setAssignedChef(Chefs* chf);
     Chefs* getAssignedChef() const;
+    
+    void setAssignedScooter(Scooters* sct);
+    Scooters* getAssignedScooter() const;
 
     int getCookPeriod() const;
     int getWaitTime() const;
