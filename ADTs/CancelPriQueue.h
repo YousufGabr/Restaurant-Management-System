@@ -17,7 +17,7 @@ public:
 
 		while (dequeue(temp, pri))
 		{
-			if (temp->getID() == ID)
+			if (temp->getID() == ID && temp->getType() == TYPE_OVC)
 			{
 				canceled = temp;
 				continue;

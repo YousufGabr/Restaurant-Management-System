@@ -15,7 +15,5 @@ int main() {
     // 2. Run the simulation
     myRestaurant.RunPhase1Simulator();
 
-    std::cout << "Simulation Ended." << std::endl;
-    system("pause");
     return 0;
 }

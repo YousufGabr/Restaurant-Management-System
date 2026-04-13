@@ -16,7 +16,7 @@ int Scooters::get_Maintenance_Duration() const
 	return this->Maintenance_Duration;
 }
 
-int Scooters::get_ID() const
+int Scooters::getID() const
 {
 	return this->ID;
 }
@@ -53,7 +53,7 @@ ostream& operator<<(ostream& os, const Scooters* scooter)
 {
 	if (scooter)
 	{
-		os << scooter->ID;
+		os << "S" << scooter->ID;
 	}
 	return os;
 }

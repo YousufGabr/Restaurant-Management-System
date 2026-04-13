@@ -5,6 +5,8 @@ Tables::Tables(int id, int capacity)
 {
 }
 
+int Tables::getID() const { return ID; }
+
 int Tables::get_capacity() const
 {
 	return this->Capacity;
@@ -30,9 +32,9 @@ int Tables::get_finish_time() const
 	return this->finish_time;
 }
 
-bool Tables::is_free(int currentTimestep) const
+bool Tables::is_free() const
 {
-	return (currentTimestep >= finish_time); // Edited: actual free check
+	return (free_Seats == Capacity);
 }
 
 int Tables::getPriority()
@@ -44,7 +46,7 @@ ostream& operator<<(ostream& os, const Tables* table)
 {
 	if (table)
 	{
-		os << "T" << table->ID << "[" << table->Capacity << "," << table->free_Seats << "]"; // Edited: formatted output
+		os << "[" << "T" << table->ID << "," << table->Capacity << "," << table->free_Seats << "]"; // Edited: formatted output
 	}
 	return os;
 }

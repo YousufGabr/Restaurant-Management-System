@@ -1,8 +1,4 @@
-﻿// ============================================================
-//  Restaurant.cpp – Phase 1.2 Final Stabilized Version
-// ============================================================
-
-#include "Restaurant.h"
+﻿#include "Restaurant.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -35,20 +31,6 @@ Restaurant::Restaurant()
     }
 }
 
-void Restaurant::AddOrder(Orders* ord)
-{
-    if (!ord) return;
-    switch (ord->getType())
-    {
-    case TYPE_ODG: PEND_ODG.enqueue(ord); break;
-    case TYPE_ODN: PEND_ODN.enqueue(ord); break;
-    case TYPE_OT:  PEND_OT.enqueue(ord);  break;
-    case TYPE_OVN: PEND_OVN.enqueue(ord); break;
-    case TYPE_OVC: PEND_OVC.enqueue(ord, (int)(ord->getPriority() * 1000)); break;
-    case TYPE_OVG: PEND_OVG.enqueue(ord, (int)(ord->getPriority() * 1000)); break;
-    }
-}
-
 void Restaurant::CancelOVC(int orderID)
 {
     Orders* canceled = PEND_OVC.CancelOrder(orderID);
@@ -58,20 +40,13 @@ void Restaurant::CancelOVC(int orderID)
     if (canceled) { Canceled_Orders.push(canceled); return; }
 
     LinkedQueue<Orders*> tempQ;
-	Orders* ord = nullptr; int pri = 0;
-    while (Cooking_Orders.dequeue(ord,pri))
-    {
-        if (ord->getID() == orderID) canceled = ord;
-        else tempQ.enqueue(ord);
-    }
-    while (tempQ.dequeue(ord)) Cooking_Orders.enqueue(ord, (int)(ord->getPriority() * 1000));
-
+	
+	canceled = Cooking_Orders.CancelOrder(orderID);
     if (canceled)
     {
         Chefs* chf = canceled->getAssignedChef();
         if (chf)
         {
-            chf->makeAvailable();
             if (chf->getType() == Chefs::TYPE_CS) Free_CS.enqueue(chf);
             else Free_CN.enqueue(chf);
             canceled->setAssignedChef(nullptr);
@@ -96,56 +71,64 @@ void Restaurant::GenerateRandomOrders()
         else if (orderType >= 3)
             newOrder->setDeliveryDistance((rand() % 4000) + 500);
 
-        AddOrder(newOrder);
+        switch (orderType)
+        {
+        case TYPE_ODG: PEND_ODG.enqueue(newOrder); break;
+        case TYPE_ODN: PEND_ODN.enqueue(newOrder); break;
+        case TYPE_OT:  PEND_OT.enqueue(newOrder);  break;
+        case TYPE_OVN: PEND_OVN.enqueue(newOrder); break;
+        case TYPE_OVC: PEND_OVC.enqueue(newOrder, (int)(newOrder->getPriority() * 1000)); break;
+        case TYPE_OVG: PEND_OVG.enqueue(newOrder, (int)(newOrder->getPriority() * 1000)); break;
+        }
     }
 }
 
 void Restaurant::PrintCurrentState(int timestep)
 {
-    cout << "\nCurrent Timestep: " << timestep << endl;
+    cout << "\nCurrent Timestep: " << timestep << endl << endl;
     cout << "=============== Actions List ================" << endl;
-    cout << "0 actions remaining" << endl;
+    cout << "0 actions remaining" << endl << endl;
 
     cout << "------------- Pending Orders IDs ---------------------" << endl;
     cout << PEND_ODG.getcount() << " ODG: "; ui.print_queue(PEND_ODG);  cout << endl;
-    cout << PEND_ODN.getcount() << " ODN: "; ui.print_queue(PEND_ODN);  cout << endl;
-    cout << PEND_OT.getcount() << " OT:  "; ui.print_queue(PEND_OT);   cout << endl;
+    cout << PEND_ODN.getcount() << " ODN: "; ui.print_queue(PEND_ODN);  cout << endl << endl;
+    cout << PEND_OT.getcount() << " OT:  "; ui.print_queue(PEND_OT);   cout << endl << endl;
     cout << PEND_OVN.getcount() << " OVN: "; ui.print_queue(PEND_OVN);  cout << endl;
     cout << PEND_OVC.getcount() << " OVC: "; ui.print_pqueue(PEND_OVC); cout << endl;
-    cout << PEND_OVG.getcount() << " OVG: "; ui.print_pqueue(PEND_OVG); cout << endl;
+    cout << PEND_OVG.getcount() << " OVG: "; ui.print_pqueue(PEND_OVG); cout << endl << endl;
 
     cout << "------------- Available chefs IDs ----------------------" << endl;
     cout << Free_CS.getcount() << " CS : "; ui.print_queue(Free_CS); cout << endl;
-    cout << Free_CN.getcount() << " CN : "; ui.print_queue(Free_CN); cout << endl;
+    cout << Free_CN.getcount() << " CN : "; ui.print_queue(Free_CN); cout << endl << endl;
 
     cout << "------------- Cooking orders [Orders ID, chef ID] ---------------------" << endl;
-    cout << Cooking_Orders.getcount() << " cooking orders: "; ui.print_pqueue(Cooking_Orders); cout << endl;
+    cout << Cooking_Orders.getcount() << " cooking orders: "; ui.print_pqueue(Cooking_Orders); cout << endl << endl;
 
     cout << "------------- Ready Orders IDs ---------------------" << endl;
     cout << READY_OD.getcount() << " OD: "; ui.print_queue(READY_OD);  cout << endl;
     cout << READY_OT.getcount() << " OT: "; ui.print_queue(READY_OT);  cout << endl;
-    cout << READY_OV.getcount() << " OV: "; ui.print_pqueue(READY_OV); cout << endl;
+    cout << READY_OV.getcount() << " OV: "; ui.print_pqueue(READY_OV); cout << endl << endl;
 
     cout << "------------- Available scooters IDs ----------------------" << endl;
-    cout << Free_Scooters.getcount() << " Scooters : "; ui.print_pqueue(Free_Scooters); cout << endl;
+    cout << Free_Scooters.getcount() << " Scooters : "; ui.print_pqueue(Free_Scooters); cout << endl << endl;
 
     cout << "------------- Available tables [ID, capacity, free seats] ----------------------" << endl;
-    cout << Free_Tables.getcount() << " tables : "; ui.print_pqueue(Free_Tables); cout << endl;
+    cout << Free_Tables.getcount() << " tables : "; ui.print_pqueue(Free_Tables); cout << endl << endl;
 
     cout << "------------- In-Service orders [order ID, scooter/Table ID] ------------------" << endl;
-    cout << InServ_Orders.getcount() << " Orders: "; ui.print_pqueue(InServ_Orders); cout << endl;
+    cout << InServ_Orders.getcount() << " Orders: "; ui.print_pqueue(InServ_Orders); cout << endl << endl;
 
     cout << "------------- In-maintainance scooters IDs ----------------------" << endl;
-    cout << Maint_Scooters.getcount() << " scooters: "; ui.print_queue(Maint_Scooters); cout << endl;
+    cout << Maint_Scooters.getcount() << " scooters: "; ui.print_queue(Maint_Scooters); cout << endl << endl;
 
     cout << "------------- Scooters Back to Restaurant IDs ----------------------" << endl;
-    cout << Back_Scooters.getcount() << " scooters: "; ui.print_pqueue(Back_Scooters); cout << endl;
+    cout << Back_Scooters.getcount() << " scooters: "; ui.print_pqueue(Back_Scooters); cout << endl << endl;
 
     cout << "------------- Cancelled Orders IDs ----------------------" << endl;
-    cout << Canceled_Orders.getcount() << " cancelled: "; ui.print_stack(Canceled_Orders); cout << endl;
+    cout << Canceled_Orders.getcount() << " cancelled: "; ui.print_stack(Canceled_Orders); cout << endl << endl;
 
     cout << "------------- Finished orders IDs----------------------------" << endl;
-    cout << Finished_Orders.getcount() << " Orders: "; ui.print_stack(Finished_Orders); cout << endl;
+    cout << Finished_Orders.getcount() << " Orders: "; ui.print_stack(Finished_Orders); cout << endl << endl;
 
     cout << "\nPRESS ANY KEY TO MOVE TO NEXT STEP !" << endl;
     cin.get();
@@ -154,12 +137,13 @@ void Restaurant::PrintCurrentState(int timestep)
 void Restaurant::RunPhase1Simulator()
 {
     GenerateRandomOrders();
+    PrintCurrentState(0);
+
     int timestep = 1;
 
     while (true)
     {
-        PrintCurrentState(timestep);
-        // 3.1: Move Pending to Cooking
+        /// 3.1: Move Pending to Cooking
         for (int i = 0; i < 30; i++)
         {
             if (Free_CS.isEmpty() && Free_CN.isEmpty()) break;
@@ -190,7 +174,7 @@ void Restaurant::RunPhase1Simulator()
             Cooking_Orders.enqueue(ord, (int)(ord->getPriority() * 1000));
         }
 
-        // 3.2: Move Cooking to Ready
+        /// 3.2: Move Cooking to Ready
         for (int i = 0; i < 15; i++)
         {
             if (Cooking_Orders.isEmpty()) break;
@@ -205,6 +189,7 @@ void Restaurant::RunPhase1Simulator()
                         else Free_CN.enqueue(chf);
                     }
                     ord->setTR(timestep);
+					ord->setAssignedChef(nullptr);
                     if (ord->getType() == TYPE_ODG || ord->getType() == TYPE_ODN) READY_OD.enqueue(ord);
                     else if (ord->getType() == TYPE_OT) READY_OT.enqueue(ord);
                     else READY_OV.enqueue(ord, pri);
@@ -212,16 +197,18 @@ void Restaurant::RunPhase1Simulator()
             }
         }
 
-        // 3.3: Move Ready to In-Service 
+        /// 3.3: Move Ready to In-Service 
         for (int i = 0; i < 10; i++)
         {
+            int choice = rand() % 3;
             Orders* ord = nullptr; int p = 0;
-            if (!READY_OT.isEmpty()) {
+
+            if (!READY_OT.isEmpty() && choice == 0) {
                 READY_OT.dequeue(ord);
                 ord->setTS(timestep); ord->setTF(timestep + 1);
                 Finished_Orders.push(ord);
             }
-            else if (!READY_OD.isEmpty()) {
+            else if (!READY_OD.isEmpty() && choice == 1) {
                 Orders* ord = nullptr;
                 READY_OD.peek(ord);
                 Tables* tbl = nullptr;
@@ -252,17 +239,15 @@ void Restaurant::RunPhase1Simulator()
                     ord->setTS(timestep);
                     InServ_Orders.enqueue(ord, (int)(ord->getPriority() * 1000));
                 }
-                // No 'else { break; }' needed here because we are only doing this once!
+                
             }
-            else if (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
+            else if (!READY_OV.isEmpty() && !Free_Scooters.isEmpty() && choice == 2) {
+
+
                 READY_OV.dequeue(ord, p);
                 Scooters* sc = nullptr; Free_Scooters.dequeue(sc, p);
                 if (sc) {
-                    // ==========================================================
-                    // FIXED LOGIC: Update the scooter's total distance correctly
-                    // ==========================================================
                     sc->setTotalDistance(ord->getDistance());
-
                     sc->assignOrder(ord, timestep);
                     ord->setAssignedScooter(sc);
                     ord->setTS(timestep); InServ_Orders.enqueue(ord, (int)(ord->getPriority() * 1000));
@@ -270,13 +255,17 @@ void Restaurant::RunPhase1Simulator()
             }
         }
 
-        // 3.7: Service Finish - Scooter MUST go to Back_Scooters FIRST
+		///3.4 & 3.5 & 3.6: Cancel OVC Orders Randomly
+		CancelOVC(rand() % 500 + 1); // Randomly cancel an OVC order by ID
+
+        /// 3.7: Service Finish
         if ((rand() % 100) < 25 && !InServ_Orders.isEmpty())
         {
 			int p = 0;
             Orders* ord = nullptr; InServ_Orders.dequeue(ord,p);
             if (ord) {
-                ord->setTF(timestep); Finished_Orders.push(ord);
+                ord->setTF(timestep);
+                Finished_Orders.push(ord);
                 if (ord->getType() >= 3) { // Delivery
                     Scooters* sc = ord->getAssignedScooter();
                     if (sc) {
@@ -286,18 +275,34 @@ void Restaurant::RunPhase1Simulator()
                     }
                 }
                 else if (ord->getType() < 2) { // Dine-in
-                    Tables* tbl = nullptr; int pri = 0; PriorityQueue<Tables*> tempPQ;
+                    Tables* tbl = nullptr;
+                    PriorityQueue<Tables*> tempnoshare, tempshare; int pri = 0;
                     bool found = false;
                     while (Busy_NonSharable.dequeue(tbl, pri)) {
-                        if (!found && tbl->is_free(timestep)) { Free_Tables.enqueue(tbl, tbl->getPriority()); found = true; }
-                        else tempPQ.enqueue(tbl, pri);
+                        if (!found && tbl==ord->getAssignedTable()) { Free_Tables.enqueue(tbl, tbl->getPriority()); found = true; }
+                        else tempnoshare.enqueue(tbl, tbl->getPriority());
                     }
-                    while (tempPQ.dequeue(tbl, pri)) Busy_NonSharable.enqueue(tbl, pri);
+                    while (tempnoshare.dequeue(tbl, pri)) Busy_NonSharable.enqueue(tbl, pri);
+
+                    while (Busy_Sharable.dequeue(tbl, pri)) {
+                        if (!found && tbl == ord->getAssignedTable()) { 
+							tbl->set_free_Seats(tbl->get_free_Seats() + ord->getNoOfSeats()); // Update free seats for sharable tables
+                            if (tbl->is_free())
+                            {
+                                Free_Tables.enqueue(tbl, tbl->getPriority());
+                            }
+                            else tempshare.enqueue(tbl, tbl->getPriority());
+                            found = true; 
+                        }
+                        else tempshare.enqueue(tbl, pri);
+                    }
+                    while (tempshare.dequeue(tbl, pri)) Busy_Sharable.enqueue(tbl, pri);
+                    ord->setAssignedTable(nullptr);
                 }
             }
         }
 
-        // 3.8: Returning Scooters (Back -> Maint/Free)
+        /// 3.8: Returning Scooters (Back -> Maint/Free)
         if (!Back_Scooters.isEmpty() && (rand() % 100 < 50)) {
             int p = 0;
             Scooters* sc = nullptr; Back_Scooters.dequeue(sc, p);
@@ -307,22 +312,27 @@ void Restaurant::RunPhase1Simulator()
             else Maint_Scooters.enqueue(sc);
         }
 
-        // 3.9: Maintenance (Maint -> Free)
+        /// 3.9: Maintenance (Maint -> Free)
         if (!Maint_Scooters.isEmpty() && (rand() % 100 < 50)) {
             Scooters* sc = nullptr; Maint_Scooters.dequeue(sc);
             Free_Scooters.enqueue(sc, sc->getPriority());
         }
 
+		///3.10: Print Current State
+        PrintCurrentState(timestep);
+
+		///4: Check for termination condition (no pending or active orders)
         int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount() + Back_Scooters.getcount() + Maint_Scooters.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
         if (pending == 0 && active == 0) break;
         timestep++;
+
     }
     cout << "\nSIMULATION ENDED AT TIMESTEP: " << timestep << endl;
     cout << "Total Finished Orders: " << Finished_Orders.getcount() << endl;
     cout << "Total Canceled Orders: " << Canceled_Orders.getcount() << endl;
     char input;
-    cout << "Press 'x' then Enter to continue..." << std::endl;
+    cout << "Type 'x' then Enter to EXIT..." << endl;
 
     // Loop until 'x' is entered
     do {

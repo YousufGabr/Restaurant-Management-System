@@ -20,7 +20,7 @@ public:
 	Scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
 	int get_Speed() const;
 	int get_Maintenance_Duration() const;
-	int get_ID() const;
+	int getID() const;
 
 	void set_finish_time(int time);
 	int get_finish_time() const; // Added: to check when it returns

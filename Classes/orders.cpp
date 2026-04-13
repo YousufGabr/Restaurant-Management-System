@@ -1,4 +1,7 @@
-#include "Orders.h" 
+#include "Orders.h"
+#include "Chefs.h"
+#include "Scooters.h"
+#include "Tables.h"
 
 Orders::Orders(ORD_TYPE t, int tq, int id, int sz, double pr)
     : ID(id), type(t), TQ(tq), size(sz), price(pr),
@@ -56,6 +59,21 @@ int Orders::getNoOfSeats() const { return noOfSeats; }
 int Orders::getOrderDuration() const { return orderDuration; }
 
 std::ostream& operator<<(std::ostream& os, const Orders* ord) {
-    if (ord) os << ord->ID;
+    if (ord)
+    {
+        if (ord->getAssignedChef() != nullptr)
+        {
+            os << "[" << ord->getID() << "," << ord->getAssignedChef()->getID() << "]";
+        }
+        else if (ord->getAssignedScooter()!= nullptr)
+        {
+            os << "[" << ord->getID() << ",S" << ord->getAssignedScooter()->getID() << "]";
+        }
+        else if (ord->getAssignedTable()!= nullptr)
+        {
+            os << "[" << ord->getID() << ",T" << ord->getAssignedTable()->getID() << "]";
+        }
+        else os << ord->getID();
+    }
     return os;
 }

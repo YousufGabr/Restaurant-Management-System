@@ -73,7 +73,7 @@ public:
         while (current)
         {
             int pri = 0;
-            cout << current->getItem(pri) << " (Priority: " << pri << ") ";
+            cout << current->getItem(pri) << " ";
             current = current->getNext();
         }
     }
