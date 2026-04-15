@@ -140,6 +140,7 @@
     <ClInclude Include="ADTs\ArrayStack.h" />
     <ClInclude Include="ADTs\BestFitPriQueue.h" />
     <ClInclude Include="ADTs\CancelPriQueue.h" />
+    <ClInclude Include="ADTs\CancelQueue.h" />
     <ClInclude Include="ADTs\LinkedQueue.h" />
     <ClInclude Include="ADTs\Node.h" />
     <ClInclude Include="ADTs\priNode.h" />

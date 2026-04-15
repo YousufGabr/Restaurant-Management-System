@@ -1,4 +1,5 @@
 #include "RequestAction.h"
+#include "../Restaurant/Restaurant.h"
 
 RequestAction::RequestAction(Restaurant * r,int id, ORD_TYPE type, int TQ, int size, int price, int seats, int duration, int distance, bool sharable)
 {
@@ -19,19 +20,15 @@ void RequestAction::ACT()
 	Orders* newOrder = new Orders(type, currentTimestep, ID, size, price);
 	if (type == TYPE_ODG || type == TYPE_ODN)
 	{
-		 
 		newOrder->setDineInInfo(numberofseats, Duration, canshare);
-		//RestPtr->AddOrder(newOrder); 
 	}
+
 	else if (type == TYPE_OVG || type == TYPE_OVN || type == TYPE_OVC)
 	{
 		newOrder->setDeliveryDistance(distance);
-		//RestPtr->AddOrder(newOrder);
 	}
-	else
-	{
-		//RestPtr->AddOrder(newOrder);
-	}
+
+	//RestPtr->AddOrder(newOrder);
 
 
 }

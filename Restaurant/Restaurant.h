@@ -9,6 +9,7 @@
 #include "../Classes/Orders.h"
 #include "../Classes/Scooters.h"
 #include "../UI/UI.h"
+#include "../ADTs/CancelQueue.h"
 
 class Restaurant
 {
@@ -23,7 +24,7 @@ private:
 	LinkedQueue<Orders*> PEND_ODN; //All pending Normal Dine-in orders
 	LinkedQueue<Orders*> PEND_OT;  //All pending Takeaway orders
 	LinkedQueue<Orders*> PEND_OVN;  //All pending Normal Delivery orders
-	CancelPriQueue PEND_OVC;  //All pending Cold Delivery orders
+	CancelQueue PEND_OVC;  //All pending Cold Delivery orders
 	PriorityQueue<Orders*> PEND_OVG;  //All pending Grilled Delivery orders
 
 	//Chefs
@@ -33,7 +34,7 @@ private:
 	//Ready Orders
 	LinkedQueue<Orders*> READY_OD; //All Ready Dine-in orders
 	LinkedQueue<Orders*> READY_OT;  //All Ready Takeaway orders
-	CancelPriQueue READY_OV;  //All Ready Delivery orders
+	CancelQueue READY_OV;  //All Ready Delivery orders
 
 	//Order Status
 	CancelPriQueue Cooking_Orders; //All orders currently being cooked

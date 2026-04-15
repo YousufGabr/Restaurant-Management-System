@@ -1,4 +1,5 @@
 #include "CancelAction.h"
+#include "../Restaurant/Restaurant.h"
 
 CancelAction::CancelAction(Restaurant* r ,int TC, int ID)
 {
@@ -9,5 +10,5 @@ CancelAction::CancelAction(Restaurant* r ,int TC, int ID)
 
 void CancelAction::ACT()
 {
-	//RestPtr->CancelOVC(ID);
+	RestPtr->CancelOVC(ID);
 }

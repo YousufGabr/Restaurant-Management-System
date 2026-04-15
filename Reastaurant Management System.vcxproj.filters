@@ -113,5 +113,8 @@
     <ClInclude Include="Restaurant\Restaurant.h">
       <Filter>Restaurant</Filter>
     </ClInclude>
+    <ClInclude Include="ADTs\CancelQueue.h">
+      <Filter>ADTs</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
