@@ -147,21 +147,37 @@ void Restaurant::RunPhase1Simulator()
         for (int i = 0; i < 30; i++)
         {
             if (Free_CS.isEmpty() && Free_CN.isEmpty()) break;
+            if (PEND_ODG.isEmpty() && PEND_ODN.isEmpty() && PEND_OT.isEmpty() &&
+                PEND_OVN.isEmpty() && PEND_OVC.isEmpty() && PEND_OVG.isEmpty()) break;
 
-            int nonEmpty = 0;
-            if (!PEND_ODG.isEmpty()) nonEmpty++; if (!PEND_ODN.isEmpty()) nonEmpty++;
-            if (!PEND_OT.isEmpty())  nonEmpty++; if (!PEND_OVN.isEmpty()) nonEmpty++;
-            if (!PEND_OVC.isEmpty()) nonEmpty++; if (!PEND_OVG.isEmpty()) nonEmpty++;
-            if (nonEmpty == 0) break;
+            Orders* ord = nullptr;
+            int p = 0;
+            bool dequeued = false;
 
-            Orders* ord = nullptr; int p = 0;
-            int choice = rand() % nonEmpty; int idx = 0;
-            if (!PEND_ODG.isEmpty() && idx++ == choice) PEND_ODG.dequeue(ord);
-            else if (!PEND_ODN.isEmpty() && idx++ == choice) PEND_ODN.dequeue(ord);
-            else if (!PEND_OT.isEmpty() && idx++ == choice) PEND_OT.dequeue(ord);
-            else if (!PEND_OVN.isEmpty() && idx++ == choice) PEND_OVN.dequeue(ord);
-            else if (!PEND_OVC.isEmpty() && idx++ == choice) PEND_OVC.dequeue(ord, p);
-            else if (!PEND_OVG.isEmpty() && idx++ == choice) PEND_OVG.dequeue(ord, p);
+            while (!dequeued) {
+                int choice = rand() % 6; // Generate a number 0-5
+
+                switch (choice) {
+                case 0:
+                    if (!PEND_ODG.isEmpty()) { PEND_ODG.dequeue(ord); dequeued = true; }
+                    break;
+                case 1:
+                    if (!PEND_ODN.isEmpty()) { PEND_ODN.dequeue(ord); dequeued = true; }
+                    break;
+                case 2:
+                    if (!PEND_OT.isEmpty()) { PEND_OT.dequeue(ord); dequeued = true; }
+                    break;
+                case 3:
+                    if (!PEND_OVN.isEmpty()) { PEND_OVN.dequeue(ord); dequeued = true; }
+                    break;
+                case 4:
+                    if (!PEND_OVC.isEmpty()) { PEND_OVC.dequeue(ord, p); dequeued = true; }
+                    break;
+                case 5:
+                    if (!PEND_OVG.isEmpty()) { PEND_OVG.dequeue(ord, p); dequeued = true; }
+                    break;
+                }
+            }
 
             if (!ord) continue;
 
