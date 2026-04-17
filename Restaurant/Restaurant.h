@@ -54,11 +54,10 @@ private:
 
 public:
 	Restaurant();
-	void GenerateRandomOrders();
 
 	// Simulation runner implementing your random-sim algorithm
-	void RunPhase1Simulator();
+	void GenerateRandomOrders();
 	void CancelOVC(int orderID);
-	void PrintCurrentState(int timestep);
+	void RunPhase1Simulator();
 };
 
