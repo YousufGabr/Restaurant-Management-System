@@ -15,47 +15,47 @@ class Restaurant
 {
 private:
 	UI ui;
-	//Action
-	LinkedQueue<Actions*> Request; //All Request actions in the input file
-	LinkedQueue<Actions*> Cancel;  //All cancel actions in the input file
+	//Actions
+	LinkedQueue<Actions*> Request; 
+	LinkedQueue<Actions*> Cancel;  
 
 	//Pending Orders
-	LinkedQueue<Orders*> PEND_ODG; //All pending Grilled Dine-in orders
-	LinkedQueue<Orders*> PEND_ODN; //All pending Normal Dine-in orders
-	LinkedQueue<Orders*> PEND_OT;  //All pending Takeaway orders
-	LinkedQueue<Orders*> PEND_OVN;  //All pending Normal Delivery orders
-	CancelQueue PEND_OVC;  //All pending Cold Delivery orders
-	PriorityQueue<Orders*> PEND_OVG;  //All pending Grilled Delivery orders
+	LinkedQueue<Orders*> PEND_ODG; 
+	LinkedQueue<Orders*> PEND_ODN; 
+	LinkedQueue<Orders*> PEND_OT;  
+	LinkedQueue<Orders*> PEND_OVN;  
+	CancelQueue PEND_OVC;  
+	PriorityQueue<Orders*> PEND_OVG;  
 
 	//Chefs
-	LinkedQueue<Chefs*> Free_CS; //All Free Special Chefs in the restaurant
-	LinkedQueue<Chefs*> Free_CN; //All Free Normal Chefs in the restaurant
+	LinkedQueue<Chefs*> Free_CS; 
+	LinkedQueue<Chefs*> Free_CN; 
 
 	//Ready Orders
-	LinkedQueue<Orders*> READY_OD; //All Ready Dine-in orders
-	LinkedQueue<Orders*> READY_OT;  //All Ready Takeaway orders
-	CancelQueue READY_OV;  //All Ready Delivery orders
+	LinkedQueue<Orders*> READY_OD; 
+	LinkedQueue<Orders*> READY_OT;  
+	CancelQueue READY_OV;  
 
 	//Order Status
-	CancelPriQueue Cooking_Orders; //All orders currently being cooked
-	PriorityQueue<Orders*> InServ_Orders; //All orders currently being served (table/scooter)
-	ArrayStack<Orders*> Finished_Orders; //All finished orders (served and delivered)
-	ArrayStack<Orders*> Canceled_Orders; //All canceled orders
+	CancelPriQueue Cooking_Orders; 
+	PriorityQueue<Orders*> InServ_Orders; 
+	ArrayStack<Orders*> Finished_Orders; 
+	ArrayStack<Orders*> Canceled_Orders; 
 
 	//Scooters
-	PriorityQueue<Scooters*> Free_Scooters; //All Free Scooters in the restaurant
-	PriorityQueue<Scooters*> Back_Scooters; //All Scooters currently back from delivery and waiting for maintenance
-	LinkedQueue<Scooters*> Maint_Scooters; //All Scooters currently in maintenance
+	PriorityQueue<Scooters*> Free_Scooters;
+	PriorityQueue<Scooters*> Back_Scooters; 
+	LinkedQueue<Scooters*> Maint_Scooters; 
 
 	//Tables
-	BestFitPriQueue Free_Tables; //All Free Tables in the restaurant
-	BestFitPriQueue Busy_Sharable; //All Occupied Sharable Tables in the restaurant
-	BestFitPriQueue Busy_NonSharable; //All Occupied Non-Sharable Tables in the restaurant
+	BestFitPriQueue Free_Tables; 
+	BestFitPriQueue Busy_Sharable;
+	BestFitPriQueue Busy_NonSharable; 
 
 public:
 	Restaurant();
 
-	// Simulation runner implementing your random-sim algorithm
+	
 	void GenerateRandomOrders();
 	void CancelOVC(int orderID);
 	void RunPhase1Simulator();

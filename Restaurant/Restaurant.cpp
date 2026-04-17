@@ -88,17 +88,17 @@ void Restaurant::RunPhase1Simulator()
     GenerateRandomOrders();
     ui.PrintCurrentState(
         0,
-        Request, Cancel,                    // Actions
-        PEND_ODG, PEND_ODN, PEND_OT,        // Pending Orders (Part 1)
-        PEND_OVN, PEND_OVC, PEND_OVG,       // Pending Orders (Part 2)
-        Free_CS, Free_CN,                   // Chefs
-        READY_OD, READY_OT, READY_OV,       // Ready Orders
-        Cooking_Orders, InServ_Orders,      // Status
-        Finished_Orders, Canceled_Orders,   // History
-        Free_Scooters, Back_Scooters,       // Scooters (Part 1)
-        Maint_Scooters,                     // Scooters (Part 2)
-        Free_Tables, Busy_Sharable,         // Tables (Part 1)
-        Busy_NonSharable                    // Tables (Part 2)
+        Request, Cancel,                    
+        PEND_ODG, PEND_ODN, PEND_OT,        
+        PEND_OVN, PEND_OVC, PEND_OVG,       
+        Free_CS, Free_CN,                  
+        READY_OD, READY_OT, READY_OV,       
+        Cooking_Orders, InServ_Orders,      
+        Finished_Orders, Canceled_Orders,   
+        Free_Scooters, Back_Scooters,       
+        Maint_Scooters,                     
+        Free_Tables, Busy_Sharable,         
+        Busy_NonSharable                    
     );
 
     int timestep = 1;
@@ -234,7 +234,7 @@ void Restaurant::RunPhase1Simulator()
         }
 
 		///3.4 & 3.5 & 3.6: Cancel OVC Orders Randomly
-		CancelOVC(rand() % 500 + 1); // Randomly cancel an OVC order by ID
+		CancelOVC(rand() % 500 + 1); 
 
         /// 3.7: Service Finish
         if ((rand() % 100) < 25 && !InServ_Orders.isEmpty())
@@ -244,10 +244,10 @@ void Restaurant::RunPhase1Simulator()
             if (ord) {
                 ord->setTF(timestep);
                 Finished_Orders.push(ord);
-                if (ord->getType() >= 3) { // Delivery
+                if (ord->getType() >= 3) { 
                     Scooters* sc = ord->getAssignedScooter();
                     if (sc) {
-                        // Priority gets recalculated here automatically because of the updated distance!
+                        
                         Back_Scooters.enqueue(sc, sc->getPriority());
                         ord->setAssignedScooter(nullptr);
                     }
@@ -284,8 +284,6 @@ void Restaurant::RunPhase1Simulator()
         if (!Back_Scooters.isEmpty() && (rand() % 100 < 50)) {
             int p = 0;
             Scooters* sc = nullptr; Back_Scooters.dequeue(sc, p);
-            // After being in "Back", it either becomes available or needs maintenance
-            // 'p' holds the newly updated priority, so re-enqueueing works perfectly.
             if (rand() % 2 == 0) Free_Scooters.enqueue(sc, p);
             else Maint_Scooters.enqueue(sc);
         }
@@ -299,17 +297,17 @@ void Restaurant::RunPhase1Simulator()
 		///3.10: Print Current State
         ui.PrintCurrentState(
             timestep,
-            Request, Cancel,                    // Actions
-            PEND_ODG, PEND_ODN, PEND_OT,        // Pending Orders (Part 1)
-            PEND_OVN, PEND_OVC, PEND_OVG,       // Pending Orders (Part 2)
-            Free_CS, Free_CN,                   // Chefs
-            READY_OD, READY_OT, READY_OV,       // Ready Orders
-            Cooking_Orders, InServ_Orders,      // Status
-            Finished_Orders, Canceled_Orders,   // History
-            Free_Scooters, Back_Scooters,       // Scooters (Part 1)
-            Maint_Scooters,                     // Scooters (Part 2)
-            Free_Tables, Busy_Sharable,         // Tables (Part 1)
-            Busy_NonSharable                    // Tables (Part 2)
+            Request, Cancel,                    
+            PEND_ODG, PEND_ODN, PEND_OT,        
+            PEND_OVN, PEND_OVC, PEND_OVG,       
+            Free_CS, Free_CN,                  
+            READY_OD, READY_OT, READY_OV,       
+            Cooking_Orders, InServ_Orders,      
+            Finished_Orders, Canceled_Orders,   
+            Free_Scooters, Back_Scooters,       
+            Maint_Scooters,                    
+            Free_Tables, Busy_Sharable,         
+            Busy_NonSharable                    
         );
 
 		///4: Check for termination condition (no pending or active orders)

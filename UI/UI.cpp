@@ -121,12 +121,12 @@ int UI::GetMode() {
         char choice = toupper(input[0]);
 
         if (choice == 'S') {
-            mode = 0; // Or use an ENUM like MODE_SILENT
+            mode = 0;
             cout << "Silent Mode selected." << endl;
             break;
         }
         else if (choice == 'I') {
-            mode = 1; // Or use an ENUM like MODE_INTERACTIVE
+            mode = 1; 
             cout << "Interactive Mode selected." << endl;
             break;
         }
@@ -146,8 +146,8 @@ void UI::simulation_ended(int timestep, int finishedorders, int canceledorders)
     char input;
     cout << "Type [X] then Enter to EXIT..." << endl;
 
-    // Loop until 'X' is entered
+   
     do {
         input = cin.get();
-    } while (toupper(input) != 'X'); // Checks for 'x' or 'X'
+    } while (toupper(input) != 'X'); 
 }
