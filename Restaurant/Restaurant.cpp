@@ -77,7 +77,7 @@ void Restaurant::GenerateRandomOrders()
         case TYPE_ODN: PEND_ODN.enqueue(newOrder); break;
         case TYPE_OT:  PEND_OT.enqueue(newOrder);  break;
         case TYPE_OVN: PEND_OVN.enqueue(newOrder); break;
-        case TYPE_OVC: PEND_OVC.enqueue(newOrder, (int)(newOrder->getPriority() * 1000)); break;
+        case TYPE_OVC: PEND_OVC.enqueue(newOrder); break;
         case TYPE_OVG: PEND_OVG.enqueue(newOrder, (int)(newOrder->getPriority() * 1000)); break;
         }
     }
@@ -94,7 +94,7 @@ void Restaurant::PrintCurrentState(int timestep)
     cout << PEND_ODN.getcount() << " ODN: "; ui.print_queue(PEND_ODN);  cout << endl << endl;
     cout << PEND_OT.getcount() << " OT:  "; ui.print_queue(PEND_OT);   cout << endl << endl;
     cout << PEND_OVN.getcount() << " OVN: "; ui.print_queue(PEND_OVN);  cout << endl;
-    cout << PEND_OVC.getcount() << " OVC: "; ui.print_pqueue(PEND_OVC); cout << endl;
+    cout << PEND_OVC.getcount() << " OVC: "; ui.print_queue(PEND_OVC); cout << endl;
     cout << PEND_OVG.getcount() << " OVG: "; ui.print_pqueue(PEND_OVG); cout << endl << endl;
 
     cout << "------------- Available chefs IDs ----------------------" << endl;
@@ -107,7 +107,7 @@ void Restaurant::PrintCurrentState(int timestep)
     cout << "------------- Ready Orders IDs ---------------------" << endl;
     cout << READY_OD.getcount() << " OD: "; ui.print_queue(READY_OD);  cout << endl;
     cout << READY_OT.getcount() << " OT: "; ui.print_queue(READY_OT);  cout << endl;
-    cout << READY_OV.getcount() << " OV: "; ui.print_pqueue(READY_OV); cout << endl << endl;
+    cout << READY_OV.getcount() << " OV: "; ui.print_queue(READY_OV); cout << endl << endl;
 
     cout << "------------- Available scooters IDs ----------------------" << endl;
     cout << Free_Scooters.getcount() << " Scooters : "; ui.print_pqueue(Free_Scooters); cout << endl << endl;
@@ -147,37 +147,21 @@ void Restaurant::RunPhase1Simulator()
         for (int i = 0; i < 30; i++)
         {
             if (Free_CS.isEmpty() && Free_CN.isEmpty()) break;
-            if (PEND_ODG.isEmpty() && PEND_ODN.isEmpty() && PEND_OT.isEmpty() &&
-                PEND_OVN.isEmpty() && PEND_OVC.isEmpty() && PEND_OVG.isEmpty()) break;
 
-            Orders* ord = nullptr;
-            int p = 0;
-            bool dequeued = false;
+            int nonEmpty = 0;
+            if (!PEND_ODG.isEmpty()) nonEmpty++; if (!PEND_ODN.isEmpty()) nonEmpty++;
+            if (!PEND_OT.isEmpty())  nonEmpty++; if (!PEND_OVN.isEmpty()) nonEmpty++;
+            if (!PEND_OVC.isEmpty()) nonEmpty++; if (!PEND_OVG.isEmpty()) nonEmpty++;
+            if (nonEmpty == 0) break;
 
-            while (!dequeued) {
-                int choice = rand() % 6; // Generate a number 0-5
-
-                switch (choice) {
-                case 0:
-                    if (!PEND_ODG.isEmpty()) { PEND_ODG.dequeue(ord); dequeued = true; }
-                    break;
-                case 1:
-                    if (!PEND_ODN.isEmpty()) { PEND_ODN.dequeue(ord); dequeued = true; }
-                    break;
-                case 2:
-                    if (!PEND_OT.isEmpty()) { PEND_OT.dequeue(ord); dequeued = true; }
-                    break;
-                case 3:
-                    if (!PEND_OVN.isEmpty()) { PEND_OVN.dequeue(ord); dequeued = true; }
-                    break;
-                case 4:
-                    if (!PEND_OVC.isEmpty()) { PEND_OVC.dequeue(ord, p); dequeued = true; }
-                    break;
-                case 5:
-                    if (!PEND_OVG.isEmpty()) { PEND_OVG.dequeue(ord, p); dequeued = true; }
-                    break;
-                }
-            }
+            Orders* ord = nullptr; int p = 0;
+            int choice = rand() % nonEmpty; int idx = 0;
+            if (!PEND_ODG.isEmpty() && idx++ == choice) PEND_ODG.dequeue(ord);
+            else if (!PEND_ODN.isEmpty() && idx++ == choice) PEND_ODN.dequeue(ord);
+            else if (!PEND_OT.isEmpty() && idx++ == choice) PEND_OT.dequeue(ord);
+            else if (!PEND_OVN.isEmpty() && idx++ == choice) PEND_OVN.dequeue(ord);
+            else if (!PEND_OVC.isEmpty() && idx++ == choice) PEND_OVC.dequeue(ord);
+            else if (!PEND_OVG.isEmpty() && idx++ == choice) PEND_OVG.dequeue(ord, p);
 
             if (!ord) continue;
 
@@ -208,7 +192,7 @@ void Restaurant::RunPhase1Simulator()
 					ord->setAssignedChef(nullptr);
                     if (ord->getType() == TYPE_ODG || ord->getType() == TYPE_ODN) READY_OD.enqueue(ord);
                     else if (ord->getType() == TYPE_OT) READY_OT.enqueue(ord);
-                    else READY_OV.enqueue(ord, pri);
+                    else READY_OV.enqueue(ord);
                 }
             }
         }
@@ -260,7 +244,7 @@ void Restaurant::RunPhase1Simulator()
             else if (!READY_OV.isEmpty() && !Free_Scooters.isEmpty() && choice == 2) {
 
 
-                READY_OV.dequeue(ord, p);
+                READY_OV.dequeue(ord);
                 Scooters* sc = nullptr; Free_Scooters.dequeue(sc, p);
                 if (sc) {
                     sc->setTotalDistance(ord->getDistance());
