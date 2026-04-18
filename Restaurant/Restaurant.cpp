@@ -1,7 +1,9 @@
-﻿#include "Restaurant.h"
+#include "Restaurant.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
 
 Restaurant::Restaurant()
@@ -329,4 +331,160 @@ void Restaurant::RunPhase1Simulator()
 
     }
 	ui.simulation_ended(timestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
+}
+void Restaurant::loadInputFile(std::string filename) {
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) return;
+
+    // 1. قراءة بيانات الطهاة
+    int numCN, numCS;
+    inputFile >> numCN >> numCS; // [cite: 860]
+
+    int speedCN, speedCS;
+    inputFile >> speedCN >> speedCS; // [cite: 861]
+
+    // يمكنك هنا عمل Loop لإنشاء الـ Chefs وإضافتهم للقوائم (Free_CN و Free_CS)
+
+    // 2. قراءة بيانات الدراجات النارية (Scooters)
+    int sCount, sSpeed;
+    inputFile >> sCount >> sSpeed; // [cite: 862]
+
+    int mainOrds, mainDur;
+    inputFile >> mainOrds >> mainDur; // [cite: 863]
+
+    // يمكنك هنا عمل Loop لإنشاء الـ Scooters وإضافتهم لقائمة Free_Scooters
+
+    // 3. قراءة بيانات الطاولات (Tables)
+    int totalTables;
+    inputFile >> totalTables; // [cite: 864]
+
+    int loadedTables = 0;
+    while (loadedTables < totalTables) {
+        int count, capacity;
+        inputFile >> count >> capacity; // [cite: 866]
+        // قم بإنشاء الطاولات بناءً على العدد والسعة وأضفهم لـ Free_Tables
+        loadedTables += count;
+    }
+
+    // 4. قراءة حد الانتظار الأقصى (Overwait Threshold) 
+    int TH;
+    inputFile >> TH; // [cite: 867]
+
+    // 5. قراءة الأحداث (Actions)
+    int M;
+    inputFile >> M; // [cite: 868]
+
+    for (int i = 0; i < M; ++i) { // [cite: 869]
+        char actionType;
+        inputFile >> actionType;
+
+        if (actionType == 'Q') { // طلب جديد (Request Action) [cite: 870]
+            std::string TYP;
+            int TQ, ID, SIZE;
+            double price;
+            inputFile >> TYP >> TQ >> ID >> SIZE >> price; // [cite: 875, 876, 877, 878]
+
+            if (TYP == "ODG" || TYP == "ODN") { // طلبات الأكل داخل المطعم
+                int seats, duration;
+                char canShareChar;
+                inputFile >> seats >> duration >> canShareChar; // [cite: 879, 880, 881]
+                bool canShare = (canShareChar == 'Y' || canShareChar == 'y');
+                // قم بإنشاء RequestAction الخاص بـ Dine-in وأضفه لطابور الأحداث
+            }
+            else if (TYP == "OVC" || TYP == "OVG" || TYP == "OVN") { // طلبات التوصيل
+                double distance;
+                inputFile >> distance; // [cite: 882]
+                // قم بإنشاء RequestAction الخاص بـ Delivery وأضفه لطابور الأحداث
+            }
+            else if (TYP == "OT") { // طلبات الاستلام الذاتي
+                // قم بإنشاء RequestAction الخاص بـ Takeaway وأضفه لطابور الأحداث
+            }
+        }
+        else if (actionType == 'X') { // إلغاء طلب (Cancel Action) [cite: 871, 884]
+            int Tcancel, ID;
+            inputFile >> Tcancel >> ID; // [cite: 885, 886]
+            // قم بإنشاء CancelAction وأضفه لطابور الأحداث
+        }
+    }
+    inputFile.close();
+}
+void Restaurant::generateOutputFile(std::string filename) {
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) return;
+
+    outFile << "TF  ID  TQ  TA  TR  TS  Ti  Tc  Tw  Tserv\n";
+
+    // 1. طباعة الطلبات المنتهية 
+    // يمكنك لاحقاً عمل Loop هنا لطباعة بيانات كل طلب من Finished_Orders
+    /*
+    Order* ord = nullptr;
+    while(Finished_Orders.pop(ord)) {
+        outFile << ord->getTF() << " " << ord->getID() << " " ... << "\n";
+    }
+    */
+
+    outFile << "\n-----------------------------------------------------------\n";
+    outFile << "-------------------- Statistics ---------------------------\n";
+
+    // =========================================================================
+    // تعريف المتغيرات لتجنب الإيرور (Errors)
+    // ملاحظة: هذه القيم حالياً مبدئية، ويجب عليك في Phase 2 حسابها بشكل حقيقي
+    // =========================================================================
+
+    int countODG = 0, countODN = 0, countOT = 0, countOVG = 0, countOVN = 0, countOVC = 0;
+
+    int finishedCount = Finished_Orders.getcount(); // سحب العدد من الكود الخاص بك
+    int cancelledCount = Canceled_Orders.getcount(); // سحب العدد من الكود الخاص بك
+    int totalOrders = finishedCount + cancelledCount;
+
+    int countCN = 0; // قم بحسابهم عند القراءة من الملف
+    int countCS = 0;
+    int totalChefs = countCN + countCS;
+
+    int totalScooters = 0; // قم بحسابه عند القراءة من الملف
+    int overwaitCount = 0; // عدد الطلبات التي تجاوزت وقت الانتظار
+
+    float avgTi = 0.0, avgTc = 0.0, avgTw = 0.0, avgTserv = 0.0;
+    float scooterUtilization = 0.0, chefUtilization = 0.0;
+
+    // حماية من القسمة على صفر (Divide by Zero)
+    float finishPer = (totalOrders == 0) ? 0 : ((float)finishedCount / totalOrders) * 100;
+    float cancelPer = (totalOrders == 0) ? 0 : ((float)cancelledCount / totalOrders) * 100;
+    float overwaitPer = (totalOrders == 0) ? 0 : ((float)overwaitCount / totalOrders) * 100;
+
+    // =========================================================================
+    // 2. طباعة الإحصائيات في الملف
+    // =========================================================================
+
+    // الإحصائية الأولى
+    outFile << "1- Total number of orders = " << totalOrders
+        << " (ODG: " << countODG << ", ODN: " << countODN
+        << ", OT: " << countOT << ", OVG: " << countOVG
+        << ", OVN: " << countOVN << ", OVC: " << countOVC << ")\n";
+
+    // الإحصائية الثانية
+    outFile << "2- Total number of chefs = " << totalChefs
+        << " (CN: " << countCN << ", CS: " << countCS << ")\n";
+
+    // الإحصائية الثالثة
+    outFile << "3- Total number of scooters = " << totalScooters << "\n";
+
+    // الإحصائية الرابعة
+    outFile << "4- Percentage of finished orders = " << finishPer
+        << "% , Percentage of cancelled orders = " << cancelPer << "%\n";
+
+    // الإحصائية الخامسة
+    outFile << "5- Percentage of overwait orders = " << overwaitPer << "%\n";
+
+    // الإحصائية السادسة
+    outFile << "6- Average Ti = " << avgTi << ", Average Tc = " << avgTc
+        << ", Average Tw = " << avgTw << ", Average Tserv = " << avgTserv << "\n";
+
+    // الإحصائية السابعة
+    outFile << "7- Scooters utilization % = " << scooterUtilization << "%\n";
+
+    // الإحصائية الثامنة
+    outFile << "8- Chefs utilization % = " << chefUtilization << "%\n";
+
+    outFile.close();
 }
