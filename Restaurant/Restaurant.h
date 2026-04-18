@@ -59,5 +59,7 @@ public:
 	void GenerateRandomOrders();
 	void CancelOVC(int orderID);
 	void RunPhase1Simulator();
+	void loadInputFile(string filename);
+	void generateOutputFile(std::string filename);
 };
 
