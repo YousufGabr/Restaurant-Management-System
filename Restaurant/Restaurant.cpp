@@ -208,9 +208,11 @@ void Restaurant::RunPhase1Simulator()
 
                     if (ord->isSharable()) {
                         tbl->set_free_Seats(tbl->get_free_Seats() - ord->getNoOfSeats());
-                        Busy_Sharable.enqueue(tbl, tbl->getPriority());
+                        if(tbl->get_free_Seats() == 0) Busy_NonSharable.enqueue(tbl, tbl->getPriority());
+                        else Busy_Sharable.enqueue(tbl, tbl->getPriority());
                     }
                     else {
+                        tbl->set_free_Seats(tbl->get_free_Seats() - ord->getNoOfSeats());
                         Busy_NonSharable.enqueue(tbl, tbl->getPriority());
                     }
 
@@ -257,7 +259,16 @@ void Restaurant::RunPhase1Simulator()
                     PriorityQueue<Tables*> tempnoshare, tempshare; int pri = 0;
                     bool found = false;
                     while (Busy_NonSharable.dequeue(tbl, pri)) {
-                        if (!found && tbl==ord->getAssignedTable()) { Free_Tables.enqueue(tbl, tbl->getPriority()); found = true; }
+                        if (!found && tbl==ord->getAssignedTable()) 
+                        {
+                            tbl->set_free_Seats(tbl->get_free_Seats() + ord->getNoOfSeats());
+                            if (tbl->is_free())
+                            {
+                                Free_Tables.enqueue(tbl, tbl->getPriority());
+                            }
+                            else if (tbl->get_free_Seats() > 0) Busy_Sharable.enqueue(tbl, tbl->getPriority());
+                            found = true; 
+                        }
                         else tempnoshare.enqueue(tbl, tbl->getPriority());
                     }
                     while (tempnoshare.dequeue(tbl, pri)) Busy_NonSharable.enqueue(tbl, pri);
