@@ -68,7 +68,7 @@ public:
     int getWaitTime() const;
     int getServiceDuration() const;
 
-    double getPriority() const;
+    int getPriority() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Orders* ord);
 int getTA() const { return TA; }
