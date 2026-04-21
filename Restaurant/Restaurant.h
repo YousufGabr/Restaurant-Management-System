@@ -69,6 +69,8 @@ public:
 	void generateOutputFile(std::string filename);
 	void AssignPendingToChef(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
+	void AssignTable(int currentTimestep);
+	void AssignScooter(int currentTimestep);
 
 };
 
