@@ -620,3 +620,39 @@ void Restaurant::AssignScooter(int currentTimestep) {
         READY_OV.enqueue(pOrd);
     }
 }
+void Restaurant::MoveToReady(int currentTimestep) {
+    Orders* pOrd = nullptr;
+
+    while (!Cooking_Orders.isEmpty()) {
+        int pri;
+        Cooking_Orders.peek(pOrd, pri);
+
+        if (pOrd == nullptr) break;
+        if (currentTimestep >= pOrd->getTR()) {
+            Cooking_Orders.dequeue(pOrd, pri);
+            Chefs* pChf = pOrd->getAssignedChef();
+            if (pChf != nullptr) {
+                if (pChf->getType() == Chefs::TYPE_CN) {
+                    Free_CN.enqueue(pChf);
+                }
+                else {
+                    Free_CS.enqueue(pChf);
+                    pOrd->setAssignedChef(nullptr);
+                }
+                ORD_TYPE type = pOrd->getType();
+                if (type == TYPE_ODG || type == TYPE_ODN) {
+                    READY_OD.enqueue(pOrd);
+                }
+                else if (type == TYPE_OT) {
+                    READY_OT.enqueue(pOrd);
+                }
+                else {
+                    READY_OV.enqueue(pOrd);
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+}
