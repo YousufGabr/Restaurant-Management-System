@@ -30,6 +30,8 @@ public:
 	int getPriority();
 	int getTotalDistance();
 	void setTotalDistance(int);
+	int getSpeed() { return Speed; }
+
 
 	friend ostream& operator<<(ostream& os, const Scooters* scooter);
 };
