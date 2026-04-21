@@ -71,4 +71,8 @@ public:
     double getPriority() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Orders* ord);
+int getTA() const { return TA; }
+int getTR() const { return TR; }
+int getTS() const { return TS; }
+int getTF() const { return TF; }
 };
