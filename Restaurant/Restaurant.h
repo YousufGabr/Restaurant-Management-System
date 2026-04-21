@@ -14,6 +14,12 @@
 class Restaurant
 {
 private:
+	struct CancelEvent {
+		int cancelTime;
+		int orderID;
+	};
+
+	
 	UI ui;
 	//Actions
 	LinkedQueue<Actions*> Request; 
@@ -61,5 +67,8 @@ public:
 	void RunPhase1Simulator();
 	void loadInputFile(string filename);
 	void generateOutputFile(std::string filename);
+	void AssignPendingToChef(int currentTimestep);
+	void finalizeTakeawayOrders(int currentTimestep);
+
 };
 
