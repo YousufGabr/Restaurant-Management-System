@@ -332,159 +332,206 @@ void Restaurant::RunPhase1Simulator()
     }
 	ui.simulation_ended(timestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
 }
-void Restaurant::loadInputFile(std::string filename) {
-    std::ifstream inputFile(filename);
-    if (!inputFile.is_open()) return;
-
-    // 1. قراءة بيانات الطهاة
-    int numCN, numCS;
-    inputFile >> numCN >> numCS; // [cite: 860]
-
-    int speedCN, speedCS;
-    inputFile >> speedCN >> speedCS; // [cite: 861]
-
-    // يمكنك هنا عمل Loop لإنشاء الـ Chefs وإضافتهم للقوائم (Free_CN و Free_CS)
-
-    // 2. قراءة بيانات الدراجات النارية (Scooters)
-    int sCount, sSpeed;
-    inputFile >> sCount >> sSpeed; // [cite: 862]
-
-    int mainOrds, mainDur;
-    inputFile >> mainOrds >> mainDur; // [cite: 863]
-
-    // يمكنك هنا عمل Loop لإنشاء الـ Scooters وإضافتهم لقائمة Free_Scooters
-
-    // 3. قراءة بيانات الطاولات (Tables)
-    int totalTables;
-    inputFile >> totalTables; // [cite: 864]
-
-    int loadedTables = 0;
-    while (loadedTables < totalTables) {
-        int count, capacity;
-        inputFile >> count >> capacity; // [cite: 866]
-        // قم بإنشاء الطاولات بناءً على العدد والسعة وأضفهم لـ Free_Tables
-        loadedTables += count;
-    }
-
-    // 4. قراءة حد الانتظار الأقصى (Overwait Threshold) 
-    int TH;
-    inputFile >> TH; // [cite: 867]
-
-    // 5. قراءة الأحداث (Actions)
-    int M;
-    inputFile >> M; // [cite: 868]
-
-    for (int i = 0; i < M; ++i) { // [cite: 869]
-        char actionType;
-        inputFile >> actionType;
-
-        if (actionType == 'Q') { // طلب جديد (Request Action) [cite: 870]
-            std::string TYP;
-            int TQ, ID, SIZE;
-            double price;
-            inputFile >> TYP >> TQ >> ID >> SIZE >> price; // [cite: 875, 876, 877, 878]
-
-            if (TYP == "ODG" || TYP == "ODN") { // طلبات الأكل داخل المطعم
-                int seats, duration;
-                char canShareChar;
-                inputFile >> seats >> duration >> canShareChar; // [cite: 879, 880, 881]
-                bool canShare = (canShareChar == 'Y' || canShareChar == 'y');
-                // قم بإنشاء RequestAction الخاص بـ Dine-in وأضفه لطابور الأحداث
-            }
-            else if (TYP == "OVC" || TYP == "OVG" || TYP == "OVN") { // طلبات التوصيل
-                double distance;
-                inputFile >> distance; // [cite: 882]
-                // قم بإنشاء RequestAction الخاص بـ Delivery وأضفه لطابور الأحداث
-            }
-            else if (TYP == "OT") { // طلبات الاستلام الذاتي
-                // قم بإنشاء RequestAction الخاص بـ Takeaway وأضفه لطابور الأحداث
-            }
-        }
-        else if (actionType == 'X') { // إلغاء طلب (Cancel Action) [cite: 871, 884]
-            int Tcancel, ID;
-            inputFile >> Tcancel >> ID; // [cite: 885, 886]
-            // قم بإنشاء CancelAction وأضفه لطابور الأحداث
-        }
-    }
-    inputFile.close();
-}
-void Restaurant::generateOutputFile(std::string filename) {
-    std::ofstream outFile(filename);
+//void Restaurant::loadInputFile(string filename) {
+//    ifstream inputFile(filename);
+//    if (!inputFile.is_open()) {
+//        cout << "Error: Could not open file " << filename << endl;
+//        return;
+//    }
+//
+//    int numCN, numCS, speedCN, speedCS;
+//    inputFile >> numCN >> numCS >> speedCN >> speedCS;
+//
+//    for (int i = 0; i < numCN; i++)
+//        Free_CN.enqueue(new Chefs(i + 1, Chefs::TYPE_CN, speedCN));
+//    for (int i = 0; i < numCS; i++)
+//        Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
+//
+//    int sCount, sSpeed, mainOrds, mainDur;
+//    inputFile >> sCount >> sSpeed >> mainOrds >> mainDur;
+//
+//    for (int i = 0; i < sCount; i++) {
+//        Scooters* s = new Scooters(i + 1, sSpeed, mainOrds, mainDur);
+//        Free_Scooters.enqueue(s, s->getPriority());
+//    }
+//
+//    int totalTables;
+//    inputFile >> totalTables;
+//
+//    for (int i = 0; i < totalTables;) {
+//        int count, cap;
+//        inputFile >> count >> cap;
+//        for (int j = 0; j < count; j++) {
+//            Tables* newTable = new Tables(++i, cap);
+//            Free_Tables.enqueue(newTable, cap);
+//        }
+//    }
+//
+//    int TH;
+//    inputFile >> TH; // overwait threshold
+//
+//    int M;
+//    inputFile >> M; // Number of events
+//
+//    for (int i = 0; i < M; i++) {
+//        char actType;
+//        inputFile >> actType;
+//
+//        if (actType == 'Q') {
+//            string typeStr;
+//            int TQ, ID, SIZE;
+//            double price;
+//
+//            inputFile >> typeStr >> TQ >> ID >> SIZE >> price;
+//
+//            ORD_TYPE type;
+//            if (typeStr == "ODG") type = TYPE_ODG;
+//            else if (typeStr == "ODN") type = TYPE_ODN;
+//            else if (typeStr == "OT") type = TYPE_OT;
+//            else if (typeStr == "OVC") type = TYPE_OVC;
+//            else if (typeStr == "OVG") type = TYPE_OVG;
+//            else type = TYPE_OVN;
+//
+//            Orders* ord = new Orders(type, TQ, ID, SIZE, price);
+//
+//            // Read specific data based on order type
+//            if (type == TYPE_ODG || type == TYPE_ODN) {
+//                int seats, duration;
+//                char share;
+//                inputFile >> seats >> duration >> share;
+//                ord->setDineInInfo(seats, duration, share == 'Y');
+//            }
+//            else if (type == TYPE_OVN || type == TYPE_OVC || type == TYPE_OVG) {
+//                int dist;
+//                inputFile >> dist;
+//                ord->setDeliveryDistance(dist);
+//            }
+//            // Takeaway (OT) has no extra data to read
+//
+//            Request.enqueue(ord);
+//        }
+//        else if (actType == 'X') {
+//            CancelEvent cEvent;
+//            inputFile >> cEvent.cancelTime >> cEvent.orderID;
+//            Cancel.enqueue(cEvent);
+//        }
+//    }
+//
+//    inputFile.close();
+//}
+void Restaurant::generateOutputFile(string filename) {
+    ofstream outFile(filename);
     if (!outFile.is_open()) return;
 
-    outFile << "TF  ID  TQ  TA  TR  TS  Ti  Tc  Tw  Tserv\n";
+    outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTc\tTw\tTserv\n";
 
-    // 1. طباعة الطلبات المنتهية 
-    // يمكنك لاحقاً عمل Loop هنا لطباعة بيانات كل طلب من Finished_Orders
-    /*
-    Order* ord = nullptr;
-    while(Finished_Orders.pop(ord)) {
-        outFile << ord->getTF() << " " << ord->getID() << " " ... << "\n";
+    Orders* pOrd = nullptr;
+
+    int total = 0;
+    double totalWait = 0, totalServ = 0;
+
+    while (Finished_Orders.pop(pOrd)) {
+        int Tc = pOrd->getTR() - pOrd->getTA();
+        int Tw = pOrd->getWaitTime();
+        int Tserv = pOrd->getTF() - pOrd->getTS();
+
+        total++;
+        totalWait += Tw;
+        totalServ += Tserv;
+
+        outFile << pOrd->getTF() << "\t"
+            << pOrd->getID() << "\t"
+            << pOrd->getTQ() << "\t"
+            << pOrd->getTA() << "\t"
+            << pOrd->getTR() << "\t"
+            << pOrd->getTS() << "\t"
+            << Tc << "\t"
+            << Tw << "\t"
+            << Tserv << "\n";
     }
-    */
 
-    outFile << "\n-----------------------------------------------------------\n";
-    outFile << "-------------------- Statistics ---------------------------\n";
-
-    // =========================================================================
-    // تعريف المتغيرات لتجنب الإيرور (Errors)
-    // ملاحظة: هذه القيم حالياً مبدئية، ويجب عليك في Phase 2 حسابها بشكل حقيقي
-    // =========================================================================
-
-    int countODG = 0, countODN = 0, countOT = 0, countOVG = 0, countOVN = 0, countOVC = 0;
-
-    int finishedCount = Finished_Orders.getcount(); // سحب العدد من الكود الخاص بك
-    int cancelledCount = Canceled_Orders.getcount(); // سحب العدد من الكود الخاص بك
-    int totalOrders = finishedCount + cancelledCount;
-
-    int countCN = 0; // قم بحسابهم عند القراءة من الملف
-    int countCS = 0;
-    int totalChefs = countCN + countCS;
-
-    int totalScooters = 0; // قم بحسابه عند القراءة من الملف
-    int overwaitCount = 0; // عدد الطلبات التي تجاوزت وقت الانتظار
-
-    float avgTi = 0.0, avgTc = 0.0, avgTw = 0.0, avgTserv = 0.0;
-    float scooterUtilization = 0.0, chefUtilization = 0.0;
-
-    // حماية من القسمة على صفر (Divide by Zero)
-    float finishPer = (totalOrders == 0) ? 0 : ((float)finishedCount / totalOrders) * 100;
-    float cancelPer = (totalOrders == 0) ? 0 : ((float)cancelledCount / totalOrders) * 100;
-    float overwaitPer = (totalOrders == 0) ? 0 : ((float)overwaitCount / totalOrders) * 100;
-
-    // =========================================================================
-    // 2. طباعة الإحصائيات في الملف
-    // =========================================================================
-
-    // الإحصائية الأولى
-    outFile << "1- Total number of orders = " << totalOrders
-        << " (ODG: " << countODG << ", ODN: " << countODN
-        << ", OT: " << countOT << ", OVG: " << countOVG
-        << ", OVN: " << countOVN << ", OVC: " << countOVC << ")\n";
-
-    // الإحصائية الثانية
-    outFile << "2- Total number of chefs = " << totalChefs
-        << " (CN: " << countCN << ", CS: " << countCS << ")\n";
-
-    // الإحصائية الثالثة
-    outFile << "3- Total number of scooters = " << totalScooters << "\n";
-
-    // الإحصائية الرابعة
-    outFile << "4- Percentage of finished orders = " << finishPer
-        << "% , Percentage of cancelled orders = " << cancelPer << "%\n";
-
-    // الإحصائية الخامسة
-    outFile << "5- Percentage of overwait orders = " << overwaitPer << "%\n";
-
-    // الإحصائية السادسة
-    outFile << "6- Average Ti = " << avgTi << ", Average Tc = " << avgTc
-        << ", Average Tw = " << avgTw << ", Average Tserv = " << avgTserv << "\n";
-
-    // الإحصائية السابعة
-    outFile << "7- Scooters utilization % = " << scooterUtilization << "%\n";
-
-    // الإحصائية الثامنة
-    outFile << "8- Chefs utilization % = " << chefUtilization << "%\n";
+    outFile << "\n--- Statistics ---\n";
+    outFile << "Total Orders: " << total << "\n";
+    outFile << "Avg Wait: " << (total ? totalWait / total : 0) << "\n";
+    outFile << "Avg Service: " << (total ? totalServ / total : 0) << "\n";
 
     outFile.close();
+}
+// Logic to be placed in the Restaurant class
+void Restaurant::AssignPendingToChef(int currentTimestep) {
+    Orders* pOrd = nullptr;
+    Chefs* pChf = nullptr;
+
+    auto assignLogic = [&](Orders* ord, Chefs* chf) {
+        ord->setAssignedChef(chf);
+        ord->setTA(currentTimestep);
+        int cookPeriod = (ord->getSize() + chf->getSpeed() - 1) / chf->getSpeed();
+        int readyTime = currentTimestep + cookPeriod;
+        ord->setTR(readyTime);
+        chf->setFinishTime(readyTime);
+        // Using -readyTime to prioritize earlier finish times in a max-heap Priority Queue
+        Cooking_Orders.enqueue(ord, -readyTime);
+        };
+
+    // 1st: OD Orders
+    // ODG -> CS only
+    while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
+        PEND_ODG.dequeue(pOrd);
+        Free_CS.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+    // ODN -> CN, then CS
+    while (!PEND_ODN.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
+        PEND_ODN.dequeue(pOrd);
+        if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
+        else Free_CS.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+
+    // 2nd: OT Orders -> CN only
+    while (!PEND_OT.isEmpty() && !Free_CN.isEmpty()) {
+        PEND_OT.dequeue(pOrd);
+        Free_CN.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+
+    // 3rd: OV Orders
+    // OVG -> CS only (Assumes PEND_OVG is a Priority Queue)
+    int pri;
+    while (!PEND_OVG.isEmpty() && !Free_CS.isEmpty()) {
+        PEND_OVG.dequeue(pOrd, pri);
+        Free_CS.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+    // OVC -> CN, then CS
+    while (!PEND_OVC.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
+        PEND_OVC.dequeue(pOrd);
+        if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
+        else Free_CS.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+    // OVN -> CN only
+    while (!PEND_OVN.isEmpty() && !Free_CN.isEmpty()) {
+        PEND_OVN.dequeue(pOrd);
+        Free_CN.dequeue(pChf);
+        assignLogic(pOrd, pChf);
+    }
+}
+void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
+    Orders* pOrd = nullptr;
+
+    while (!READY_OT.isEmpty()) {
+        READY_OT.peek(pOrd);
+        if (!pOrd) break;
+
+        if (currentTimestep >= pOrd->getTR() + 1) {
+            READY_OT.dequeue(pOrd);
+
+            pOrd->setTS(pOrd->getTR());
+            pOrd->setTF(currentTimestep);
+
+            Finished_Orders.push(pOrd);
+        }
+        else break;
+    }
 }
