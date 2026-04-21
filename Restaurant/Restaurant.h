@@ -71,6 +71,8 @@ public:
 	void finalizeTakeawayOrders(int currentTimestep);
 	void AssignTable(int currentTimestep);
 	void AssignScooter(int currentTimestep);
+	void MoveToReady(int currentTimestep);
+
 
 };
 
