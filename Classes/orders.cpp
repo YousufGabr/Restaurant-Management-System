@@ -41,7 +41,7 @@ int Orders::getWaitTime() const {
     return (TA - TQ) + (TS - TR);
 }
 
-double Orders::getPriority() const {
+int Orders::getPriority() const {
     if (type != TYPE_OVG) return 0;
     // Weighted priority equation for OVG
     return (price * 0.5) / (size * 0.3 + distance * 0.2 + 1);
