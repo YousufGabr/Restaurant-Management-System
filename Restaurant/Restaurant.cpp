@@ -535,3 +535,88 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
         else break;
     }
 }
+void Restaurant::AssignTable(int currentTimestep) {
+    Orders* pOrd = nullptr;
+    LinkedQueue<Orders*> tempReadyOD; 
+
+    while (READY_OD.dequeue(pOrd)) {
+        Tables* assignedTable = nullptr;
+
+        if (pOrd->isSharable() && !Busy_Sharable.isEmpty()) {
+            PriorityQueue<Tables*> tempShare;
+            Tables* tbl = nullptr;
+            int pri;
+            while (Busy_Sharable.dequeue(tbl, pri)) {
+                if (!assignedTable && tbl->get_free_Seats() >= pOrd->getNoOfSeats()) {
+                    assignedTable = tbl;
+                }
+                else {
+                    tempShare.enqueue(tbl, pri);
+                }
+            }
+            while (tempShare.dequeue(tbl, pri)) Busy_Sharable.enqueue(tbl, pri);
+        }
+
+        if (!assignedTable && !Free_Tables.isEmpty()) {
+            PriorityQueue<Tables*> tempFree;
+            Tables* tbl = nullptr;
+            int pri;
+            while (Free_Tables.dequeue(tbl, pri)) {
+                if (!assignedTable && tbl->get_free_Seats() >= pOrd->getNoOfSeats()) {
+                    assignedTable = tbl;
+                }
+                else {
+                    tempFree.enqueue(tbl, pri);
+                }
+            }
+            while (tempFree.dequeue(tbl, pri)) Free_Tables.enqueue(tbl, pri);
+        }
+
+        if (assignedTable) {
+            pOrd->setAssignedTable(assignedTable);
+            pOrd->setTS(currentTimestep);
+
+            pOrd->setTF(currentTimestep + pOrd->getOrderDuration());
+            assignedTable->set_free_Seats(assignedTable->get_free_Seats() - pOrd->getNoOfSeats());
+            if (assignedTable->get_free_Seats() > 0 && pOrd->isSharable()) {
+                Busy_Sharable.enqueue(assignedTable, assignedTable->getPriority());
+            }
+            else {
+                Busy_NonSharable.enqueue(assignedTable, assignedTable->getPriority());
+            }
+            InServ_Orders.enqueue(pOrd, -pOrd->getTF());
+        }
+        else {
+            tempReadyOD.enqueue(pOrd);
+        }
+    }
+    while (tempReadyOD.dequeue(pOrd)) {
+        READY_OD.enqueue(pOrd);
+    }
+}
+void Restaurant::AssignScooter(int currentTimestep) {
+    Orders* pOrd = nullptr;
+    Scooters* pScooter = nullptr;
+    LinkedQueue<Orders*> tempReadyOV; 
+
+    while (READY_OV.dequeue(pOrd)) {
+        if (Free_Scooters.isEmpty()) {
+            tempReadyOV.enqueue(pOrd);
+            continue;
+        }
+
+        int pri;
+        Free_Scooters.dequeue(pScooter, pri);
+
+        pOrd->setAssignedScooter(pScooter);
+        pOrd->setTS(currentTimestep);
+
+        int tserv = (pOrd->getDistance() + pScooter->getSpeed() - 1) / pScooter->getSpeed();
+
+        pOrd->setTF(currentTimestep + tserv);
+        InServ_Orders.enqueue(pOrd, -pOrd->getTF());
+    }
+    while (tempReadyOV.dequeue(pOrd)) {
+        READY_OV.enqueue(pOrd);
+    }
+}
