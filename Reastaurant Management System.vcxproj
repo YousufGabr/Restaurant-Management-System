@@ -126,9 +126,12 @@
     <ClCompile Include="Actions\CancelAction.cpp" />
     <ClCompile Include="Actions\RequestAction.cpp" />
     <ClCompile Include="Classes\Chefs.cpp" />
+    <ClCompile Include="Classes\Deliveryorders.cpp" />
+    <ClCompile Include="Classes\Dineorders.cpp" />
     <ClCompile Include="Classes\Orders.cpp" />
     <ClCompile Include="Classes\Scooters.cpp" />
     <ClCompile Include="Classes\Tables.cpp" />
+    <ClCompile Include="Classes\Takeawayorders.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Restaurant\Restaurant.cpp" />
     <ClCompile Include="UI\UI.cpp" />
@@ -148,9 +151,12 @@
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
     <ClInclude Include="Classes\Chefs.h" />
+    <ClInclude Include="Classes\Deliveryorders.h" />
+    <ClInclude Include="Classes\Dineorders.h" />
     <ClInclude Include="Classes\Orders.h" />
     <ClInclude Include="Classes\Scooters.h" />
     <ClInclude Include="Classes\Tables.h" />
+    <ClInclude Include="Classes\Takeawayorders.h" />
     <ClInclude Include="Restaurant\Restaurant.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>

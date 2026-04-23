@@ -21,7 +21,7 @@ Restaurant::Restaurant()
     for (int i = 1; i <= 20; i++)
     {
         Scooters* S = new Scooters(i, 150, 23, 8);
-        Free_Scooters.enqueue(S, S->getPriority());
+        Free_Scooters.enqueue(S, S->getFreePriority());
     }
 
     // Initialize Tables
@@ -33,37 +33,43 @@ Restaurant::Restaurant()
     }
 }
 
-void Restaurant::GenerateRandomOrders()
+
+////////////////////////  ADD and Cancel Functions //////////////////////
+
+void Restaurant::AddPendingOrder(Orders* neworder)
 {
-    for (int i = 1; i <= 500; ++i)
+    ORD_TYPE orderType = neworder->getType();
+    if (dynamic_cast<Deliveryorders*>(neworder))
     {
-        int    orderType = rand() % 6;
-        int    id = i;
-        int    size = (rand() % 10) + 1;
-        double price = (rand() % 400) + 100.0;
-
-        Orders* newOrder = new Orders((ORD_TYPE)orderType, 1, id, size, price);
-
-        if (orderType == 0 || orderType == 1)
-            newOrder->setDineInInfo((rand() % 5) + 2, (rand() % 30) + 10, rand() % 2 == 0);
-        else if (orderType >= 3)
-            newOrder->setDeliveryDistance((rand() % 4000) + 500);
-
+        Deliveryorders* newOV = dynamic_cast<Deliveryorders*>(neworder);
         switch (orderType)
         {
-        case TYPE_ODG: PEND_ODG.enqueue(newOrder); break;
-        case TYPE_ODN: PEND_ODN.enqueue(newOrder); break;
-        case TYPE_OT:  PEND_OT.enqueue(newOrder);  break;
-        case TYPE_OVN: PEND_OVN.enqueue(newOrder); break;
-        case TYPE_OVC: PEND_OVC.enqueue(newOrder); break;
-        case TYPE_OVG: PEND_OVG.enqueue(newOrder, (int)(newOrder->getPriority() * 1000)); break;
+        case TYPE_OVN: PEND_OVN.enqueue(newOV); break;
+        case TYPE_OVC: PEND_OVC.enqueue(newOV); break;
+        case TYPE_OVG: PEND_OVG.enqueue(newOV, (newOV->getOVGpriority() * 1000)); break;
         }
+
+    }
+    else if (dynamic_cast<Dineorders*>(neworder))
+    {
+        Dineorders* newOD = dynamic_cast<Dineorders*>(neworder);
+        switch (orderType)
+        {
+        case TYPE_ODG: PEND_ODG.enqueue(newOD); break;
+        case TYPE_ODN: PEND_ODN.enqueue(newOD); break;
+        }
+
+    }
+    else if (dynamic_cast<Deliveryorders*>(neworder))
+    {
+        Takeawayorders* newOT = dynamic_cast<Takeawayorders*>(neworder);
+        PEND_OT.enqueue(newOT);
     }
 }
 
 void Restaurant::CancelOVC(int orderID)
 {
-    Orders* canceled = PEND_OVC.CancelOrder(orderID);
+    Deliveryorders* canceled = PEND_OVC.CancelOrder(orderID);
     if (canceled) { Canceled_Orders.push(canceled); return; }
 
     canceled = READY_OV.CancelOrder(orderID);
@@ -74,6 +80,7 @@ void Restaurant::CancelOVC(int orderID)
     canceled = Cooking_Orders.CancelOrder(orderID);
     if (canceled)
     {
+
         Chefs* chf = canceled->getAssignedChef();
         if (chf)
         {
@@ -83,11 +90,139 @@ void Restaurant::CancelOVC(int orderID)
         }
         Canceled_Orders.push(canceled);
     }
+    
 }
 
-void Restaurant::RunPhase1Simulator()
+////////////////////////////////////  Load input file to actions ///////////////////////////
+
+void Restaurant::loadInputFile(string filename)
 {
-    GenerateRandomOrders();
+    Actions* act = nullptr;
+    ifstream input(ui.getinputfilename());
+    if (!input.is_open()) {
+       cout << "Error file cannot open\n"; return;
+    }
+
+    //main data
+    int numCN, numCS, speedCN, speedCS;
+    int sCount, sSpeed, mainOrds, mainDur;
+    int totalTables;
+    int tablecount, capacity;  // (3 ,4 ) -> 3 tables with capacity 4;
+    int TH;
+    int M; // number of actions 
+    
+  // Actions parameters
+    char Acttype = 0;
+    string ordtype;
+    int TQ;
+    int Tcancel;
+    int ID;
+    int size;
+    int price;
+    int numberofseats;
+    int Duration;
+    int distance;
+    bool canshare;
+
+ //initalizing the resturant 
+    
+    input >> numCN >> numCS >> speedCN >> speedCS;
+    for (int i = 0; i < numCN; i++)
+    Free_CN.enqueue(new Chefs(i + 1, Chefs::TYPE_CN, speedCN));
+    for (int i = 0; i < numCS; i++)
+    Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
+
+    int sCount, sSpeed, mainOrds, mainDur;
+    input >> sCount >> sSpeed >> mainOrds >> mainDur;
+    for (int i = 0; i < sCount; i++) {
+        Scooters* s = new Scooters(i + 1, sSpeed, mainOrds, mainDur);
+        Free_Scooters.enqueue(s, s->getFreePriority());
+    }
+
+    int totalTables;
+    input >> totalTables;
+   
+    for (int i = 0; i < totalTables;) {
+    
+    input >> tablecount >> capacity;
+    for (int j = 0; j < tablecount; j++) {
+      Tables* newTable = new Tables(++i, capacity);
+      Free_Tables.enqueue(newTable, capacity);
+      }
+    }
+
+    input >> TH; // overwhight threshold -> to be implemented
+
+
+    input >> M; // number of action lines
+//Reading actions and load them to lists
+    for(int i =0 ; i<M; i++)
+    {
+        input >> Acttype;
+        if (Acttype == 'Q')
+        {
+            
+
+            input >> ordtype;
+
+            if (ordtype == "ODG")
+            {
+                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
+                act = new RequestAction(this, ID, TYPE_ODG, TQ, size, price,
+                    numberofseats, Duration, canshare);
+            }
+
+            else if (ordtype == "ODN")
+            {
+                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
+                act = new RequestAction(this, ID, TYPE_ODN, TQ, size, price,
+                    numberofseats, Duration, canshare);
+            }
+            else if (ordtype == "OT")
+            {
+                input >> TQ >> ID >> size >> price ;
+                act = new RequestAction(this, ID, TYPE_OT, TQ, size, price);
+            }
+            else if (ordtype == "OVN")
+            {
+                input >> TQ >> ID >> size >> price >> distance;
+                act = new RequestAction(this, ID, TYPE_OVN, TQ, size, price, distance);
+            }
+            else if (ordtype == "OVG")
+            {
+                input >> TQ >> ID >> size >> price >> distance;
+                act = new RequestAction(this, ID, TYPE_OVG, TQ, size, price, distance);
+            }
+            else if (ordtype == "OVN")
+            {
+                input >> TQ >> ID >> size >> price >> distance;
+                act = new RequestAction(this, ID, TYPE_OVC, TQ, size, price, distance);
+            }
+
+            if(act)
+            Request.enqueue(act);
+
+        }
+        else if (Acttype == 'X')
+        {
+            input >> Tcancel>>ID;
+            act = new CancelAction(this, Tcancel, ID);
+
+            if(act)
+            Cancel.enqueue(act);
+
+        }
+    }
+
+    input.close(); 
+
+}
+
+////////////////////////// Main simulation Function ////////////////////////////////////
+
+/*void Restaurant::RunSimulator()
+{
+  
     ui.PrintCurrentState(
         0,
         Request, Cancel,                    
@@ -331,94 +466,12 @@ void Restaurant::RunPhase1Simulator()
 
     }
 	ui.simulation_ended(timestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
-}
-//void Restaurant::loadInputFile(string filename) {
-//    ifstream inputFile(filename);
-//    if (!inputFile.is_open()) {
-//        cout << "Error: Could not open file " << filename << endl;
-//        return;
-//    }
-//
-//    int numCN, numCS, speedCN, speedCS;
-//    inputFile >> numCN >> numCS >> speedCN >> speedCS;
-//
-//    for (int i = 0; i < numCN; i++)
-//        Free_CN.enqueue(new Chefs(i + 1, Chefs::TYPE_CN, speedCN));
-//    for (int i = 0; i < numCS; i++)
-//        Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
-//
-//    int sCount, sSpeed, mainOrds, mainDur;
-//    inputFile >> sCount >> sSpeed >> mainOrds >> mainDur;
-//
-//    for (int i = 0; i < sCount; i++) {
-//        Scooters* s = new Scooters(i + 1, sSpeed, mainOrds, mainDur);
-//        Free_Scooters.enqueue(s, s->getPriority());
-//    }
-//
-//    int totalTables;
-//    inputFile >> totalTables;
-//
-//    for (int i = 0; i < totalTables;) {
-//        int count, cap;
-//        inputFile >> count >> cap;
-//        for (int j = 0; j < count; j++) {
-//            Tables* newTable = new Tables(++i, cap);
-//            Free_Tables.enqueue(newTable, cap);
-//        }
-//    }
-//
-//    int TH;
-//    inputFile >> TH; // overwait threshold
-//
-//    int M;
-//    inputFile >> M; // Number of events
-//
-//    for (int i = 0; i < M; i++) {
-//        char actType;
-//        inputFile >> actType;
-//
-//        if (actType == 'Q') {
-//            string typeStr;
-//            int TQ, ID, SIZE;
-//            double price;
-//
-//            inputFile >> typeStr >> TQ >> ID >> SIZE >> price;
-//
-//            ORD_TYPE type;
-//            if (typeStr == "ODG") type = TYPE_ODG;
-//            else if (typeStr == "ODN") type = TYPE_ODN;
-//            else if (typeStr == "OT") type = TYPE_OT;
-//            else if (typeStr == "OVC") type = TYPE_OVC;
-//            else if (typeStr == "OVG") type = TYPE_OVG;
-//            else type = TYPE_OVN;
-//
-//            Orders* ord = new Orders(type, TQ, ID, SIZE, price);
-//
-//            // Read specific data based on order type
-//            if (type == TYPE_ODG || type == TYPE_ODN) {
-//                int seats, duration;
-//                char share;
-//                inputFile >> seats >> duration >> share;
-//                ord->setDineInInfo(seats, duration, share == 'Y');
-//            }
-//            else if (type == TYPE_OVN || type == TYPE_OVC || type == TYPE_OVG) {
-//                int dist;
-//                inputFile >> dist;
-//                ord->setDeliveryDistance(dist);
-//            }
-//            // Takeaway (OT) has no extra data to read
-//
-//            Request.enqueue(ord);
-//        }
-//        else if (actType == 'X') {
-//            CancelEvent cEvent;
-//            inputFile >> cEvent.cancelTime >> cEvent.orderID;
-//            Cancel.enqueue(cEvent);
-//        }
-//    }
-//
-//    inputFile.close();
-//}
+} */
+
+
+
+
+
 void Restaurant::generateOutputFile(string filename) {
     ofstream outFile(filename);
     if (!outFile.is_open()) return;
@@ -432,7 +485,7 @@ void Restaurant::generateOutputFile(string filename) {
 
     while (Finished_Orders.pop(pOrd)) {
         int Tc = pOrd->getTR() - pOrd->getTA();
-        int Tw = pOrd->getWaitTime();
+        int Tw = pOrd->getTW();
         int Tserv = pOrd->getTF() - pOrd->getTS();
 
         total++;
@@ -457,6 +510,7 @@ void Restaurant::generateOutputFile(string filename) {
 
     outFile.close();
 }
+
 // Logic to be placed in the Restaurant class
 void Restaurant::AssignPendingToChef(int currentTimestep) {
     Orders* pOrd = nullptr;
@@ -533,126 +587,5 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
             Finished_Orders.push(pOrd);
         }
         else break;
-    }
-}
-void Restaurant::AssignTable(int currentTimestep) {
-    Orders* pOrd = nullptr;
-    LinkedQueue<Orders*> tempReadyOD; 
-
-    while (READY_OD.dequeue(pOrd)) {
-        Tables* assignedTable = nullptr;
-
-        if (pOrd->isSharable() && !Busy_Sharable.isEmpty()) {
-            PriorityQueue<Tables*> tempShare;
-            Tables* tbl = nullptr;
-            int pri;
-            while (Busy_Sharable.dequeue(tbl, pri)) {
-                if (!assignedTable && tbl->get_free_Seats() >= pOrd->getNoOfSeats()) {
-                    assignedTable = tbl;
-                }
-                else {
-                    tempShare.enqueue(tbl, pri);
-                }
-            }
-            while (tempShare.dequeue(tbl, pri)) Busy_Sharable.enqueue(tbl, pri);
-        }
-
-        if (!assignedTable && !Free_Tables.isEmpty()) {
-            PriorityQueue<Tables*> tempFree;
-            Tables* tbl = nullptr;
-            int pri;
-            while (Free_Tables.dequeue(tbl, pri)) {
-                if (!assignedTable && tbl->get_free_Seats() >= pOrd->getNoOfSeats()) {
-                    assignedTable = tbl;
-                }
-                else {
-                    tempFree.enqueue(tbl, pri);
-                }
-            }
-            while (tempFree.dequeue(tbl, pri)) Free_Tables.enqueue(tbl, pri);
-        }
-
-        if (assignedTable) {
-            pOrd->setAssignedTable(assignedTable);
-            pOrd->setTS(currentTimestep);
-
-            pOrd->setTF(currentTimestep + pOrd->getOrderDuration());
-            assignedTable->set_free_Seats(assignedTable->get_free_Seats() - pOrd->getNoOfSeats());
-            if (assignedTable->get_free_Seats() > 0 && pOrd->isSharable()) {
-                Busy_Sharable.enqueue(assignedTable, assignedTable->getPriority());
-            }
-            else {
-                Busy_NonSharable.enqueue(assignedTable, assignedTable->getPriority());
-            }
-            InServ_Orders.enqueue(pOrd, -pOrd->getTF());
-        }
-        else {
-            tempReadyOD.enqueue(pOrd);
-        }
-    }
-    while (tempReadyOD.dequeue(pOrd)) {
-        READY_OD.enqueue(pOrd);
-    }
-}
-void Restaurant::AssignScooter(int currentTimestep) {
-    Orders* pOrd = nullptr;
-    Scooters* pScooter = nullptr;
-    LinkedQueue<Orders*> tempReadyOV; 
-
-    while (READY_OV.dequeue(pOrd)) {
-        if (Free_Scooters.isEmpty()) {
-            tempReadyOV.enqueue(pOrd);
-            continue;
-        }
-
-        int pri;
-        Free_Scooters.dequeue(pScooter, pri);
-
-        pOrd->setAssignedScooter(pScooter);
-        pOrd->setTS(currentTimestep);
-
-        int tserv = (pOrd->getDistance() + pScooter->getSpeed() - 1) / pScooter->getSpeed();
-
-        pOrd->setTF(currentTimestep + tserv);
-        InServ_Orders.enqueue(pOrd, -pOrd->getTF());
-    }
-    while (tempReadyOV.dequeue(pOrd)) {
-        READY_OV.enqueue(pOrd);
-    }
-}
-void Restaurant::MoveToReady(int currentTimestep) {
-    Orders* pOrd = nullptr;
-
-    while (!Cooking_Orders.isEmpty()) {
-        int pri;
-        Cooking_Orders.peek(pOrd, pri);
-
-        if (pOrd == nullptr) break;
-        if (currentTimestep >= pOrd->getTR()) {
-            Cooking_Orders.dequeue(pOrd, pri);
-            Chefs* pChf = pOrd->getAssignedChef();
-            if (pChf != nullptr) {
-                if (pChf->getType() == Chefs::TYPE_CN) {
-                    Free_CN.enqueue(pChf);
-                }
-                else {
-                    Free_CS.enqueue(pChf);
-                    pOrd->setAssignedChef(nullptr);
-                }
-                ORD_TYPE type = pOrd->getType();
-                if (type == TYPE_ODG || type == TYPE_ODN) {
-                    READY_OD.enqueue(pOrd);
-                }
-                else if (type == TYPE_OT) {
-                    READY_OT.enqueue(pOrd);
-                }
-                else {
-                    READY_OV.enqueue(pOrd);
-                }
-            }
-            else {
-                break;
-            }
-        }
     }
 }

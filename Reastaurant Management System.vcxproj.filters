@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\orders.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
@@ -56,6 +53,18 @@
     </ClCompile>
     <ClCompile Include="Restaurant\Restaurant.cpp">
       <Filter>Restaurant</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Deliveryorders.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Dineorders.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Takeawayorders.cpp">
+      <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +124,15 @@
     </ClInclude>
     <ClInclude Include="ADTs\CancelQueue.h">
       <Filter>ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Deliveryorders.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Dineorders.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Takeawayorders.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
