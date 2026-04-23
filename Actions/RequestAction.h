@@ -1,5 +1,11 @@
 #pragma once
 #include "Actions.h"
+#include "../Classes/orders.h"
+#include "../Restaurant/Restaurant.h"
+#include "../Classes/Dineorders.h"
+#include "../Classes/Takeawayorders.h"
+#include "../Classes/Deliveryorders.h"
+
 class RequestAction : public Actions
 {
 private :
@@ -12,8 +18,12 @@ private :
 	int distance;
 	bool canshare;
 public:
-	RequestAction(Restaurant* r ,int id, ORD_TYPE type, int TQ, int size, int price,
-		int seats = -1, int duration = -1, int distance = -1, bool sharable = false) ;
+	RequestAction(Restaurant* r ,int id, ORD_TYPE type, int TQ, int size, int price) ;
+
+	RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int size, int price,
+		int seats , int duration , bool sharable);
+
+	RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int size, int price,int distance );
 
 	virtual void ACT();
 };

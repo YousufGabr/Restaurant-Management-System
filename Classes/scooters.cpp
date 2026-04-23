@@ -2,7 +2,7 @@
 
 Scooters::Scooters(int id, int speed, int Main_Dur, int threshold)
 	: ID(id), Speed(speed), Maintenance_Duration(Main_Dur), Main_Ords_Threshold(threshold),
-	orders_delivered_count(0), finish_time(0), currentOrder(nullptr), TotalDistance(0) // Edited: initialize members
+	orders_delivered_count(0), finish_time(0), TotalDistance(0) // Edited: initialize members
 {
 }
 
@@ -36,16 +36,7 @@ bool Scooters::is_available(int currentTimestep) const
 	return (currentTimestep >= finish_time); // Edited: actual availability check
 }
 
-void Scooters::assignOrder(Orders* OV, int currentTimestep)
-{
-	currentOrder = OV; // Edited: store pointer
-	int trip_time = OV->getDistance() / Speed; // Edited: calculate travel time
-	OV->setTS(currentTimestep); // Edited: record Service Start Time
-	OV->setTF(currentTimestep + trip_time); // Edited: record Finish Time (delivery)
-	finish_time = currentTimestep + (2 * trip_time); // Edited: scooter returns after round trip
-	orders_delivered_count++; // Edited: increment maintenance counter
-	setTotalDistance(OV->getDistance());
-}
+
 
 
 
@@ -58,9 +49,14 @@ ostream& operator<<(ostream& os, const Scooters* scooter)
 	return os;
 }
 
-int Scooters :: getPriority()
+int Scooters :: getFreePriority()
 {
 	return ( -1 * TotalDistance);
+}
+
+int Scooters::getBackPriority()
+{
+	return 0;
 }
 
 int Scooters::getTotalDistance()

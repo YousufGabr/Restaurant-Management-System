@@ -14,7 +14,6 @@ private:
 	int orders_delivered_count; // Added: counter for assigned Orders
 	int finish_time;
 	int TotalDistance;
-	Orders* currentOrder; // Edited: changed to pointer to follow "Don't Copy" rule
 
 public:
 	Scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
@@ -26,8 +25,8 @@ public:
 	int get_finish_time() const; // Added: to check when it returns
 
 	bool is_available(int currentTimestep) const; // Edited: logic to check finish_time
-	void assignOrder(Orders* OV, int currentTimestep); // Edited: changed to pointer and added logic
-	int getPriority();
+	int getFreePriority();
+	int getBackPriority();
 	int getTotalDistance();
 	void setTotalDistance(int);
 	int getSpeed() { return Speed; }

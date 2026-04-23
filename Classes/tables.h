@@ -11,7 +11,7 @@ private:
 	int Capacity;
 	int free_Seats;
 	int finish_time;
-	Orders* currentOrder; // Added: pointer to assigned order
+	Orders* currentOrder; 
 
 public:
 	Tables(int id, int capacity);
@@ -23,7 +23,7 @@ public:
 	void set_finish_time(int time);
 	int get_finish_time() const;
 
-	bool is_free() const; // Edited: check if finish_time passed
+	bool is_free() const; 
 	int getPriority();
 
 	friend ostream& operator<<(ostream& os, const Tables* table);

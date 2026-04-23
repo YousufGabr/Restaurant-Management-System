@@ -2,11 +2,11 @@
 #include "PriorityQueue.h"
 #include "LinkedQueue.h"
 #include "../Classes/Tables.h"
-#include "../Classes/Orders.h"
+#include "../Classes/Dineorders.h"
 class BestFitPriQueue : public PriorityQueue<Tables*>
 {
 public:
-	Tables* getBest(Orders* OD)
+	Tables* getBest(Dineorders* OD)
 	{
 		PriorityQueue<Tables*> Qtemp; // to store the priority value
 		Tables* temp = nullptr;

@@ -1,15 +1,14 @@
 #pragma once
 #include "../ADTs/LinkedQueue.h"
-#include "../Classes/Orders.h"
-class CancelQueue : public LinkedQueue<Orders*>
+#include "../Classes/Deliveryorders.h"
+class CancelQueue : public LinkedQueue<Deliveryorders*>
 {
 public :
-	Orders* CancelOrder(int ID)
+	Deliveryorders* CancelOrder(int ID)
 	{
-		LinkedQueue<Orders*> Qtemp; // Qtemp should be priotized to store the values of prioritires
-		Orders* temp = nullptr;
-		Orders* canceled = nullptr;
-		int pri = 0;
+		LinkedQueue<Deliveryorders*> Qtemp;
+		Deliveryorders* temp = nullptr;
+		Deliveryorders* canceled = nullptr;
 
 		while (dequeue(temp))
 		{
