@@ -60,11 +60,11 @@
     <ClCompile Include="Classes\Dineorders.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\Takeawayorders.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

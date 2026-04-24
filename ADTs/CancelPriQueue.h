@@ -3,16 +3,16 @@
 #include "LinkedQueue.h"
 #include "../Classes/Deliveryorders.h"
 
-class CancelPriQueue :public PriorityQueue<Deliveryorders *> //class specialization inherited from template class
+class CancelPriQueue :public PriorityQueue<Orders *> //class specialization inherited from template class
 {
 
 public:
 
-	Deliveryorders * CancelOrder(int ID)
+	Orders * CancelOrder(int ID)
 	{
-		PriorityQueue<Deliveryorders*> Qtemp;
-		Deliveryorders* temp = nullptr;
-		Deliveryorders* canceled = nullptr;
+		PriorityQueue<Orders*> Qtemp;
+		Orders* temp = nullptr;
+		Orders* canceled = nullptr;
 		int pri = 0;
 
 		while (dequeue(temp, pri))

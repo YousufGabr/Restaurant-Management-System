@@ -41,7 +41,7 @@ int Dineorders::getTi() const
 }
 
 int Dineorders::getTW() const {
-    return (TA - TQ) + (TS - TR);
+    return getTi() + getCookPeriod();
 }
 
 //priority , To be revised

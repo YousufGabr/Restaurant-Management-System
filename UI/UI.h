@@ -77,6 +77,7 @@ class UI
             BestFitPriQueue& Busy_Sharable,
             BestFitPriQueue& Busy_NonSharable
         );
+
 		string getinputfilename() const;
 		string getoutputfilename() const;
         int GetMode();

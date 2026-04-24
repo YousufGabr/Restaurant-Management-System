@@ -17,7 +17,11 @@ int Deliveryorders::getDistance() const { return distance; }
 
 int Deliveryorders::getTserv() const { return TF - TS; }
 int Deliveryorders::getTW() const {
-    return (TA - TQ) + (TS - TR);
+    return getTi() + getCookPeriod();
+}
+int Deliveryorders::getTi() const
+{
+    return  (TA - TQ) + (TS - TR);
 }
 
 int Deliveryorders::getOVGpriority() const
