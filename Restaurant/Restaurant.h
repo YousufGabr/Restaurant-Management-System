@@ -71,7 +71,7 @@ public:
 	void CancelOVC(int orderID);
 
 
-	//void RunSimulator();
+	void RunSimulator();
 	void loadInputFile(string filename);
 	void generateOutputFile(std::string filename);
 	void AssignPendingToChef(int currentTimestep);

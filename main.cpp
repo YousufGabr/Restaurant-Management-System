@@ -13,7 +13,7 @@ int main() {
     std::cout << "Starting Phase 1.2 Random Simulation..." << std::endl;
 
    
-    //myRestaurant.RunPhase1Simulator();
+    myRestaurant.RunSimulator();
 
     return 0;
 }
