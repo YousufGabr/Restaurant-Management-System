@@ -379,45 +379,52 @@ void Restaurant::RunSimulator()
     {
     // To Do 1: check Scooters (Back , Maint) ->free
 
-    // To Do 2: check Tables (Busy) -> available 
+// To Do 2: check Tables (Busy) -> available 
 
-    // To Do 3: check Finished orders 
+// To Do 3: check Finished orders 
 
-    // Assign pending to Chef 
-        AssignPendingToChef(currentTimestep);
-    
-    // To Do 4: Assign Ready orders 
-        //finalize takeaway orders 
-        finalizeTakeawayOrders(currentTimestep);
+// Assign pending to Chef 
+    AssignPendingToChef(currentTimestep);
 
-    // To Do 5: Collect stats 
+//To Do 4: move cooking to ready 
 
-    // print current stats
-        ui.PrintCurrentState(
-            currentTimestep,
-            Request, Cancel,
-            PEND_ODG, PEND_ODN, PEND_OT,
-            PEND_OVN, PEND_OVC, PEND_OVG,
-            Free_CS, Free_CN,
-            READY_OD, READY_OT, READY_OV,
-            Cooking_Orders, InServ_Orders,
-            Finished_Orders, Canceled_Orders,
-            Free_Scooters, Back_Scooters,
-            Maint_Scooters,
-            Free_Tables, Busy_Sharable,
-            Busy_NonSharable
-        );
+
+// To Do 6: Assign Ready orders 
+    //finalize takeaway orders 
+    finalizeTakeawayOrders(currentTimestep);
+
+    //Assign table 
+    //Assign Scooter
+
+// To Do 6: Collect stats 
+
+// print current stats
+    ui.PrintCurrentState(
+        currentTimestep,
+        Request, Cancel,
+        PEND_ODG, PEND_ODN, PEND_OT,
+        PEND_OVN, PEND_OVC, PEND_OVG,
+        Free_CS, Free_CN,
+        READY_OD, READY_OT, READY_OV,
+        Cooking_Orders, InServ_Orders,
+        Finished_Orders, Canceled_Orders,
+        Free_Scooters, Back_Scooters,
+        Maint_Scooters,
+        Free_Tables, Busy_Sharable,
+        Busy_NonSharable
+    );
   
-    // Check if simulation ends
-        int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
-        if (pending == 0 && active == 0) break;
-        currentTimestep++;
-    }
-    // print final status
-        ui.simulation_ended(currentTimestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
-    // Generate output file 
-        generateOutputFile(ui.getoutputfilename());
+// Check if simulation ends
+    int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount();
+    int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
+    if (pending == 0 && active == 0) break;
+    currentTimestep++;
+}
+// print final status
+    ui.simulation_ended(currentTimestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
+// Generate output file 
+    generateOutputFile(ui.getoutputfilename());
+
 
 }
 
