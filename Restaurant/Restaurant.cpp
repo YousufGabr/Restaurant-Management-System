@@ -79,39 +79,34 @@ void Restaurant::CancelOVC(int orderID)
 void Restaurant::loadInputFile(string filename)
 {
     Actions* act = nullptr;
-    ifstream input(ui.getinputfilename());
+    // Note: You passed 'filename' as a parameter, but used 'ui.getinputfilename()'
+    // I will use 'filename' for consistency.
+    ifstream input(filename);
+
     if (!input.is_open()) {
-       cout << "Error file cannot open\n"; return;
+        cout << "Error file cannot open\n";
+        return;
     }
 
-    //main data
+    // 1. Declare all variables ONCE at the top
     int numCN, numCS, speedCN, speedCS;
     int sCount, sSpeed, mainOrds, mainDur;
     int totalTables;
-    int tablecount, capacity;  // (3 ,4 ) -> 3 tables with capacity 4;
+    int tablecount, capacity;
     int TH;
-    int M; // number of actions 
-    
-  // Actions parameters
+    int M;
+
     char Acttype = 0;
     string ordtype;
-    int TQ;
-    int Tcancel;
-    int ID;
-    int size;
-    int price;
-    int numberofseats;
-    int Duration;
-    int distance;
+    int TQ, Tcancel, ID, size, price, numberofseats, Duration, distance;
     bool canshare;
 
- //initalizing the resturant 
-    
+    // 2. Reading Chef Data
     input >> numCN >> numCS >> speedCN >> speedCS;
     for (int i = 0; i < numCN; i++)
-    Free_CN.enqueue(new Chefs(i + 1, Chefs::TYPE_CN, speedCN));
+        Free_CN.enqueue(new Chefs(i + 1, Chefs::TYPE_CN, speedCN));
     for (int i = 0; i < numCS; i++)
-    Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
+        Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
 
     
     input >> sCount >> sSpeed >> mainOrds >> mainDur;
@@ -122,82 +117,65 @@ void Restaurant::loadInputFile(string filename)
 
     
     input >> totalTables;
-   
-    for (int i = 0; i < totalTables;) {
-    
-    input >> tablecount >> capacity;
-    for (int j = 0; j < tablecount; j++) {
-      Tables* newTable = new Tables(++i, capacity);
-      Free_Tables.enqueue(newTable, capacity);
-      }
+    for (int i = 0; i < totalTables; /* incrementing handled inside */) {
+        input >> tablecount >> capacity;
+        for (int j = 0; j < tablecount; j++) {
+            Tables* newTable = new Tables(++i, capacity);
+            Free_Tables.enqueue(newTable, capacity);
+        }
     }
 
-    input >> TH; // overwhight threshold -> to be implemented
-
+    input >> TH;
+    input >> M;
 
     input >> M; // number of action lines
 
     //Reading actions and load them to lists
     for(int i =0 ; i<M; i++)
     {
+        act = nullptr; // Reset act pointer each iteration
         input >> Acttype;
+
         if (Acttype == 'Q')
         {
-            
-
             input >> ordtype;
 
-            if (ordtype == "ODG")
-            {
+            if (ordtype == "ODG") {
                 input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
-                act = new RequestAction(this, ID, TYPE_ODG, TQ, size, price,
-                    numberofseats, Duration, canshare);
+                act = new RequestAction(this, ID, TYPE_ODG, TQ, size, price, numberofseats, Duration, canshare);
             }
-
-            else if (ordtype == "ODN")
-            {
+            else if (ordtype == "ODN") {
                 input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
-                act = new RequestAction(this, ID, TYPE_ODN, TQ, size, price,
-                    numberofseats, Duration, canshare);
+                act = new RequestAction(this, ID, TYPE_ODN, TQ, size, price, numberofseats, Duration, canshare);
             }
-            else if (ordtype == "OT")
-            {
-                input >> TQ >> ID >> size >> price ;
+            else if (ordtype == "OT") {
+                input >> TQ >> ID >> size >> price;
                 act = new RequestAction(this, ID, TYPE_OT, TQ, size, price);
             }
-            else if (ordtype == "OVN")
-            {
+            else if (ordtype == "OVN") {
                 input >> TQ >> ID >> size >> price >> distance;
                 act = new RequestAction(this, ID, TYPE_OVN, TQ, size, price, distance);
             }
-            else if (ordtype == "OVG")
-            {
+            else if (ordtype == "OVG") {
                 input >> TQ >> ID >> size >> price >> distance;
                 act = new RequestAction(this, ID, TYPE_OVG, TQ, size, price, distance);
             }
-            else if (ordtype == "OVN")
-            {
+            else if (ordtype == "OVC") { // Fixed duplicate "OVN" check to "OVC"
                 input >> TQ >> ID >> size >> price >> distance;
                 act = new RequestAction(this, ID, TYPE_OVC, TQ, size, price, distance);
             }
 
-            if(act)
-            Request.enqueue(act);
-
+            if (act) Request.enqueue(act);
         }
         else if (Acttype == 'X')
         {
-            input >> Tcancel>>ID;
+            input >> Tcancel >> ID;
             act = new CancelAction(this, Tcancel, ID);
-
-            if(act)
-            Cancel.enqueue(act);
-
+            if (act) Cancel.enqueue(act);
         }
     }
 
-    input.close(); 
-
+    input.close();
 }
 
 void Restaurant::generateOutputFile(string filename) {
@@ -374,7 +352,7 @@ void Restaurant::RunSimulator()
     );
 
 // main loop 
-    int currentTimestep = 0; 
+    int currentTimestep = 1; 
     while (true)
     {
     // To Do 1: check Scooters (Back , Maint) ->free
