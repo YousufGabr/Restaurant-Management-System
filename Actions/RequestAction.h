@@ -5,11 +5,11 @@
 #include "../Classes/Dineorders.h"
 #include "../Classes/Takeawayorders.h"
 #include "../Classes/Deliveryorders.h"
+#include <ostream>
 
 class RequestAction : public Actions
 {
-private :
-	int ID;   
+private :   
 	int size;
 	int price;
 	int numberofseats;
@@ -26,5 +26,7 @@ public:
 	RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int size, int price,int distance );
 
 	virtual void ACT();
+
+	friend std::ostream& operator<<(std::ostream& os, const RequestAction* Q);
 };
 

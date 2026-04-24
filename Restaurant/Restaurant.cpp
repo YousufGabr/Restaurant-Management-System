@@ -69,7 +69,7 @@ void Restaurant::AddPendingOrder(Orders* neworder)
 
 void Restaurant::CancelOVC(int orderID)
 {
-    Deliveryorders* canceled = PEND_OVC.CancelOrder(orderID);
+    Orders* canceled = PEND_OVC.CancelOrder(orderID);
     if (canceled) { Canceled_Orders.push(canceled); return; }
 
     canceled = READY_OV.CancelOrder(orderID);
@@ -132,14 +132,14 @@ void Restaurant::loadInputFile(string filename)
     for (int i = 0; i < numCS; i++)
     Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
 
-    int sCount, sSpeed, mainOrds, mainDur;
+    
     input >> sCount >> sSpeed >> mainOrds >> mainDur;
     for (int i = 0; i < sCount; i++) {
         Scooters* s = new Scooters(i + 1, sSpeed, mainOrds, mainDur);
         Free_Scooters.enqueue(s, s->getFreePriority());
     }
 
-    int totalTables;
+    
     input >> totalTables;
    
     for (int i = 0; i < totalTables;) {
@@ -155,7 +155,8 @@ void Restaurant::loadInputFile(string filename)
 
 
     input >> M; // number of action lines
-//Reading actions and load them to lists
+
+    //Reading actions and load them to lists
     for(int i =0 ; i<M; i++)
     {
         input >> Acttype;
@@ -474,7 +475,10 @@ void Restaurant::loadInputFile(string filename)
 
 void Restaurant::generateOutputFile(string filename) {
     ofstream outFile(filename);
-    if (!outFile.is_open()) return;
+    if (!outFile.is_open()) {
+        cout << "Error: Could not create output file!" << endl;
+        return;
+    }
 
     outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTc\tTw\tTserv\n";
 
@@ -483,10 +487,40 @@ void Restaurant::generateOutputFile(string filename) {
     int total = 0;
     double totalWait = 0, totalServ = 0;
 
+    // Popping from the Stack naturally prints in descending order of Finish Time (TF)
     while (Finished_Orders.pop(pOrd)) {
+        if (pOrd == nullptr) continue; // Safety check
+
         int Tc = pOrd->getTR() - pOrd->getTA();
-        int Tw = pOrd->getTW();
-        int Tserv = pOrd->getTF() - pOrd->getTS();
+        int Tw = 0;
+        int Tserv = 0;
+        int printed_TS = 0; // «·ﬁÌ„… «· Ì ” ıÿ»⁄ ›Ì «·„·›
+
+        // «· Õﬁﬁ „‰ ‰Ê⁄ «·ÿ·» ·„⁄«·Ã… €Ì«» «·‹ TS ›Ì «· Ìﬂ √Ê«Ì
+        if (pOrd->getType() == TYPE_OT) {
+            Tw = pOrd->getTA() - pOrd->getTQ();
+            Tserv = pOrd->getTF() - pOrd->getTR();
+            printed_TS = 0;
+        }
+        else {
+            // »„« √‰ «·ﬂ·«” «·√» Orders ·« Ì„ ·ﬂ TS° ‰ﬁÊ„ »⁄„· Cast ··ﬂ·«” «·›—⁄Ì
+            int TS_Value = 0;
+
+            if (pOrd->getType() == TYPE_ODG || pOrd->getType() == TYPE_ODN) {
+                Dineorders* pDine = dynamic_cast<Dineorders*>(pOrd);
+                if (pDine) TS_Value = pDine->getTS();
+            }
+            else {
+                // ··ÿ·»«  «·œ·Ì›—Ì OVG, OVC, OVN
+                Deliveryorders* pDelv = dynamic_cast<Deliveryorders*>(pOrd);
+                if (pDelv) TS_Value = pDelv->getTS();
+            }
+
+            // «·¬‰ ‰” Œœ„ TS_Value «·„Õ”Ê»… ›Ì «·„⁄«œ·« 
+            Tw = (pOrd->getTA() - pOrd->getTQ()) + (TS_Value - pOrd->getTR());
+            Tserv = pOrd->getTF() - TS_Value;
+            printed_TS = TS_Value;
+        }
 
         total++;
         totalWait += Tw;
@@ -497,23 +531,24 @@ void Restaurant::generateOutputFile(string filename) {
             << pOrd->getTQ() << "\t"
             << pOrd->getTA() << "\t"
             << pOrd->getTR() << "\t"
-            << pOrd->getTS() << "\t"
+            << printed_TS << "\t"
             << Tc << "\t"
             << Tw << "\t"
             << Tserv << "\n";
     }
 
-    outFile << "\n--- Statistics ---\n";
+    outFile << "\n------------------------------------------------\n";
+    outFile << "------------------ Statistics ------------------\n";
+    outFile << "------------------------------------------------\n";
     outFile << "Total Orders: " << total << "\n";
-    outFile << "Avg Wait: " << (total ? totalWait / total : 0) << "\n";
-    outFile << "Avg Service: " << (total ? totalServ / total : 0) << "\n";
+    outFile << "Avg Wait Time: " << (total ? totalWait / total : 0.0) << "\n";
+    outFile << "Avg Service Time: " << (total ? totalServ / total : 0.0) << "\n";
 
     outFile.close();
 }
 
 // Logic to be placed in the Restaurant class
 void Restaurant::AssignPendingToChef(int currentTimestep) {
-    Orders* pOrd = nullptr;
     Chefs* pChf = nullptr;
 
     auto assignLogic = [&](Orders* ord, Chefs* chf) {
@@ -522,70 +557,67 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         int cookPeriod = (ord->getSize() + chf->getSpeed() - 1) / chf->getSpeed();
         int readyTime = currentTimestep + cookPeriod;
         ord->setTR(readyTime);
-        chf->setFinishTime(readyTime);
-        // Using -readyTime to prioritize earlier finish times in a max-heap Priority Queue
+        chf->setFinishTime(readyTime);  
         Cooking_Orders.enqueue(ord, -readyTime);
         };
 
-    // 1st: OD Orders
-    // ODG -> CS only
+    Dineorders* pDine = nullptr;
     while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
-        PEND_ODG.dequeue(pOrd);
+        PEND_ODG.dequeue(pDine);
         Free_CS.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pDine, pChf);
     }
-    // ODN -> CN, then CS
     while (!PEND_ODN.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
-        PEND_ODN.dequeue(pOrd);
+        PEND_ODN.dequeue(pDine);
         if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
         else Free_CS.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pDine, pChf);
     }
 
-    // 2nd: OT Orders -> CN only
+    Takeawayorders* pTake = nullptr;
     while (!PEND_OT.isEmpty() && !Free_CN.isEmpty()) {
-        PEND_OT.dequeue(pOrd);
+        PEND_OT.dequeue(pTake);
         Free_CN.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pTake, pChf);
     }
 
-    // 3rd: OV Orders
-    // OVG -> CS only (Assumes PEND_OVG is a Priority Queue)
+    Deliveryorders* pDelv = nullptr;
     int pri;
     while (!PEND_OVG.isEmpty() && !Free_CS.isEmpty()) {
-        PEND_OVG.dequeue(pOrd, pri);
+        PEND_OVG.dequeue(pDelv, pri);
         Free_CS.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pDelv, pChf);
     }
-    // OVC -> CN, then CS
     while (!PEND_OVC.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
-        PEND_OVC.dequeue(pOrd);
+        PEND_OVC.dequeue(pDelv);
         if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
         else Free_CS.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pDelv, pChf);
     }
-    // OVN -> CN only
     while (!PEND_OVN.isEmpty() && !Free_CN.isEmpty()) {
-        PEND_OVN.dequeue(pOrd);
+        PEND_OVN.dequeue(pDelv);
         Free_CN.dequeue(pChf);
-        assignLogic(pOrd, pChf);
+        assignLogic(pDelv, pChf);
     }
 }
 void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
-    Orders* pOrd = nullptr;
+    Takeawayorders* pTake = nullptr;
 
-    while (!READY_OT.isEmpty()) {
-        READY_OT.peek(pOrd);
-        if (!pOrd) break;
+    while (READY_OT.peek(pTake)) {
+        if (pTake == nullptr) break;
 
-        if (currentTimestep >= pOrd->getTR() + 1) {
-            READY_OT.dequeue(pOrd);
+        // Takeaway orders wait exactly 1 timestep after TR to be packed
+        if (currentTimestep >= pTake->getTR() + 1) {
+            READY_OT.dequeue(pTake);
 
-            pOrd->setTS(pOrd->getTR());
-            pOrd->setTF(currentTimestep);
+            // ·« ÌÊÃœ TS Â‰«° ‰‰ ﬁ· ··‹ TF (Êﬁ  «·‰Â«Ì…) „»«‘—…
+            pTake->setTF(currentTimestep);
 
-            Finished_Orders.push(pOrd);
+            // Finished_Orders (Stack<Orders*>) accepts Takeawayorders* gracefully
+            Finished_Orders.push(pTake);
         }
-        else break;
+        else {
+            break;
+        }
     }
 }

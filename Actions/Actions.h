@@ -11,9 +11,11 @@ class Actions
 protected:
 	int currentTimestep;
 	Restaurant* RestPtr;
+	int ID;
 public :
-	Actions() : RestPtr(nullptr) , currentTimestep(0) {}
+	Actions() : RestPtr(nullptr) , currentTimestep(0), ID(0) {}
 	virtual void  ACT() = 0;
 	int getTimestep() const { return currentTimestep;}
+
 };
 
