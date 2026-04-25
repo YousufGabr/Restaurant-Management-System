@@ -355,7 +355,9 @@ void Restaurant::RunSimulator()
     int currentTimestep = 1; 
     while (true)
     {
-    // To Do 1: check Scooters (Back , Maint) ->free
+ // To DO: Loop on action lists
+        
+// To Do 1: check Scooters (Back , Maint) ->free
 
 // To Do 2: check Tables (Busy) -> available 
 
