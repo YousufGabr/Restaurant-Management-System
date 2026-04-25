@@ -12,8 +12,11 @@ private:
 	int Maintenance_Duration;
 	int Main_Ords_Threshold; // Added: to store limit before maintenance
 	int orders_delivered_count; // Added: counter for assigned Orders
-	int finish_time;
+	int Tripdistance;
 	int TotalDistance;
+	int Tstart;
+	int Tfinish;
+	
 
 public:
 	Scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
@@ -21,15 +24,26 @@ public:
 	int get_Maintenance_Duration() const;
 	int getID() const;
 
-	void set_finish_time(int time);
-	int get_finish_time() const; // Added: to check when it returns
+	// set and get time steps for scooter per each trip
+	int get_StartTime() const;
+	int getfinish_time() const;
+	void setfinish_time(int time);
+	void setstart_time(int time);
 
-	bool is_available(int currentTimestep) const; // Edited: logic to check finish_time
+    //set and get each trip distance 
+	void setTripdistance(int distance);
+	int  getTripdistance() const;
+
+	//priorities
 	int getFreePriority();
 	int getBackPriority();
+
 	int getTotalDistance();
-	void setTotalDistance(int);
+	void updateCount();
+	void updateTotalDistance(int);
 	int getSpeed() { return Speed; }
+
+	
 
 
 	friend ostream& operator<<(ostream& os, const Scooters* scooter);

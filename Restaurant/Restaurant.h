@@ -72,6 +72,8 @@ public:
 
 
 	void RunSimulator();
+	void excuteActions(int currentTimestep);
+	void checkScootersAvailablity(int currentTimestep);
 	void loadInputFile(string filename);
 	void generateOutputFile(std::string filename);
 	void AssignPendingToChef(int currentTimestep);
