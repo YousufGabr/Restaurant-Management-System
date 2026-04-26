@@ -6,7 +6,7 @@ Takeawayorders::Takeawayorders(int tq, int id, int sz, double pr) : Orders(TYPE_
 
 // there is a timestep for packing so we add 1 instead of TS
 int Takeawayorders::getTW() const {
-    return getTi() + getCookPeriod();
+    return getTi() + getTC();
 }
 
 int Takeawayorders::getTi() const {

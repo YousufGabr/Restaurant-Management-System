@@ -41,7 +41,7 @@ void UI::PrintCurrentState(
 )
 {
     cout << "\nCurrent Timestep: " << timestep << endl << endl;
-    cout << "=============== Actions List ================" << endl;
+    cout << "=============== Actions List [Order Type/X, TQ/Tcancel, order ID] ================" << endl;
     cout << Request.getcount() << " Request actions: "; print_queue(Request); cout << endl << endl;
     cout << Cancel.getcount() << " Cancel actions: "; print_queue(Cancel); cout << endl << endl;
 

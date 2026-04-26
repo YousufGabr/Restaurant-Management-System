@@ -84,9 +84,10 @@ void Restaurant::loadInputFile()
     string filename = ui.getinputfilename();
     ifstream input(filename);
 
-    if (!input.is_open()) {
+    while (!input.is_open()) {
         cout << "Error file cannot open\n";
-        return;
+        filename = ui.getinputfilename();
+        input.open(filename);
     }
 
     // 1. Declare all variables ONCE at the top
@@ -122,7 +123,7 @@ void Restaurant::loadInputFile()
         input >> tablecount >> capacity;
         for (int j = 0; j < tablecount; j++) {
             Tables* newTable = new Tables(++i, capacity);
-            Free_Tables.enqueue(newTable, capacity);
+            Free_Tables.enqueue(newTable, newTable->getPriority());
         }
     }
 
@@ -260,7 +261,7 @@ void Restaurant::generateOutputFile() {
 ////////////////////////// Logic functions /////////////////////////////////////////////
 
 
-void Restaurant::excuteActions(int currenttimestep)
+void Restaurant::executeActions(int currenttimestep)
 {
     Actions* a = nullptr;
     Request.peek(a);
@@ -292,9 +293,9 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
     Scooters* s = nullptr;
     Maint_Scooters.peek(s);
     if (s)
-    { 
-        //triptime is the total time from leaving to returning back 
-        if (currentTimestep >= 2* (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
+    {
+        //triptime is the total time from leaving to returning back
+        if (currentTimestep >= 2 * (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
         {
             Maint_Scooters.dequeue(s);
             Free_Scooters.enqueue(s,s->getFreePriority());
@@ -314,6 +315,67 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
     }
 }
 
+
+void Restaurant::checkFinishedOrders(int currentTimestep)
+{
+    Orders* ord = nullptr;
+    int pri = 0;
+    while (InServ_Orders.peek(ord, pri))
+    {
+        if (ord == nullptr) break;
+        if (dynamic_cast<Dineorders*>(ord))
+        {
+            Dineorders* dine = dynamic_cast<Dineorders*>(ord);
+            if ((currentTimestep - dine->getTS()) >= dine->getorderDuration())
+            {
+                InServ_Orders.dequeue(ord, pri);
+				Finished_Orders.push(ord);
+                dine->setTF(currentTimestep);
+                Tables* tbl = nullptr;
+                PriorityQueue<Tables*> tempnoshare, tempshare; int pri = 0;
+                bool found = false;
+                while (Busy_NonSharable.dequeue(tbl, pri)) {
+                    if (!found && tbl == dine->getAssignedTable())
+                    {
+                        tbl->set_free_Seats(tbl->get_free_Seats() + dine->getNoOfSeats());
+                        if (tbl->is_free())
+                        {
+                            Free_Tables.enqueue(tbl, tbl->getPriority());
+                        }
+                        else if (tbl->get_free_Seats() > 0) Busy_Sharable.enqueue(tbl, tbl->getPriority());
+                        found = true;
+                    }
+                    else tempnoshare.enqueue(tbl, tbl->getPriority());
+                }
+                while (tempnoshare.dequeue(tbl, pri)) Busy_NonSharable.enqueue(tbl, pri);
+
+                while (Busy_Sharable.dequeue(tbl, pri)) {
+                    if (!found && tbl == dine->getAssignedTable()) {
+                        tbl->set_free_Seats(tbl->get_free_Seats() + dine->getNoOfSeats()); // Update free seats for sharable tables
+                        if (tbl->is_free())
+                        {
+                            Free_Tables.enqueue(tbl, tbl->getPriority());
+                        }
+                        else tempshare.enqueue(tbl, tbl->getPriority());
+                        found = true;
+                    }
+                    else tempshare.enqueue(tbl, pri);
+                }
+                while (tempshare.dequeue(tbl, pri)) Busy_Sharable.enqueue(tbl, pri);
+                dine->setAssignedTable(nullptr);
+            }
+            else return;
+        }
+        /*else if (dynamic_cast<Dineorders*>(ord))
+        {
+            Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
+            if ((currentTimestep - delv->getTS()) >= delv->getDeliveryDuration())
+            {
+                InServ_Orders.dequeue(ord, pri);
+            }
+        }*/
+    }
+}
 
 
 
@@ -369,6 +431,39 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         assignLogic(pDelv, pChf);
     }
 }
+void Restaurant::MoveToReady(int currentTimestep) {
+    Orders* pOrd = nullptr;
+    Chefs* pChf = nullptr;
+    int pri = 0;
+    while (Cooking_Orders.peek(pOrd, pri)) {
+        if (pOrd == nullptr) break;
+        if (currentTimestep - pOrd->getTA() >= pOrd->getCookingOrderDuration()) {
+            Cooking_Orders.dequeue(pOrd, pri);
+			pOrd->setTR(currentTimestep); // Update TR to the actual time it finished cooking
+            pChf = pOrd->getAssignedChef();
+            if (pChf) {
+                if (pChf->getType() == Chefs::TYPE_CS) Free_CS.enqueue(pChf);
+                else Free_CN.enqueue(pChf);
+                pOrd->setAssignedChef(nullptr);
+            }
+            switch (pOrd->getType()) {
+                case TYPE_ODG:
+                case TYPE_ODN:
+                    READY_OD.enqueue(pOrd);
+                    break;
+                case TYPE_OT:
+                    READY_OT.enqueue(pOrd);
+                    break;
+                case TYPE_OVN:
+                case TYPE_OVC:
+                case TYPE_OVG:
+                    READY_OV.enqueue(pOrd);
+                    break;
+            }
+        }
+        else break;
+    }
+}
 void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
     Orders* pTake = nullptr;
 
@@ -379,16 +474,54 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
         if (currentTimestep >= pTake->getTR() + 1) {
             READY_OT.dequeue(pTake);
 
-            
+
             pTake->setTF(currentTimestep);
 
             // Finished_Orders (Stack<Orders*>) accepts Takeawayorders* gracefully
             Finished_Orders.push(pTake);
         }
-        else {
-            break;
-        }
+        else break;
     }
+}
+void Restaurant::MovetoInservice(int currentTimestep) {
+    Orders* ord = nullptr;
+    int pri = 0;
+     while (!READY_OD.isEmpty()) {
+         Orders* ord = nullptr;
+         READY_OD.peek(ord);
+         Dineorders* dine = dynamic_cast<Dineorders*>(ord);
+         Tables* tbl = nullptr;
+
+         // 1. Opt for table sharing first
+         if (dine->isSharable() && !Busy_Sharable.isEmpty()) {
+             tbl = Busy_Sharable.getBest(dine);
+         }
+
+         // 2. If no suitable busy table was found, check Free_Tables
+         if (tbl == nullptr && !Free_Tables.isEmpty()) {
+             tbl = Free_Tables.getBest(dine);
+         }
+
+         // 3. If a table was successfully found in EITHER list
+         if (tbl != nullptr) {
+             READY_OD.dequeue(ord); // Safe to remove from ready list now
+             dine->setAssignedTable(tbl);
+
+             if (dine->isSharable()) {
+                 tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
+                 if (tbl->get_free_Seats() == 0) Busy_NonSharable.enqueue(tbl, tbl->getPriority());
+                 else Busy_Sharable.enqueue(tbl, tbl->getPriority());
+             }
+             else {
+                 tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
+                 Busy_NonSharable.enqueue(tbl, tbl->getPriority());
+             }
+
+             dine->setTS(currentTimestep);
+             InServ_Orders.enqueue(ord, dine->getServicePriority());
+         }
+         else break;
+     }
 }
 
 ////////////////////////// Main simulation Function ////////////////////////////////////
@@ -418,63 +551,54 @@ void Restaurant::RunSimulator()
     int currentTimestep = 1; 
     while (true)
     {
-//To Do: loop on action lists 
-
-       excuteActions(currentTimestep);
+        //loop on action lists 
+        executeActions(currentTimestep);
     
-// To Do 1: check Scooters (Back , Maint) ->free
-       checkScootersAvailablity(currentTimestep);
+        //check Scooters (Back , Maint) ->free
+        ///TODO: Check finished delivery orders
+        checkScootersAvailablity(currentTimestep);
 
-/// To Do 2: check Tables (Busy) -> available 
+        /// To Do 2: Check finished orders 
+		checkFinishedOrders(currentTimestep); //only done for dine orders (delivery left)
 
-/// To Do 3: check Finished orders 
+        /// Assign pending to Chef 
+        AssignPendingToChef(currentTimestep);
 
-/// Assign pending to Chef 
-    AssignPendingToChef(currentTimestep);
+        /// Move cooking to ready
+        MoveToReady(currentTimestep);
+ 
+        ///finalize takeaway orders 
+        finalizeTakeawayOrders(currentTimestep);
 
-///To Do 4: move cooking to ready 
+        /// To Do 6: Assign Ready orders
+		MovetoInservice(currentTimestep); //only done for dine orders (delivery left)
 
+        /// To Do 6: Collect stats (technically done in generateOutputFile)
 
-/// To Do 6: Assign Ready orders 
-    //finalize takeaway orders 
-    finalizeTakeawayOrders(currentTimestep);
-
-    //Assign table 
-    //Assign Scooter
-
-/// To Do 6: Collect stats 
-
-/// print current stats
-    ui.PrintCurrentState(
-        currentTimestep,
-        Request, Cancel,
-        PEND_ODG, PEND_ODN, PEND_OT,
-        PEND_OVN, PEND_OVC, PEND_OVG,
-        Free_CS, Free_CN,
-        READY_OD, READY_OT, READY_OV,
-        Cooking_Orders, InServ_Orders,
-        Finished_Orders, Canceled_Orders,
-        Free_Scooters, Back_Scooters,
-        Maint_Scooters,
-        Free_Tables, Busy_Sharable,
-        Busy_NonSharable
-    );
+        /// print current stats
+            ui.PrintCurrentState(
+                currentTimestep,
+                Request, Cancel,
+                PEND_ODG, PEND_ODN, PEND_OT,
+                PEND_OVN, PEND_OVC, PEND_OVG,
+                Free_CS, Free_CN,
+                READY_OD, READY_OT, READY_OV,
+                Cooking_Orders, InServ_Orders,
+                Finished_Orders, Canceled_Orders,
+                Free_Scooters, Back_Scooters,
+                Maint_Scooters,
+                Free_Tables, Busy_Sharable,
+                Busy_NonSharable
+            );
   
-/// Check if simulation ends
-    int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount();
-    int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
-    if (pending == 0 && active == 0) break;
-    currentTimestep++;
-}
+        /// Check if simulation ends
+        int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
+        if (pending == 0 && active == 0) break;
+        currentTimestep++;
+    }
     /// Generate output file 
     generateOutputFile();
     /// print final status
     ui.simulation_ended(currentTimestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
-
-
-
 }
-
-
-
-

@@ -24,9 +24,8 @@ public :
 
 
     void setAssignedTable(Tables* tbl);
-    void setNoOfSeats(int seats);
     void setTS(int t);
-    void setorderDuration(int t);
+    int getorderDuration() const;
 
     int getTserv() const; // = TF-TS
     virtual int getTi() const;

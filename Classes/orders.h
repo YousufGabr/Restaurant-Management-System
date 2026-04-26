@@ -32,7 +32,6 @@ public:
     int getTQ() const;
     int getSize() const;
     double getPrice() const;
-    int getCookPeriod() const;
     
 // Instant time steps 
     int getTA() const { return TA; }
@@ -54,6 +53,7 @@ public:
 
     // general for all orders 
     int getCookingpriority() const;
+	int getCookingOrderDuration() const;
 
     ORD_TYPE getType() const;
 

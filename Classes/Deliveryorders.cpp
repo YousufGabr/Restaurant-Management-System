@@ -17,7 +17,7 @@ int Deliveryorders::getDistance() const { return distance; }
 
 int Deliveryorders::getTserv() const { return TF - TS; }
 int Deliveryorders::getTW() const {
-    return getTi() + getCookPeriod();
+    return getTi() + getTC();
 }
 int Deliveryorders::getTi() const
 {
@@ -35,6 +35,10 @@ int Deliveryorders::getServicePriority() const
     return -1 * (distance / (AssignedScooter->getSpeed()));
 }
 
+int Deliveryorders::getDeliveryDuration() const
+{
+    return (distance / (AssignedScooter->getSpeed()));
+}
 
 void Deliveryorders::print(ostream& os) const
 {

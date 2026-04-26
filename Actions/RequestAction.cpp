@@ -63,7 +63,16 @@ void RequestAction::ACT()
 
 void RequestAction::print(ostream& os) const
 {
-    os << "[" << type << "," << currentTimestep << "," << ID << "] ";
+	string typeStr;
+	switch (type) {
+		case TYPE_ODG: typeStr = "ODG"; break;
+		case TYPE_ODN: typeStr = "ODN"; break;
+		case TYPE_OT:  typeStr = "OT";  break;
+		case TYPE_OVC:  typeStr = "OVC";  break;
+		case TYPE_OVG:  typeStr = "OVG";  break;
+		case TYPE_OVN:  typeStr = "OVN";  break;
+	}
+    os << "[" << typeStr << "," << currentTimestep << "," << ID << "] ";
 }
 
 

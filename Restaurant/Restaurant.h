@@ -72,11 +72,14 @@ public:
 
 
 	void RunSimulator();
-	void excuteActions(int currentTimestep);
+	void executeActions(int currentTimestep);
 	void checkScootersAvailablity(int currentTimestep);
+	void checkFinishedOrders(int currentTimestep); //check if any order is finished at the current timestep and move it to finished orders stack
 	void loadInputFile();
 	void generateOutputFile();
 	void AssignPendingToChef(int currentTimestep);
+	void MoveToReady(int currentTimestep);
+	void MovetoInservice(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
 	//void AssignTable(int currentTimestep);
 	//void AssignScooter(int currentTimestep);

@@ -28,6 +28,7 @@ public:
 
 	int getOVGpriority() const;
 	int getServicePriority() const;
+	int getDeliveryDuration() const;
 
 
 	virtual void print(ostream& os) const override;

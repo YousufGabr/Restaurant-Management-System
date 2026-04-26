@@ -18,16 +18,10 @@ void Orders::setTA(int t) { TA = t; }
 void Orders::setTR(int t) { TR = t; }
 void Orders::setTF(int t) { TF = t; }
 
-
+//time periods
 int Orders::getTC() const { return TR - TA; }
 int Orders::getID() const { return ID; }
 int Orders::getTQ() const { return TQ; }
-
-//time periods
-int Orders::getCookPeriod() const
-{
-	return TR - TA;
-}
 
 ORD_TYPE Orders::getType() const
 {
@@ -38,6 +32,10 @@ ORD_TYPE Orders::getType() const
 int Orders::getCookingpriority() const
 {
 	return (size / (getAssignedChef()->getSpeed())) * -1;
+}
+int Orders::getCookingOrderDuration() const
+{
+    return (size / (getAssignedChef()->getSpeed()));
 }
 
 ostream& operator<<(ostream& os, const Orders* ord) {

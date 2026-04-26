@@ -7,14 +7,9 @@ Dineorders::Dineorders(ORD_TYPE type ,int tq, int id, int sz, double pr, int sea
 {
 }
 
-void Dineorders::setNoOfSeats(int seats)
+int Dineorders::getorderDuration() const
 {
-    this->noOfSeats = seats;
-}
-
-void Dineorders::setorderDuration(int t)
-{
-    this->orderDuration = t;
+    return orderDuration;
 }
 
 void Dineorders::setTS(int t)
@@ -41,7 +36,7 @@ int Dineorders::getTi() const
 }
 
 int Dineorders::getTW() const {
-    return getTi() + getCookPeriod();
+    return getTi() + getTC();
 }
 
 //priority , To be revised
