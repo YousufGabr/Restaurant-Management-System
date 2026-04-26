@@ -332,7 +332,7 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
 				Finished_Orders.push(ord);
                 dine->setTF(currentTimestep);
                 Tables* tbl = nullptr;
-                PriorityQueue<Tables*> tempnoshare, tempshare; int pri = 0;
+                PriorityQueue<Tables*> tempnoshare, tempshare;
                 bool found = false;
                 while (Busy_NonSharable.dequeue(tbl, pri)) {
                     if (!found && tbl == dine->getAssignedTable())
@@ -364,8 +364,9 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
                 while (tempshare.dequeue(tbl, pri)) Busy_Sharable.enqueue(tbl, pri);
                 dine->setAssignedTable(nullptr);
             }
-            else return;
+            else break;
         }
+        else break;
         /*else if (dynamic_cast<Dineorders*>(ord))
         {
             Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
@@ -484,8 +485,7 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
     }
 }
 void Restaurant::MovetoInservice(int currentTimestep) {
-    Orders* ord = nullptr;
-    int pri = 0;
+    
      while (!READY_OD.isEmpty()) {
          Orders* ord = nullptr;
          READY_OD.peek(ord);
@@ -523,6 +523,7 @@ void Restaurant::MovetoInservice(int currentTimestep) {
          else break;
      }
      while (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
+         Orders* ord = nullptr;
          int pri = 0;
          READY_OV.dequeue(ord);
          Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
