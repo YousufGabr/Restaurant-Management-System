@@ -259,6 +259,64 @@ void Restaurant::generateOutputFile() {
 
 ////////////////////////// Logic functions /////////////////////////////////////////////
 
+
+void Restaurant::excuteActions(int currenttimestep)
+{
+    Actions* a = nullptr;
+    Request.peek(a);
+    if (a)
+    {
+        if (a->getTimestep() <= currenttimestep)
+        {
+            Request.dequeue(a);
+            a->ACT();
+        }
+
+    }
+    Cancel.peek(a);
+    if (a)
+    {
+        if (a->getTimestep() <= currenttimestep)
+        {
+            Cancel.dequeue(a);
+            a->ACT();
+        }
+
+    }
+
+    
+}
+
+void Restaurant::checkScootersAvailablity(int currentTimestep)
+{
+    Scooters* s = nullptr;
+    Maint_Scooters.peek(s);
+    if (s)
+    { 
+        //triptime is the total time from leaving to returning back 
+        if (currentTimestep >= 2* (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
+        {
+            Maint_Scooters.dequeue(s);
+            Free_Scooters.enqueue(s,s->getFreePriority());
+        }
+    }
+
+    int pri = 0; //wil carry the back priority
+    Back_Scooters.peek(s , pri);
+    if (s)
+    {
+        //trip time / 2 is the actual time that scooter takes to back again
+        if (currentTimestep >= (2 * (s->getfinish_time() - s->get_StartTime())))
+        {
+            Maint_Scooters.dequeue(s);
+            Free_Scooters.enqueue(s, s->getFreePriority());
+        }
+    }
+}
+
+
+
+
 void Restaurant::AssignPendingToChef(int currentTimestep) {
     Chefs* pChf = nullptr;
 
@@ -360,14 +418,12 @@ void Restaurant::RunSimulator()
     int currentTimestep = 1; 
     while (true)
     {
-		Actions* act = nullptr;
-        // To Do 0: Execute actions 
-        while (!Request.isEmpty()) {
-            Request.dequeue(act);
-            act->ACT();
-            delete act; // Clean up after execution
-        }
-    /// To Do 1: check Scooters (Back , Maint) ->free
+//To Do: loop on action lists 
+
+       excuteActions(currentTimestep);
+    
+// To Do 1: check Scooters (Back , Maint) ->free
+       checkScootersAvailablity(currentTimestep);
 
 /// To Do 2: check Tables (Busy) -> available 
 
@@ -418,5 +474,7 @@ void Restaurant::RunSimulator()
 
 
 }
+
+
 
 

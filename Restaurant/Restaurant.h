@@ -72,8 +72,10 @@ public:
 
 
 	void RunSimulator();
-	void loadInputFile();
-	void generateOutputFile();
+	void excuteActions(int currentTimestep);
+	void checkScootersAvailablity(int currentTimestep);
+	void loadInputFile(string filename);
+	void generateOutputFile(std::string filename);
 	void AssignPendingToChef(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
 	//void AssignTable(int currentTimestep);
