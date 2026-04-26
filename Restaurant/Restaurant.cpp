@@ -291,28 +291,47 @@ void Restaurant::executeActions(int currenttimestep)
 void Restaurant::checkScootersAvailablity(int currentTimestep)
 {
     Scooters* s = nullptr;
-    Maint_Scooters.peek(s);
-    if (s)
+    while(!Maint_Scooters.isEmpty())
     {
-        //triptime is the total time from leaving to returning back
-        if (currentTimestep >= 2 * (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
+        Maint_Scooters.peek(s);
+        if (s)
         {
-            Maint_Scooters.dequeue(s);
-            Free_Scooters.enqueue(s,s->getFreePriority());
+            if (currentTimestep >= 2* (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
+            {
+                Maint_Scooters.dequeue(s);
+                Free_Scooters.enqueue(s, s->getFreePriority());
+            }
+            else break;
         }
+        else break;
     }
+    
 
-    int pri = 0; //wil carry the back priority
-    Back_Scooters.peek(s , pri);
-    if (s)
+    int pri = 0;
+    while (!Back_Scooters.isEmpty())
     {
-        //trip time / 2 is the actual time that scooter takes to back again
-        if (currentTimestep >= (2 * (s->getfinish_time() - s->get_StartTime())))
+        Back_Scooters.peek(s, pri);
+        if (s)
         {
-            Maint_Scooters.dequeue(s);
-            Free_Scooters.enqueue(s, s->getFreePriority());
+
+            if (currentTimestep >= (2 * (s->getfinish_time() - s->get_StartTime())))
+            {
+                Back_Scooters.dequeue(s, pri);
+                if (s->getCount() == s->getMain_Ords_Threshold())
+                {
+                    // make count and total distance = 0;
+                    s->fix();
+                    Maint_Scooters.enqueue(s);
+                }
+                else;
+                Free_Scooters.enqueue(s, s->getFreePriority());
+            }
+            else break;
         }
+        else break;
+
     }
+   
 }
 
 
@@ -366,15 +385,25 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
             }
             else break;
         }
-        else break;
-        /*else if (dynamic_cast<Dineorders*>(ord))
+        else if (dynamic_cast<Deliveryorders*>(ord))
         {
             Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
             if ((currentTimestep - delv->getTS()) >= delv->getDeliveryDuration())
             {
                 InServ_Orders.dequeue(ord, pri);
+                if (ord)
+                {
+                    Scooters* s = delv->getAssignedScooter();
+                    s->setfinish_time(currentTimestep);
+                    s->updateCount();
+                    delv->setAssignedScooter(nullptr);
+                    Finished_Orders.push(ord);
+                    Back_Scooters.enqueue(s, s->getBackPriority());
+       
+                }
+              
             }
-        }*/
+        }
     }
 }
 
@@ -525,12 +554,18 @@ void Restaurant::MovetoInservice(int currentTimestep) {
      while (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
          Orders* ord = nullptr;
          int pri = 0;
-         READY_OV.dequeue(ord);
-         Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
+         Deliveryorders* delv = nullptr;
          Scooters* sc = nullptr;
+         READY_OV.dequeue(ord);
+         if (ord)
+         delv = dynamic_cast<Deliveryorders*>(ord);
          Free_Scooters.dequeue(sc, pri);
-         if (sc) {
+
+
+         if (sc && delv) {
+             
              sc->updateTotalDistance(delv->getDistance());
+             sc->setTripdistance(delv->getDistance());
 			 sc->setstart_time(currentTimestep);
              delv->setAssignedScooter(sc);
              delv->setTS(currentTimestep);

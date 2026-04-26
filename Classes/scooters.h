@@ -40,8 +40,11 @@ public:
 
 	int getTotalDistance();
 	void updateCount();
+	int getCount();
 	void updateTotalDistance(int);
 	int getSpeed() { return Speed; }
+	int getMain_Ords_Threshold();
+	void fix();
 
 	
 

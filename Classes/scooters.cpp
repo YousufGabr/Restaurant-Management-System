@@ -75,9 +75,25 @@ void Scooters::updateCount()
 	this->orders_delivered_count ++;
 }
 
+int Scooters::getCount()
+{
+	return orders_delivered_count;
+}
+
 void Scooters::updateTotalDistance(int distance)
 {
 	this->TotalDistance += distance;
+}
+
+int Scooters::getMain_Ords_Threshold()
+{
+	return Main_Ords_Threshold;
+}
+
+void Scooters::fix()
+{
+	this->TotalDistance = 0;
+	this->orders_delivered_count = 0;
 }
 
 void Scooters::setTripdistance(int distance)
