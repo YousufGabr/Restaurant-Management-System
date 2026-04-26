@@ -39,7 +39,7 @@ void Restaurant::AddPendingOrder(Orders* neworder)
         }
 
     }
-    else if (dynamic_cast<Deliveryorders*>(neworder))
+    else if (dynamic_cast<Takeawayorders*>(neworder))
     {
         Takeawayorders* newOT = dynamic_cast<Takeawayorders*>(neworder);
         PEND_OT.enqueue(newOT);
@@ -113,7 +113,7 @@ void Restaurant::loadInputFile()
     
     input >> sCount >> sSpeed >> mainOrds >> mainDur;
     for (int i = 0; i < sCount; i++) {
-        Scooters* s = new Scooters(i + 1, sSpeed, mainOrds, mainDur);
+        Scooters* s = new Scooters(i + 1, sSpeed, mainDur, mainOrds);
         Free_Scooters.enqueue(s, s->getFreePriority());
     }
 
@@ -264,28 +264,34 @@ void Restaurant::generateOutputFile() {
 void Restaurant::executeActions(int currenttimestep)
 {
     Actions* a = nullptr;
-    Request.peek(a);
-    if (a)
+
+    // Process ALL request actions due at this timestep, not just one
+    while (true)
     {
+        a = nullptr;
+        Request.peek(a);
+        if (!a) break;
         if (a->getTimestep() <= currenttimestep)
         {
             Request.dequeue(a);
             a->ACT();
         }
-
+        else break;
     }
-    Cancel.peek(a);
-    if (a)
+
+    // Reset and process ALL cancel actions due at this timestep
+    while (true)
     {
+        a = nullptr;
+        Cancel.peek(a);
+        if (!a) break;
         if (a->getTimestep() <= currenttimestep)
         {
             Cancel.dequeue(a);
             a->ACT();
         }
-
+        else break;
     }
-
-    
 }
 
 void Restaurant::checkScootersAvailablity(int currentTimestep)
@@ -296,7 +302,7 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
         Maint_Scooters.peek(s);
         if (s)
         {
-            if (currentTimestep >= 2* (s->getfinish_time() - s->get_StartTime()) + s->get_Maintenance_Duration())
+            if (currentTimestep - 2* s->getfinish_time() + s->get_StartTime() >= s->get_Maintenance_Duration())
             {
                 Maint_Scooters.dequeue(s);
                 Free_Scooters.enqueue(s, s->getFreePriority());
@@ -313,18 +319,16 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
         Back_Scooters.peek(s, pri);
         if (s)
         {
-
-            if (currentTimestep >= (2 * (s->getfinish_time() - s->get_StartTime())))
+            if (currentTimestep - s->getfinish_time() >= (s->getfinish_time() - s->get_StartTime()))
             {
                 Back_Scooters.dequeue(s, pri);
-                if (s->getCount() == s->getMain_Ords_Threshold())
+                if (s->getCount() >= s->getMain_Ords_Threshold())
                 {
                     // make count and total distance = 0;
                     s->fix();
                     Maint_Scooters.enqueue(s);
                 }
-                else;
-                Free_Scooters.enqueue(s, s->getFreePriority());
+                else Free_Scooters.enqueue(s, s->getFreePriority());
             }
             else break;
         }
@@ -401,9 +405,10 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
                     Back_Scooters.enqueue(s, s->getBackPriority());
        
                 }
-              
             }
+            else break;
         }
+		else break;
     }
 }
 
