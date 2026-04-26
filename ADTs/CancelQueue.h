@@ -1,14 +1,14 @@
 #pragma once
 #include "../ADTs/LinkedQueue.h"
 #include "../Classes/Deliveryorders.h"
-class CancelQueue : public LinkedQueue<Deliveryorders*>
+class CancelQueue : public LinkedQueue<Orders*>
 {
 public :
-	Deliveryorders* CancelOrder(int ID)
+	Orders* CancelOrder(int ID)
 	{
-		LinkedQueue<Deliveryorders*> Qtemp;
-		Deliveryorders* temp = nullptr;
-		Deliveryorders* canceled = nullptr;
+		LinkedQueue<Orders*> Qtemp;
+		Orders* temp = nullptr;
+		Orders* canceled = nullptr;
 
 		while (dequeue(temp))
 		{

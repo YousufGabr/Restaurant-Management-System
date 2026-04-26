@@ -330,7 +330,7 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         Cooking_Orders.enqueue(ord, -readyTime);
         };
 
-    Dineorders* pDine = nullptr;
+    Orders* pDine = nullptr;
     while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
         PEND_ODG.dequeue(pDine);
         Free_CS.dequeue(pChf);
@@ -343,14 +343,14 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         assignLogic(pDine, pChf);
     }
 
-    Takeawayorders* pTake = nullptr;
+    Orders* pTake = nullptr;
     while (!PEND_OT.isEmpty() && !Free_CN.isEmpty()) {
         PEND_OT.dequeue(pTake);
         Free_CN.dequeue(pChf);
         assignLogic(pTake, pChf);
     }
 
-    Deliveryorders* pDelv = nullptr;
+    Orders* pDelv = nullptr;
     int pri;
     while (!PEND_OVG.isEmpty() && !Free_CS.isEmpty()) {
         PEND_OVG.dequeue(pDelv, pri);
@@ -370,7 +370,7 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
     }
 }
 void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
-    Takeawayorders* pTake = nullptr;
+    Orders* pTake = nullptr;
 
     while (READY_OT.peek(pTake)) {
         if (pTake == nullptr) break;

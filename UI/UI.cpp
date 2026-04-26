@@ -7,20 +7,20 @@ void UI::PrintCurrentState(
     LinkedQueue<Actions*>& Cancel,
 
     // Pending Orders
-    LinkedQueue<Dineorders*>& PEND_ODG,
-    LinkedQueue<Dineorders*>& PEND_ODN,
-    LinkedQueue<Takeawayorders*>& PEND_OT,
-    LinkedQueue<Deliveryorders*>& PEND_OVN,
+    LinkedQueue<Orders*>& PEND_ODG,
+    LinkedQueue<Orders*>& PEND_ODN,
+    LinkedQueue<Orders*>& PEND_OT,
+    LinkedQueue<Orders*>& PEND_OVN,
     CancelQueue& PEND_OVC,
-    PriorityQueue<Deliveryorders*>& PEND_OVG,
+    PriorityQueue<Orders*>& PEND_OVG,
 
     // Chefs
     LinkedQueue<Chefs*>& Free_CS,
     LinkedQueue<Chefs*>& Free_CN,
 
     // Ready Orders
-    LinkedQueue<Dineorders*>& READY_OD,
-    LinkedQueue<Takeawayorders*>& READY_OT,
+    LinkedQueue<Orders*>& READY_OD,
+    LinkedQueue<Orders*>& READY_OT,
     CancelQueue& READY_OV,
 
     // Order Status
