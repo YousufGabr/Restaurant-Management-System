@@ -61,10 +61,9 @@ void RequestAction::ACT()
 	RestPtr->AddPendingOrder(neworder);
 }
 
-std::ostream& operator<<(std::ostream& os, const RequestAction* Q)
+void RequestAction::print(ostream& os) const
 {
-    os << "[ " << Q->type << ", "<<Q->currentTimestep <<", " << Q->ID << " ]" << endl;
-    return os;
+    os << "[" << type << "," << currentTimestep << "," << ID << "] ";
 }
 
 

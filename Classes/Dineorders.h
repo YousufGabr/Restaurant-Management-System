@@ -34,7 +34,7 @@ public :
 
     int getServicePriority();
 
-    friend std::ostream& operator<<(std::ostream& os, const Dineorders* OD);
+    virtual void print(ostream& os) const override;
    
 
 };

@@ -10,6 +10,6 @@ public:
 	virtual int getTi() const;
 	virtual int getTW() const;
 
-	friend std::ostream& operator<<(std::ostream& os, const Takeawayorders* OD);
+	virtual void print(ostream& os) const override;
 };
 

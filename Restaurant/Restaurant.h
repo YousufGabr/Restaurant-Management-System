@@ -72,8 +72,8 @@ public:
 
 
 	void RunSimulator();
-	void loadInputFile(string filename);
-	void generateOutputFile(std::string filename);
+	void loadInputFile();
+	void generateOutputFile();
 	void AssignPendingToChef(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
 	//void AssignTable(int currentTimestep);

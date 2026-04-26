@@ -5,7 +5,6 @@
 #include "../Classes/Dineorders.h"
 #include "../Classes/Takeawayorders.h"
 #include "../Classes/Deliveryorders.h"
-#include <ostream>
 
 class RequestAction : public Actions
 {
@@ -27,6 +26,6 @@ public:
 
 	virtual void ACT();
 
-	friend std::ostream& operator<<(std::ostream& os, const RequestAction* Q);
+	virtual void print(ostream& os) const override;
 };
 

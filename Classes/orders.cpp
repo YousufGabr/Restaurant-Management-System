@@ -40,7 +40,10 @@ int Orders::getCookingpriority() const
 	return (size / (getAssignedChef()->getSpeed())) * -1;
 }
 
-
+ostream& operator<<(ostream& os, const Orders* ord) {
+    ord->print(os);
+    return os;
+}
 
 
 

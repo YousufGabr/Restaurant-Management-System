@@ -51,20 +51,16 @@ int Dineorders::getServicePriority()
 }
 
 
-std::ostream& operator<<(std::ostream& os, const Dineorders* OD)
+void Dineorders::print(ostream& os) const
 {
-    if (OD)
+    if (getAssignedChef() != nullptr)
     {
-        if (OD->getAssignedChef() != nullptr)
-        {
-            os << "[" << OD->getID() << "," << OD->getAssignedChef()->getID() << "]";
-        }
-       
-        else if (OD->getAssignedTable() != nullptr)
-        {
-            os << "[" << OD->getID() << ",T" << OD->getAssignedTable()->getID() << "]";
-        }
-        else os << OD->getID();
+        os << "[" << getID() << "," << getAssignedChef()->getID() << "]";
     }
-    return os;
+
+    else if (getAssignedTable() != nullptr)
+    {
+        os << "[" << getID() << ",T" << getAssignedTable()->getID() << "]";
+    }
+    else os << getID();
 }
