@@ -522,6 +522,20 @@ void Restaurant::MovetoInservice(int currentTimestep) {
          }
          else break;
      }
+     while (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
+         int pri = 0;
+         READY_OV.dequeue(ord);
+         Deliveryorders* delv = dynamic_cast<Deliveryorders*>(ord);
+         Scooters* sc = nullptr;
+         Free_Scooters.dequeue(sc, pri);
+         if (sc) {
+             sc->updateTotalDistance(delv->getDistance());
+			 sc->setstart_time(currentTimestep);
+             delv->setAssignedScooter(sc);
+             delv->setTS(currentTimestep);
+             InServ_Orders.enqueue(ord, delv->getServicePriority());
+         }
+     }
 }
 
 ////////////////////////// Main simulation Function ////////////////////////////////////

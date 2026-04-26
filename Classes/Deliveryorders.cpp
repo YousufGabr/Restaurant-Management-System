@@ -11,6 +11,10 @@ void Deliveryorders::setDeliveryDistance(int dist)
 {
     this->distance = dist;
 }
+void Deliveryorders::setTS(int t)
+{
+    this->TS = t;
+}
 
 Scooters* Deliveryorders::getAssignedScooter() const { return AssignedScooter; }
 int Deliveryorders::getDistance() const { return distance; }
