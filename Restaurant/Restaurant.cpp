@@ -76,11 +76,12 @@ void Restaurant::CancelOVC(int orderID)
 
 
 
-void Restaurant::loadInputFile(string filename)
+void Restaurant::loadInputFile()
 {
     Actions* act = nullptr;
     // Note: You passed 'filename' as a parameter, but used 'ui.getinputfilename()'
     // I will use 'filename' for consistency.
+    string filename = ui.getinputfilename();
     ifstream input(filename);
 
     if (!input.is_open()) {
@@ -125,9 +126,7 @@ void Restaurant::loadInputFile(string filename)
         }
     }
 
-    input >> TH;
-    input >> M;
-
+	input >> TH; // overwait threshold
     input >> M; // number of action lines
 
     //Reading actions and load them to lists
@@ -139,13 +138,18 @@ void Restaurant::loadInputFile(string filename)
         if (Acttype == 'Q')
         {
             input >> ordtype;
+            char share;
 
             if (ordtype == "ODG") {
-                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
+                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> share;
+                if(share == 'Y' || share == 'y') canshare = true;
+				else canshare = false;
                 act = new RequestAction(this, ID, TYPE_ODG, TQ, size, price, numberofseats, Duration, canshare);
             }
             else if (ordtype == "ODN") {
-                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> canshare;
+                input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> share;
+                if (share == 'Y' || share == 'y') canshare = true;
+                else canshare = false;
                 act = new RequestAction(this, ID, TYPE_ODN, TQ, size, price, numberofseats, Duration, canshare);
             }
             else if (ordtype == "OT") {
@@ -178,7 +182,8 @@ void Restaurant::loadInputFile(string filename)
     input.close();
 }
 
-void Restaurant::generateOutputFile(string filename) {
+void Restaurant::generateOutputFile() {
+	string filename = ui.getoutputfilename();
     ofstream outFile(filename);
     if (!outFile.is_open()) {
         cout << "Error: Could not create output file!" << endl;
@@ -391,7 +396,7 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
 void Restaurant::RunSimulator()
 {
 // reads input file , initialize the restaurant , move to action list
-    loadInputFile(ui.getinputfilename()); 
+    loadInputFile(); 
 
  // first print all restaurant parameters
     ui.PrintCurrentState(
@@ -420,26 +425,26 @@ void Restaurant::RunSimulator()
 // To Do 1: check Scooters (Back , Maint) ->free
        checkScootersAvailablity(currentTimestep);
 
-// To Do 2: check Tables (Busy) -> available 
+/// To Do 2: check Tables (Busy) -> available 
 
-// To Do 3: check Finished orders 
+/// To Do 3: check Finished orders 
 
-// Assign pending to Chef 
-      AssignPendingToChef(currentTimestep);
+/// Assign pending to Chef 
+    AssignPendingToChef(currentTimestep);
 
-//To Do 4: move cooking to ready 
+///To Do 4: move cooking to ready 
 
 
-// To Do 6: Assign Ready orders 
+/// To Do 6: Assign Ready orders 
     //finalize takeaway orders 
     finalizeTakeawayOrders(currentTimestep);
 
     //Assign table 
     //Assign Scooter
 
-// To Do 6: Collect stats 
+/// To Do 6: Collect stats 
 
-// print current stats
+/// print current stats
     ui.PrintCurrentState(
         currentTimestep,
         Request, Cancel,
@@ -455,16 +460,17 @@ void Restaurant::RunSimulator()
         Busy_NonSharable
     );
   
-// Check if simulation ends
-    int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount();
+/// Check if simulation ends
+    int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount();
     int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
     if (pending == 0 && active == 0) break;
     currentTimestep++;
 }
-// print final status
+    /// Generate output file 
+    generateOutputFile();
+    /// print final status
     ui.simulation_ended(currentTimestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
-// Generate output file 
-    generateOutputFile(ui.getoutputfilename());
+
 
 
 }

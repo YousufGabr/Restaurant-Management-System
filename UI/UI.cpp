@@ -42,7 +42,8 @@ void UI::PrintCurrentState(
 {
     cout << "\nCurrent Timestep: " << timestep << endl << endl;
     cout << "=============== Actions List ================" << endl;
-    cout << "0 actions remaining" << endl << endl;
+    cout << Request.getcount() << " Request actions: "; print_queue(Request); cout << endl << endl;
+    cout << Cancel.getcount() << " Cancel actions: "; print_queue(Cancel); cout << endl << endl;
 
     cout << "------------- Pending Orders IDs ---------------------" << endl;
     cout << PEND_ODG.getcount() << " ODG: "; print_queue(PEND_ODG);  cout << endl;
@@ -91,18 +92,19 @@ void UI::PrintCurrentState(
 
 string UI::getinputfilename() const
 {
-	cout << "Enter input file name (with extension): ";
+	cout << "Enter input file name: ";
 	string filename;
 	cin >> filename;
-	return filename;
+	cin.ignore();
+	return filename + ".txt";
 }
 
 string UI::getoutputfilename() const
 {
-    cout << "Enter output file name (with extension): ";
+    cout << "Enter output file name: ";
     string filename;
     cin >> filename;
-    return filename;
+    return filename + ".txt";
 }
 
 int UI::GetMode() {
@@ -116,6 +118,7 @@ int UI::GetMode() {
         cout << "Choice: ";
 
         cin >> input;
+        cin.ignore();
 
         // Convert input to uppercase to handle 's' or 'i'
         char choice = toupper(input[0]);

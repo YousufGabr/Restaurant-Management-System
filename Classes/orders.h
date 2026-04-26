@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+using namespace std;
 
 // Forward declaration
 class Chefs;
@@ -55,6 +56,9 @@ public:
     int getCookingpriority() const;
 
     ORD_TYPE getType() const;
+
+    friend ostream& operator<<(ostream& os, const Orders* ord);
+	virtual void print(ostream& os) const = 0;
 
     virtual ~Orders() {};
 

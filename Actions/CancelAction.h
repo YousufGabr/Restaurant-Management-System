@@ -1,6 +1,5 @@
 #pragma once
 #include "Actions.h"
-#include<ostream>
 
 class CancelAction : public Actions
 {
@@ -9,7 +8,7 @@ private :
 public:
 	CancelAction(Restaurant* r ,int TC, int ID);
 	virtual void ACT();
-	friend std::ostream& operator<<(std::ostream& os, const CancelAction* X);
+	virtual void print(ostream& os) const override;
 };
 
 

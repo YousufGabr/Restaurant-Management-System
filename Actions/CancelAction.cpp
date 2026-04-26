@@ -13,8 +13,7 @@ void CancelAction::ACT()
 	RestPtr->CancelOVC(ID);
 }
 
-std::ostream& operator<<(std::ostream& os, const CancelAction* X)
+void CancelAction::print(ostream& os) const
 {
-	os << "( X, " << X->currentTimestep << ", " << X->ID << " )" << endl;
-	return os;
+	os << "[X," << currentTimestep << "," << ID << "] ";
 }

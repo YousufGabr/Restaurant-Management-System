@@ -13,16 +13,13 @@ int Takeawayorders::getTi() const {
     return (TA - TQ) - TR + 1;
 }
 
-std::ostream& operator<<(std::ostream& os, const Takeawayorders* OT)
+void Takeawayorders::print(ostream& os) const
 {
-    if (OT)
+    if (getAssignedChef() != nullptr)
     {
-        if (OT->getAssignedChef() != nullptr)
-        {
-            os << "[" << OT->getID() << "," << OT->getAssignedChef()->getID() << "]";
-        }
-       
-        else os << OT->getID();
+        os << "[" << getID() << "," << getAssignedChef()->getID() << "]";
     }
-    return os;
+
+    else os << getID();
+        
 }

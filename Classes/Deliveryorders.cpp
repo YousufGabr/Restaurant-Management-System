@@ -36,15 +36,15 @@ int Deliveryorders::getServicePriority() const
 }
 
 
-std::ostream& operator<<(std::ostream& os, const Deliveryorders* OV)
+void Deliveryorders::print(ostream& os) const
 {
-    if (OV->getAssignedChef() != nullptr)
+    if (getAssignedChef() != nullptr)
     {
-        os << "[" << OV->getID() << "," << OV->getAssignedChef()->getID() << "]";
+        os << "[" << getID() << "," << getAssignedChef()->getID() << "]";
     }
-    else if (OV->getAssignedScooter() != nullptr)
+    else if (getAssignedScooter() != nullptr)
     {
-        os << "[" << OV->getID() << ",S" << OV->getAssignedScooter()->getID() << "]";
+        os << "[" << getID() << ",S" << getAssignedScooter()->getID() << "]";
     }
-    return os;
+    else os << getID();
 }

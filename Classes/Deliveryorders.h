@@ -30,6 +30,6 @@ public:
 	int getServicePriority() const;
 
 
-	friend std::ostream& operator<<(std::ostream& os, const Deliveryorders* OV);
+	virtual void print(ostream& os) const override;
 };
 
