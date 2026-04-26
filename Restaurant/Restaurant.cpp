@@ -614,26 +614,25 @@ void Restaurant::RunSimulator()
         //loop on action lists 
         executeActions(currentTimestep);
     
-        //check Scooters (Back , Maint) ->free
-        ///TODO: Check finished delivery orders
+        /// check Scooters (Back , Maint) ->free
         checkScootersAvailablity(currentTimestep);
 
-        /// To Do 2: Check finished orders 
-		checkFinishedOrders(currentTimestep); //only done for dine orders (delivery left)
+        /// Check finished orders 
+		checkFinishedOrders(currentTimestep); 
 
-        /// Assign pending to Chef 
+        /// Assign pending to Chef (syntax to be changed )
         AssignPendingToChef(currentTimestep);
 
-        /// Move cooking to ready
+        ///Move cooking to ready
         MoveToReady(currentTimestep);
  
         ///finalize takeaway orders 
         finalizeTakeawayOrders(currentTimestep);
 
-        /// To Do 6: Assign Ready orders
-		MovetoInservice(currentTimestep); //only done for dine orders (delivery left)
+        /// Assign Ready orders
+		MovetoInservice(currentTimestep); 
 
-        /// To Do 6: Collect stats (technically done in generateOutputFile)
+        /// To Do 6: Collect stats (technically done in generateOutputFile) ->need more details 
 
         /// print current stats
             ui.PrintCurrentState(
