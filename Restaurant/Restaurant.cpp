@@ -265,38 +265,33 @@ void Restaurant::executeActions(int currenttimestep)
 {
     Actions* a = nullptr;
 
-    while (!Request.isEmpty())
+    // Process ALL request actions due at this timestep, not just one
+    while (true)
     {
+        a = nullptr;
         Request.peek(a);
-        if (a)
+        if (!a) break;
+        if (a->getTimestep() <= currenttimestep)
         {
-            if (a->getTimestep() <= currenttimestep)
-            {
-                Request.dequeue(a);
-                a->ACT();
-            }
-            else break;
+            Request.dequeue(a);
+            a->ACT();
         }
         else break;
     }
 
-    a = nullptr;
-    while (!Request.isEmpty())
+    // Reset and process ALL cancel actions due at this timestep
+    while (true)
     {
+        a = nullptr;
         Cancel.peek(a);
-        if (a)
+        if (!a) break;
+        if (a->getTimestep() <= currenttimestep)
         {
-            if (a->getTimestep() <= currenttimestep)
-            {
-                Request.dequeue(a);
-                a->ACT();
-            }
-            else break;
+            Cancel.dequeue(a);
+            a->ACT();
         }
         else break;
     }
-
-
 }
 
 void Restaurant::checkScootersAvailablity(int currentTimestep)
