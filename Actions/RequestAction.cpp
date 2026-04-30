@@ -27,7 +27,7 @@ RequestAction::RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int s
 	this->canshare = sharable;
 }
 
-RequestAction::RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int size, int price , int distance):
+RequestAction::RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int size, int price , int distance, int TH):
 	numberofseats(0), Duration(0), canshare(false)
 {
 	this->RestPtr = r;
@@ -37,7 +37,7 @@ RequestAction::RequestAction(Restaurant* r, int id, ORD_TYPE type, int TQ, int s
 	this->size = size;
 	this->price = price;
 	this->distance = distance;
-
+	this->TH = TH;
 }
 
 // 1-Create new order according to its type 2-Add it to pending lists by calling the function in restaurant 
@@ -55,7 +55,7 @@ void RequestAction::ACT()
 	}
 	else
 	{
-		neworder = new Deliveryorders(type, currentTimestep, ID, size, price, distance);
+		neworder = new Deliveryorders(type, currentTimestep, ID, size, price, distance, TH);
 	}
 
 	RestPtr->AddPendingOrder(neworder);

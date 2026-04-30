@@ -60,6 +60,7 @@ class UI
             LinkedQueue<Orders*>& READY_OD,
             LinkedQueue<Orders*>& READY_OT,
             CancelQueue& READY_OV,
+            PriorityQueue<Orders*>& Overwait_OVG,
 
             // Order Status
             CancelPriQueue& Cooking_Orders,

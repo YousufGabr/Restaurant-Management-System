@@ -6,7 +6,7 @@
 #include <string>
 using namespace std;
 
-Restaurant::Restaurant()
+Restaurant::Restaurant() : Mode(-1)
 {
     
 }
@@ -163,7 +163,7 @@ void Restaurant::loadInputFile()
             }
             else if (ordtype == "OVG") {
                 input >> TQ >> ID >> size >> price >> distance;
-                act = new RequestAction(this, ID, TYPE_OVG, TQ, size, price, distance);
+                act = new RequestAction(this, ID, TYPE_OVG, TQ, size, price, distance, TH);
             }
             else if (ordtype == "OVC") { // Fixed duplicate "OVN" check to "OVC"
                 input >> TQ >> ID >> size >> price >> distance;
@@ -197,9 +197,10 @@ void Restaurant::generateOutputFile() {
 
     int total = 0;
     double totalWait = 0, totalServ = 0;
+	ArrayStack<Orders*> tempStack = Finished_Orders;
 
     // Popping from the Stack naturally prints in descending order of Finish Time (TF)
-    while (Finished_Orders.pop(pOrd)) {
+    while (tempStack.pop(pOrd)) {
         if (pOrd == nullptr) continue; // Safety check
 
         int Tc = pOrd->getTR() - pOrd->getTA();
@@ -402,6 +403,7 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
                     s->updateCount();
                     delv->setAssignedScooter(nullptr);
                     Finished_Orders.push(ord);
+					ord->setTF(currentTimestep);
                     Back_Scooters.enqueue(s, s->getBackPriority());
        
                 }
@@ -499,6 +501,30 @@ void Restaurant::MoveToReady(int currentTimestep) {
         else break;
     }
 }
+void Restaurant::checkOverwaitOVG(int currentTimestep) {
+
+    Orders* pOV = nullptr;
+    LinkedQueue<Orders*> tempOVG;
+    while (READY_OV.dequeue(pOV)) 
+    {
+        if (pOV->getType() != TYPE_OVG) tempOVG.enqueue(pOV);
+
+        else
+        {
+            Deliveryorders* delv = dynamic_cast<Deliveryorders*>(pOV);
+            int waitTime = currentTimestep - delv->getTR();
+            if (waitTime >= delv->getTH())
+            {
+                Overwait_OVG.enqueue(pOV, waitTime);
+            }
+            else
+            {
+                tempOVG.enqueue(pOV);
+            }
+        }
+    }
+	while (tempOVG.dequeue(pOV)) READY_OV.enqueue(pOV);
+}
 void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
     Orders* pTake = nullptr;
 
@@ -519,7 +545,29 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
     }
 }
 void Restaurant::MovetoInservice(int currentTimestep) {
+
+    //Overwait OVG First
+    while (!Overwait_OVG.isEmpty() && !Free_Scooters.isEmpty()) {
+        Orders* ord = nullptr;
+        int pri = 0;
+        Deliveryorders* delv = nullptr;
+        Scooters* sc = nullptr;
+        Overwait_OVG.dequeue(ord, pri);
+        if (ord) delv = dynamic_cast<Deliveryorders*>(ord);
+        Free_Scooters.dequeue(sc, pri);
+
+        if (sc && delv) {
+
+            sc->updateTotalDistance(delv->getDistance());
+            sc->setTripdistance(delv->getDistance());
+            sc->setstart_time(currentTimestep);
+            delv->setAssignedScooter(sc);
+            delv->setTS(currentTimestep);
+            InServ_Orders.enqueue(ord, delv->getServicePriority());
+        }
+    }
     
+     //OD Second
      while (!READY_OD.isEmpty()) {
          Orders* ord = nullptr;
          READY_OD.peek(ord);
@@ -556,16 +604,16 @@ void Restaurant::MovetoInservice(int currentTimestep) {
          }
          else break;
      }
+
+     //Rest Of OV Third
      while (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
          Orders* ord = nullptr;
          int pri = 0;
          Deliveryorders* delv = nullptr;
          Scooters* sc = nullptr;
          READY_OV.dequeue(ord);
-         if (ord)
-         delv = dynamic_cast<Deliveryorders*>(ord);
+         if (ord) delv = dynamic_cast<Deliveryorders*>(ord);
          Free_Scooters.dequeue(sc, pri);
-
 
          if (sc && delv) {
              
@@ -583,26 +631,30 @@ void Restaurant::MovetoInservice(int currentTimestep) {
 
 void Restaurant::RunSimulator()
 {
-// reads input file , initialize the restaurant , move to action list
+	//Set App mode
+	Mode = ui.GetMode();
+
+    // reads input file , initialize the restaurant , move to action list
     loadInputFile(); 
 
- // first print all restaurant parameters
-    ui.PrintCurrentState(
-        0,
-        Request, Cancel,
-        PEND_ODG, PEND_ODN, PEND_OT,
-        PEND_OVN, PEND_OVC, PEND_OVG,
-        Free_CS, Free_CN,
-        READY_OD, READY_OT, READY_OV,
-        Cooking_Orders, InServ_Orders,
-        Finished_Orders, Canceled_Orders,
-        Free_Scooters, Back_Scooters,
-        Maint_Scooters,
-        Free_Tables, Busy_Sharable,
-        Busy_NonSharable
-    );
-
-// main loop 
+    // first print all restaurant parameters (Interactive Mode Only)
+    if (Mode == 0) {
+        ui.PrintCurrentState(
+            0,
+            Request, Cancel,
+            PEND_ODG, PEND_ODN, PEND_OT,
+            PEND_OVN, PEND_OVC, PEND_OVG,
+            Free_CS, Free_CN,
+            READY_OD, READY_OT, READY_OV, Overwait_OVG,
+            Cooking_Orders, InServ_Orders,
+            Finished_Orders, Canceled_Orders,
+            Free_Scooters, Back_Scooters,
+            Maint_Scooters,
+            Free_Tables, Busy_Sharable,
+            Busy_NonSharable
+        );
+    }
+    // main loop 
     int currentTimestep = 1; 
     while (true)
     {
@@ -620,6 +672,9 @@ void Restaurant::RunSimulator()
 
         ///Move cooking to ready
         MoveToReady(currentTimestep);
+
+        ///Check Overwait OVG Orders
+        checkOverwaitOVG(currentTimestep);
  
         ///finalize takeaway orders 
         finalizeTakeawayOrders(currentTimestep);
@@ -630,13 +685,14 @@ void Restaurant::RunSimulator()
         /// To Do 6: Collect stats (technically done in generateOutputFile) ->need more details 
 
         /// print current stats
+        if (Mode == 0) {
             ui.PrintCurrentState(
                 currentTimestep,
                 Request, Cancel,
                 PEND_ODG, PEND_ODN, PEND_OT,
                 PEND_OVN, PEND_OVC, PEND_OVG,
                 Free_CS, Free_CN,
-                READY_OD, READY_OT, READY_OV,
+                READY_OD, READY_OT, READY_OV, Overwait_OVG,
                 Cooking_Orders, InServ_Orders,
                 Finished_Orders, Canceled_Orders,
                 Free_Scooters, Back_Scooters,
@@ -644,10 +700,11 @@ void Restaurant::RunSimulator()
                 Free_Tables, Busy_Sharable,
                 Busy_NonSharable
             );
+        }
   
         /// Check if simulation ends
         int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + InServ_Orders.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount();
         if (pending == 0 && active == 0) break;
         currentTimestep++;
     }

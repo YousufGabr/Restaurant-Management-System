@@ -1,7 +1,7 @@
 #include "Deliveryorders.h"
 
-Deliveryorders::Deliveryorders(ORD_TYPE type,int tq, int id, int sz, double pr, int distance)
-    : Orders(type, tq, id, sz, pr), distance (distance), AssignedScooter(nullptr), TS(0)
+Deliveryorders::Deliveryorders(ORD_TYPE type,int tq, int id, int sz, double pr, int distance , int TH)
+    : Orders(type, tq, id, sz, pr), distance (distance), AssignedScooter(nullptr), TS(0), TH(TH)
 {
 }
 

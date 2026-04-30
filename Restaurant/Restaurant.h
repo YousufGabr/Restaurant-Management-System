@@ -26,6 +26,7 @@ private:
 
 	
 	UI ui;
+	int Mode; // 0 for interactive, 1 for silent
 	//Actions
 	LinkedQueue<Actions*> Request; 
 	LinkedQueue<Actions*> Cancel;  
@@ -46,6 +47,7 @@ private:
 	LinkedQueue<Orders*> READY_OD;
 	LinkedQueue<Orders*> READY_OT;
 	CancelQueue READY_OV;  
+	PriorityQueue<Orders*> Overwait_OVG;
 
 	//Order Status
 	CancelPriQueue Cooking_Orders; 
@@ -79,6 +81,7 @@ public:
 	void generateOutputFile();
 	void AssignPendingToChef(int currentTimestep);
 	void MoveToReady(int currentTimestep);
+	void checkOverwaitOVG(int currentTimestep);
 	void MovetoInservice(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
 	//void AssignTable(int currentTimestep);

@@ -22,6 +22,7 @@ void UI::PrintCurrentState(
     LinkedQueue<Orders*>& READY_OD,
     LinkedQueue<Orders*>& READY_OT,
     CancelQueue& READY_OV,
+    PriorityQueue<Orders*>& Overwait_OVG,
 
     // Order Status
     CancelPriQueue& Cooking_Orders,
@@ -63,7 +64,8 @@ void UI::PrintCurrentState(
     cout << "------------- Ready Orders IDs ---------------------" << endl;
     cout << READY_OD.getcount() << " OD: "; print_queue(READY_OD);  cout << endl;
     cout << READY_OT.getcount() << " OT: "; print_queue(READY_OT);  cout << endl;
-    cout << READY_OV.getcount() << " OV: "; print_queue(READY_OV); cout << endl << endl;
+    cout << READY_OV.getcount() << " OV: "; print_queue(READY_OV); cout << endl;
+    cout << Overwait_OVG.getcount() << " Overwait OVG: "; print_pqueue(Overwait_OVG); cout << endl << endl;
 
     cout << "------------- Available scooters IDs ----------------------" << endl;
     cout << Free_Scooters.getcount() << " Scooters : "; print_pqueue(Free_Scooters); cout << endl << endl;
@@ -113,8 +115,8 @@ int UI::GetMode() {
 
     while (true) {
         cout << "Please select the application mode:" << endl;
-        cout << "[S] Silent Mode" << endl;
         cout << "[I] Interactive Mode" << endl;
+        cout << "[S] Silent Mode" << endl;
         cout << "Choice: ";
 
         cin >> input;
@@ -123,14 +125,14 @@ int UI::GetMode() {
         // Convert input to uppercase to handle 's' or 'i'
         char choice = toupper(input[0]);
 
-        if (choice == 'S') {
-            mode = 0;
-            cout << "Silent Mode selected." << endl;
+        if (choice == 'I') {
+            mode = 0; 
+            cout << "Interactive Mode selected." << endl;
             break;
         }
-        else if (choice == 'I') {
-            mode = 1; 
-            cout << "Interactive Mode selected." << endl;
+        else if (choice == 'S') {
+            mode = 1;
+            cout << "Silent Mode selected." << endl;
             break;
         }
         else {
