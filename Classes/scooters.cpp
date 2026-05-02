@@ -2,7 +2,7 @@
 
 Scooters::Scooters(int id, int speed, int Main_Dur, int threshold)
 	: ID(id), Speed(speed), Maintenance_Duration(Main_Dur), Main_Ords_Threshold(threshold),
-	orders_delivered_count(0), Tfinish(0), TotalDistance(0) , Tstart(0) , Tripdistance(0)  // Edited: initialize members
+	orders_delivered_count(0), Tfinish(0), TotalDistance(0) , Tstart(0) , Tripdistance(0), maxTripsBeforeMaintenance(threshold)  // Edited: initialize members
 {
 }
 
@@ -85,16 +85,6 @@ void Scooters::updateTotalDistance(int distance)
 	this->TotalDistance += distance;
 }
 
-int Scooters::getMain_Ords_Threshold()
-{
-	return Main_Ords_Threshold;
-}
-
-void Scooters::fix()
-{
-	this->TotalDistance = 0;
-	this->orders_delivered_count = 0;
-}
 
 void Scooters::setTripdistance(int distance)
 {
@@ -105,3 +95,22 @@ int Scooters::getTripdistance() const
 {
 	return Tripdistance;
 }
+
+
+// maintnace functions 
+
+int Scooters::get_MaxTripsBeforaMaint() const
+{
+	return this->maxTripsBeforeMaintenance;
+}
+
+void Scooters::updateMaxTrips()
+{
+	maxTripsBeforeMaintenance += Main_Ords_Threshold;
+}
+
+void Scooters::fix()
+{
+	updateMaxTrips();
+}
+

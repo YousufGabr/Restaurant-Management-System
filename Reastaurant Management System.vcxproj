@@ -126,6 +126,7 @@
     <ClCompile Include="Actions\CancelAction.cpp" />
     <ClCompile Include="Actions\RequestAction.cpp" />
     <ClCompile Include="Classes\Chefs.cpp" />
+    <ClCompile Include="Classes\ComboOrders.cpp" />
     <ClCompile Include="Classes\Deliveryorders.cpp" />
     <ClCompile Include="Classes\Dineorders.cpp" />
     <ClCompile Include="Classes\Orders.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
     <ClInclude Include="Classes\Chefs.h" />
+    <ClInclude Include="Classes\ComboOrders.h" />
     <ClInclude Include="Classes\Deliveryorders.h" />
     <ClInclude Include="Classes\Dineorders.h" />
     <ClInclude Include="Classes\Orders.h" />

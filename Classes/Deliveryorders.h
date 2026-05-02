@@ -5,9 +5,9 @@
 class Deliveryorders : public Orders
 {
 private:
+	int TH;
 	int distance;
 	int TS;
-	int TH;
 
 	Scooters* AssignedScooter;
 public:

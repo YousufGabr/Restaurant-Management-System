@@ -18,7 +18,13 @@ Restaurant::Restaurant() : Mode(-1)
 void Restaurant::AddPendingOrder(Orders* neworder)
 {
     ORD_TYPE orderType = neworder->getType();
-    if (dynamic_cast<Deliveryorders*>(neworder))
+    if (dynamic_cast<ComboOrders*>(neworder))
+    {
+        ComboOrders* newCM = dynamic_cast<ComboOrders*>(neworder);
+        if (newCM)
+            PENDING_COMBO.enqueue(newCM, newCM->getpendingPriority());
+    }
+    else if (dynamic_cast<Deliveryorders*>(neworder))
     {
         Deliveryorders* newOV = dynamic_cast<Deliveryorders*>(neworder);
         switch (orderType)
@@ -79,8 +85,6 @@ void Restaurant::CancelOVC(int orderID)
 void Restaurant::loadInputFile()
 {
     Actions* act = nullptr;
-    // Note: You passed 'filename' as a parameter, but used 'ui.getinputfilename()'
-    // I will use 'filename' for consistency.
     string filename = ui.getinputfilename();
     ifstream input(filename);
 
@@ -97,6 +101,8 @@ void Restaurant::loadInputFile()
     int tablecount, capacity;
     int TH;
     int M;
+    //data for combo orders
+    int chefsNumber; int CN; int CS; int ScootersNumber;
 
     char Acttype = 0;
     string ordtype;
@@ -141,7 +147,14 @@ void Restaurant::loadInputFile()
             input >> ordtype;
             char share;
 
-            if (ordtype == "ODG") {
+            if (ordtype == "COMBO")
+            {
+                input >> TQ >> ID >> size >> price >> distance>>chefsNumber >> CN >> CS>> ScootersNumber;
+                act = new RequestAction(this, ID, TYPE_COMBO, TQ, size, price, distance, chefsNumber, CN, CS, ScootersNumber);
+
+            }
+
+            else if (ordtype == "ODG") {
                 input >> TQ >> ID >> size >> price >> numberofseats >> Duration >> share;
                 if(share == 'Y' || share == 'y') canshare = true;
 				else canshare = false;
@@ -165,7 +178,7 @@ void Restaurant::loadInputFile()
                 input >> TQ >> ID >> size >> price >> distance;
                 act = new RequestAction(this, ID, TYPE_OVG, TQ, size, price, distance, TH);
             }
-            else if (ordtype == "OVC") { // Fixed duplicate "OVN" check to "OVC"
+            else if (ordtype == "OVC") { 
                 input >> TQ >> ID >> size >> price >> distance;
                 act = new RequestAction(this, ID, TYPE_OVC, TQ, size, price, distance);
             }
@@ -266,7 +279,7 @@ void Restaurant::executeActions(int currenttimestep)
 {
     Actions* a = nullptr;
 
-    // Process ALL request actions due at this timestep, not just one
+    
     while (true)
     {
         a = nullptr;
@@ -280,7 +293,7 @@ void Restaurant::executeActions(int currenttimestep)
         else break;
     }
 
-    // Reset and process ALL cancel actions due at this timestep
+    
     while (true)
     {
         a = nullptr;
@@ -323,9 +336,9 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
             if (currentTimestep - s->getfinish_time() >= (s->getfinish_time() - s->get_StartTime()))
             {
                 Back_Scooters.dequeue(s, pri);
-                if (s->getCount() >= s->getMain_Ords_Threshold())
+                if (s->getCount() >= s->get_MaxTripsBeforaMaint())
                 {
-                    // make count and total distance = 0;
+                    // fix updates scooters abillity to to more Maint_Ords  orders ;
                     s->fix();
                     Maint_Scooters.enqueue(s);
                 }
@@ -347,7 +360,35 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
     while (InServ_Orders.peek(ord, pri))
     {
         if (ord == nullptr) break;
-        if (dynamic_cast<Dineorders*>(ord))
+        if (dynamic_cast<ComboOrders*>(ord))
+        {
+            ComboOrders* cmb = dynamic_cast<ComboOrders*>(ord);
+            if (currentTimestep - cmb->getTs() >= cmb->getDeliveryDuration())
+            {
+                InServ_Orders.dequeue(ord, pri);
+                if (ord)
+                {
+                    Scooters** s = cmb->getAssignedScooters();
+                    for (int i = 0; i < cmb->getScootersNumber(); i++)
+                    {
+                        s[i]->setfinish_time(currentTimestep);
+                        s[i]->updateCount();
+                        Back_Scooters.enqueue(s[i], s[i]->getBackPriority());
+
+                    }
+
+                    cmb->setAssignedScooters(nullptr);
+                    delete[] s;
+                    s = nullptr;
+                    Finished_Orders.push(ord);
+                    ord->setTF(currentTimestep);
+                }
+
+            }
+            else break;
+
+        }
+        else if (dynamic_cast<Dineorders*>(ord))
         {
             Dineorders* dine = dynamic_cast<Dineorders*>(ord);
             if ((currentTimestep - dine->getTS()) >= dine->getorderDuration())
@@ -429,6 +470,9 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         Cooking_Orders.enqueue(ord, -readyTime);
         };
 
+    assignComboTochef(currentTimestep);
+
+
     Orders* pDine = nullptr;
     while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
         PEND_ODG.dequeue(pDine);
@@ -468,13 +512,28 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
         assignLogic(pDelv, pChf);
     }
 }
+
 void Restaurant::MoveToReady(int currentTimestep) {
     Orders* pOrd = nullptr;
     Chefs* pChf = nullptr;
     int pri = 0;
     while (Cooking_Orders.peek(pOrd, pri)) {
         if (pOrd == nullptr) break;
-        if (currentTimestep - pOrd->getTA() >= pOrd->getCookingOrderDuration()) {
+        //handling comobs
+        if (pOrd->getType() == TYPE_COMBO)
+        {
+            
+            bool check =moveComboToready(currentTimestep, pOrd);
+            if (check == false) break;
+            else
+            {
+                Cooking_Orders.dequeue(pOrd, pri);
+                READY_COMBO.enqueue(pOrd);
+                pOrd->setTR(currentTimestep);
+
+            }
+        }
+        else if (currentTimestep - pOrd->getTA() >= pOrd->getCookingOrderDuration()) {
             Cooking_Orders.dequeue(pOrd, pri);
 			pOrd->setTR(currentTimestep); // Update TR to the actual time it finished cooking
             pChf = pOrd->getAssignedChef();
@@ -531,20 +590,57 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
     while (READY_OT.peek(pTake)) {
         if (pTake == nullptr) break;
 
-        // Takeaway orders wait exactly 1 timestep after TR to be packed
+        
         if (currentTimestep >= pTake->getTR() + 1) {
             READY_OT.dequeue(pTake);
 
 
             pTake->setTF(currentTimestep);
 
-            // Finished_Orders (Stack<Orders*>) accepts Takeawayorders* gracefully
+            
             Finished_Orders.push(pTake);
         }
         else break;
     }
 }
+
 void Restaurant::MovetoInservice(int currentTimestep) {
+
+    //handling combo orders
+    while (!READY_COMBO.isEmpty() && !Free_Scooters.isEmpty())
+    {
+        Orders* ord = nullptr;
+        int pri = 0;
+        ComboOrders* cmb = nullptr;
+        Scooters*s = nullptr;
+        READY_COMBO.peek(ord);
+        if (ord) cmb = dynamic_cast<ComboOrders*>(ord);
+        if (Free_Scooters.getcount() >= cmb->getScootersNumber())
+        {
+            READY_COMBO.dequeue(ord);
+            Scooters** AssignedScooters = new Scooters * [cmb->getScootersNumber()];
+            for (int i = 0; i < cmb->getScootersNumber(); i++)
+            {
+                Free_Scooters.dequeue(s, pri);
+                if (s)
+                {
+                    AssignedScooters[i] = s;
+                    s->updateTotalDistance(cmb->getDistance());
+                    s->setTripdistance(cmb->getDistance());
+                    s->setstart_time(currentTimestep);
+                }
+
+            }
+            cmb->setAVGscooters(AssignedScooters[0]->getSpeed());
+            cmb->setAssignedScooters(AssignedScooters);
+            cmb->setTS(currentTimestep);
+            InServ_Orders.enqueue(ord, cmb->getServicePriority());
+            
+        }
+        else break;
+        
+    }
+
 
     //Overwait OVG First
     while (!Overwait_OVG.isEmpty() && !Free_Scooters.isEmpty()) {
@@ -627,6 +723,102 @@ void Restaurant::MovetoInservice(int currentTimestep) {
      }
 }
 
+
+// combo orders 
+void Restaurant::assignComboTochef(int currentTimestep)
+{
+    Orders* ord = nullptr;
+    int pri = 0;
+    int Cnspeed = 0;
+    int Csspeed = 0;
+   
+    while (PENDING_COMBO.peek(ord, pri) && ord->getTQ() <= currentTimestep)
+    {
+
+        ComboOrders* cmb = dynamic_cast<ComboOrders*> (ord);
+        if (cmb)
+        {
+            int chefs = cmb->getChefsNumber();
+           
+            int CN = cmb->getCN();
+            int CS = cmb->getCS();
+            if (Free_CN.getcount() >= CN && Free_CS.getcount() >= CS)
+            {
+                Chefs** Assignedchefs = new Chefs * [chefs];
+                PENDING_COMBO.dequeue(ord, pri);
+                cmb = dynamic_cast<ComboOrders*> (ord);
+                Chefs* c = nullptr;
+                int i = 0;
+                int cn = CN;
+               
+                
+                while (!Free_CN.isEmpty() && cn > 0 && i < chefs)
+                {
+                    Free_CN.dequeue(c);
+                    Assignedchefs[i++] = c;
+                    cn--;
+                }
+                
+                c = nullptr;
+                while (!Free_CS.isEmpty() && CS> 0 && i < chefs)
+                {
+                    Free_CS.dequeue(c);
+                    Assignedchefs[i++] = c;
+                    CS--;
+                }
+                cmb->setAssignedChefs(Assignedchefs);
+                cmb->setTA(currentTimestep);
+                cmb->setAssignedChef(Assignedchefs[0]);
+                Cnspeed = (CN > 0) ? Assignedchefs[0]->getSpeed() : 0;
+                Assignedchefs[i - 1]->getSpeed();
+                cmb->setAVGcooking(Cnspeed, Csspeed);
+                Cooking_Orders.enqueue(cmb, cmb->getCookingpriority( )); 
+
+            }
+            else break;
+        
+        }
+        else break;
+    }
+    
+
+}
+bool Restaurant::moveComboToready(int currentTimestep , Orders*& pOrd)
+{
+    int pri = 0;
+    ComboOrders* cmb = dynamic_cast<ComboOrders*>(pOrd);
+    if (cmb && currentTimestep - pOrd->getTA() >= cmb->getCookingOrderDuration())
+    {
+        if (cmb) {
+            int idx = 0;
+            Chefs** Assignedchefs = cmb->getAssignedChefs();
+
+            for (int i = 0; i < cmb->getCN(); i++)
+            {
+                Assignedchefs[idx]->setFinishTime(currentTimestep);
+                Free_CN.enqueue(Assignedchefs[idx++]);
+
+            }
+
+            for (int i = 0; i < cmb->getCS(); i++)
+            {
+                Assignedchefs[idx]->setFinishTime(currentTimestep);
+                Free_CS.enqueue(Assignedchefs[idx++]);
+
+            }
+            delete[] Assignedchefs;
+            cmb->setAssignedChefs(nullptr);
+            return true;
+        }
+    }
+    else return false;
+}
+
+
+
+
+
+
 ////////////////////////// Main simulation Function ////////////////////////////////////
 
 void Restaurant::RunSimulator()
@@ -643,9 +835,9 @@ void Restaurant::RunSimulator()
             0,
             Request, Cancel,
             PEND_ODG, PEND_ODN, PEND_OT,
-            PEND_OVN, PEND_OVC, PEND_OVG,
+            PEND_OVN, PEND_OVC, PEND_OVG, PENDING_COMBO,
             Free_CS, Free_CN,
-            READY_OD, READY_OT, READY_OV, Overwait_OVG,
+            READY_OD, READY_OT, READY_OV, Overwait_OVG, READY_COMBO,
             Cooking_Orders, InServ_Orders,
             Finished_Orders, Canceled_Orders,
             Free_Scooters, Back_Scooters,
@@ -690,9 +882,9 @@ void Restaurant::RunSimulator()
                 currentTimestep,
                 Request, Cancel,
                 PEND_ODG, PEND_ODN, PEND_OT,
-                PEND_OVN, PEND_OVC, PEND_OVG,
+                PEND_OVN, PEND_OVC, PEND_OVG,PENDING_COMBO,
                 Free_CS, Free_CN,
-                READY_OD, READY_OT, READY_OV, Overwait_OVG,
+                READY_OD, READY_OT, READY_OV, Overwait_OVG, READY_COMBO,
                 Cooking_Orders, InServ_Orders,
                 Finished_Orders, Canceled_Orders,
                 Free_Scooters, Back_Scooters,
@@ -703,8 +895,8 @@ void Restaurant::RunSimulator()
         }
   
         /// Check if simulation ends
-        int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount();
+        int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount() + PENDING_COMBO.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount() + READY_COMBO.getcount();
         if (pending == 0 && active == 0) break;
         currentTimestep++;
     }

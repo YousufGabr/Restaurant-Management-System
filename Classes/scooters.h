@@ -10,12 +10,14 @@ private:
 	int ID;
 	int Speed;
 	int Maintenance_Duration;
-	int Main_Ords_Threshold; // Added: to store limit before maintenance
-	int orders_delivered_count; // Added: counter for assigned Orders
+	int Main_Ords_Threshold;
+	int orders_delivered_count;
 	int Tripdistance;
 	int TotalDistance;
 	int Tstart;
 	int Tfinish;
+    int maxTripsBeforeMaintenance;
+
 	
 
 public:
@@ -43,7 +45,10 @@ public:
 	int getCount();
 	void updateTotalDistance(int);
 	int getSpeed() { return Speed; }
-	int getMain_Ords_Threshold();
+
+
+	int get_MaxTripsBeforaMaint() const;
+	void updateMaxTrips();
 	void fix();
 
 	

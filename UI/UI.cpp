@@ -13,6 +13,8 @@ void UI::PrintCurrentState(
     LinkedQueue<Orders*>& PEND_OVN,
     CancelQueue& PEND_OVC,
     PriorityQueue<Orders*>& PEND_OVG,
+    PriorityQueue<Orders*>& PENDING_COMBO,
+
 
     // Chefs
     LinkedQueue<Chefs*>& Free_CS,
@@ -23,6 +25,7 @@ void UI::PrintCurrentState(
     LinkedQueue<Orders*>& READY_OT,
     CancelQueue& READY_OV,
     PriorityQueue<Orders*>& Overwait_OVG,
+    LinkedQueue<Orders*>& READY_COMBO,
 
     // Order Status
     CancelPriQueue& Cooking_Orders,
@@ -45,7 +48,7 @@ void UI::PrintCurrentState(
     cout << "=============== Actions List [Order Type/X, TQ/Tcancel, order ID] ================" << endl;
     cout << Request.getcount() << " Request actions: "; print_queue(Request); cout << endl << endl;
     cout << Cancel.getcount() << " Cancel actions: "; print_queue(Cancel); cout << endl << endl;
-
+    
     cout << "------------- Pending Orders IDs ---------------------" << endl;
     cout << PEND_ODG.getcount() << " ODG: "; print_queue(PEND_ODG);  cout << endl;
     cout << PEND_ODN.getcount() << " ODN: "; print_queue(PEND_ODN);  cout << endl << endl;
@@ -53,6 +56,7 @@ void UI::PrintCurrentState(
     cout << PEND_OVN.getcount() << " OVN: "; print_queue(PEND_OVN);  cout << endl;
     cout << PEND_OVC.getcount() << " OVC: "; print_queue(PEND_OVC); cout << endl;
     cout << PEND_OVG.getcount() << " OVG: "; print_pqueue(PEND_OVG); cout << endl << endl;
+    cout << PENDING_COMBO.getcount() << " COMBO: "; print_pqueue(PENDING_COMBO); cout << endl << endl;
 
     cout << "------------- Available chefs IDs ----------------------" << endl;
     cout << Free_CS.getcount() << " CS : "; print_queue(Free_CS); cout << endl;
@@ -66,6 +70,7 @@ void UI::PrintCurrentState(
     cout << READY_OT.getcount() << " OT: "; print_queue(READY_OT);  cout << endl;
     cout << READY_OV.getcount() << " OV: "; print_queue(READY_OV); cout << endl;
     cout << Overwait_OVG.getcount() << " Overwait OVG: "; print_pqueue(Overwait_OVG); cout << endl << endl;
+    cout << READY_COMBO.getcount() << " COMBO: "; print_queue(READY_COMBO); cout << endl;
 
     cout << "------------- Available scooters IDs ----------------------" << endl;
     cout << Free_Scooters.getcount() << " Scooters : "; print_pqueue(Free_Scooters); cout << endl << endl;
