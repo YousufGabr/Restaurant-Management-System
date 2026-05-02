@@ -1,4 +1,5 @@
 #include "Deliveryorders.h"
+#include "ComboOrders.h"
 
 Deliveryorders::Deliveryorders(ORD_TYPE type,int tq, int id, int sz, double pr, int distance , int TH)
     : Orders(type, tq, id, sz, pr), distance (distance), AssignedScooter(nullptr), TS(0), TH(TH)
@@ -38,6 +39,7 @@ int Deliveryorders::getServicePriority() const
 {
     return -1 * (distance / (AssignedScooter->getSpeed()));
 }
+
 
 int Deliveryorders::getDeliveryDuration() const
 {

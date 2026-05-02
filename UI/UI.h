@@ -13,6 +13,7 @@
 #include"../Classes/Deliveryorders.h"
 #include"../Classes/Dineorders.h"
 #include"../Classes/Takeawayorders.h"
+#include "../Classes/ComboOrders.h"
 
 using namespace std;
 class Actions;
@@ -51,6 +52,8 @@ class UI
             LinkedQueue<Orders*>& PEND_OVN,
             CancelQueue& PEND_OVC,
             PriorityQueue<Orders*>& PEND_OVG,
+            PriorityQueue<Orders*>& PENDING_COMBO,
+
 
             // Chefs
             LinkedQueue<Chefs*>& Free_CS,
@@ -61,6 +64,7 @@ class UI
             LinkedQueue<Orders*>& READY_OT,
             CancelQueue& READY_OV,
             PriorityQueue<Orders*>& Overwait_OVG,
+            LinkedQueue<Orders*>& READY_COMBO,
 
             // Order Status
             CancelPriQueue& Cooking_Orders,

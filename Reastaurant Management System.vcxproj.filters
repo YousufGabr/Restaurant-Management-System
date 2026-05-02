@@ -66,6 +66,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\ComboOrders.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h">
@@ -132,6 +135,9 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Takeawayorders.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\ComboOrders.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>

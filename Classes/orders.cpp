@@ -35,6 +35,7 @@ int Orders::getCookingpriority() const
 }
 int Orders::getCookingOrderDuration() const
 {
+   
     return (size / (getAssignedChef()->getSpeed()));
 }
 

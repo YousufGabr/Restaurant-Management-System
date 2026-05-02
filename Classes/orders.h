@@ -7,7 +7,7 @@ class Chefs;
 
 
 enum ORD_TYPE {
-    TYPE_ODG, TYPE_ODN, TYPE_OT, TYPE_OVC, TYPE_OVG, TYPE_OVN
+    TYPE_ODG, TYPE_ODN, TYPE_OT, TYPE_OVC, TYPE_OVG, TYPE_OVN , TYPE_COMBO
 };
 
 class Orders {
@@ -52,8 +52,8 @@ public:
     Chefs* getAssignedChef() const;
 
     // general for all orders 
-    int getCookingpriority() const;
-	int getCookingOrderDuration() const;
+   virtual int getCookingpriority() const;
+   virtual int getCookingOrderDuration() const;
 
     ORD_TYPE getType() const;
 

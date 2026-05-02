@@ -15,6 +15,7 @@
 #include "../Classes/Deliveryorders.h"
 #include "../Classes/Dineorders.h"
 #include "../Classes/Takeawayorders.h"
+#include"..//Classes/ComboOrders.h"
 
 class Restaurant
 {
@@ -38,6 +39,7 @@ private:
 	LinkedQueue<Orders*> PEND_OVN;
 	CancelQueue PEND_OVC;  
 	PriorityQueue<Orders*> PEND_OVG;
+	PriorityQueue<Orders*> PENDING_COMBO;
 
 	//Chefs
 	LinkedQueue<Chefs*> Free_CS; 
@@ -47,6 +49,7 @@ private:
 	LinkedQueue<Orders*> READY_OD;
 	LinkedQueue<Orders*> READY_OT;
 	CancelQueue READY_OV;  
+	LinkedQueue<Orders*> READY_COMBO;
 	PriorityQueue<Orders*> Overwait_OVG;
 
 	//Order Status
@@ -76,7 +79,7 @@ public:
 	void RunSimulator();
 	void executeActions(int currentTimestep);
 	void checkScootersAvailablity(int currentTimestep);
-	void checkFinishedOrders(int currentTimestep); //check if any order is finished at the current timestep and move it to finished orders stack
+	void checkFinishedOrders(int currentTimestep);
 	void loadInputFile();
 	void generateOutputFile();
 	void AssignPendingToChef(int currentTimestep);
@@ -84,9 +87,9 @@ public:
 	void checkOverwaitOVG(int currentTimestep);
 	void MovetoInservice(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
-	//void AssignTable(int currentTimestep);
-	//void AssignScooter(int currentTimestep);
-	//void MoveToReady(int currentTimestep);
+	void assignComboTochef(int currentTimestep);
+	bool moveComboToready(int currentTimestep , Orders*& Pord);
+	
 
 
 };
