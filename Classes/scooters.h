@@ -16,6 +16,8 @@ private:
 	int TotalDistance;
 	int Tstart;
 	int Tfinish;
+    int maxTripsBeforeMaintenance;
+
 	
 
 public:
@@ -43,7 +45,10 @@ public:
 	int getCount();
 	void updateTotalDistance(int);
 	int getSpeed() { return Speed; }
-	int getMain_Ords_Threshold();
+
+
+	int get_MaxTripsBeforaMaint() const;
+	void updateMaxTrips();
 	void fix();
 
 	

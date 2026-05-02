@@ -336,9 +336,9 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
             if (currentTimestep - s->getfinish_time() >= (s->getfinish_time() - s->get_StartTime()))
             {
                 Back_Scooters.dequeue(s, pri);
-                if (s->getCount() >= s->getMain_Ords_Threshold())
+                if (s->getCount() >= s->get_MaxTripsBeforaMaint())
                 {
-                    // make count and total distance = 0;
+                    // fix updates scooters abillity to to more Maint_Ords  orders ;
                     s->fix();
                     Maint_Scooters.enqueue(s);
                 }
