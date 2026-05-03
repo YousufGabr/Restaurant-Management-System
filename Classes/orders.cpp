@@ -1,5 +1,6 @@
 #include "Orders.h"
 #include "Chefs.h"
+#include<cmath>
 
 Orders::Orders(ORD_TYPE type ,int tq, int id, int sz, double pr) : type (type) ,ID(id), TQ(tq), size(sz), price(pr)
 , TA(0), TR(0) , TF(0) , assignedChef(nullptr)
@@ -18,10 +19,15 @@ void Orders::setTA(int t) { TA = t; }
 void Orders::setTR(int t) { TR = t; }
 void Orders::setTF(int t) { TF = t; }
 
+void Orders::setTQ(int t)
+{
+    this->TQ = t;
+}
+
 //time periods
 int Orders::getTC() const { return TR - TA; }
 int Orders::getID() const { return ID; }
-int Orders::getTQ() const { return TQ; }
+
 
 ORD_TYPE Orders::getType() const
 {
@@ -31,12 +37,12 @@ ORD_TYPE Orders::getType() const
 //priority based on duration of cooking ( t = size / assigned Chef speed )
 int Orders::getCookingpriority() const
 {
-	return (size / (getAssignedChef()->getSpeed())) * -1;
+	return ceil((size / (getAssignedChef()->getSpeed()))) * -1;
 }
 int Orders::getCookingOrderDuration() const
 {
    
-    return (size / (getAssignedChef()->getSpeed()));
+    return ceil((size / (getAssignedChef()->getSpeed())));
 }
 
 ostream& operator<<(ostream& os, const Orders* ord) {

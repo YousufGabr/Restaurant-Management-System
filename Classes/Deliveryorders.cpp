@@ -37,13 +37,13 @@ int Deliveryorders::getOVGpriority() const
 //To be revised
 int Deliveryorders::getServicePriority() const
 {
-    return -1 * (distance / (AssignedScooter->getSpeed()));
+    return -1 * ceil((distance / (AssignedScooter->getSpeed())));
 }
 
 
 int Deliveryorders::getDeliveryDuration() const
 {
-    return (distance / (AssignedScooter->getSpeed()));
+    return ceil((distance / (AssignedScooter->getSpeed())));
 }
 
 void Deliveryorders::print(ostream& os) const

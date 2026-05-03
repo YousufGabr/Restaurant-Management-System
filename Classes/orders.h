@@ -29,7 +29,6 @@ public:
     Orders(ORD_TYPE type ,int tq, int id, int sz, double pr);
 
     int getID() const;
-    int getTQ() const;
     int getSize() const;
     double getPrice() const;
     
@@ -37,11 +36,12 @@ public:
     int getTA() const { return TA; }
     int getTR() const { return TR; } 
     int getTF() const { return TF; }
+    int getTQ() const { return TQ; }
 
     void setTA(int t);
     void setTR(int t);
     void setTF(int t);
-
+    void setTQ(int t);
 // Time periods
     
     int getTC() const; // setting cooking time period = TR-TA 

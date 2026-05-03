@@ -65,13 +65,13 @@ Chefs** ComboOrders::getAssignedChefs() const
 
 void ComboOrders::setAVGcooking(int n, int s)
 {
-	if(CN == 0) this->averageCookingPeriod = (size) / ((s / CS));
-	this->averageCookingPeriod = (size) / ((n / CN) + (s / CS));
+	if(CN == 0) this->averageCookingPeriod = ceil((size) / ((s / CS)));
+	this->averageCookingPeriod = ceil((size) / ((n / CN) + (s / CS)));
 }
 
 void ComboOrders::setAVGscooters(int s)
 {
-	averageDeliveryPeriod = distance / (getScootersNumber() * s);
+	averageDeliveryPeriod = ceil(distance / (getScootersNumber() * s));
 }
 
 void ComboOrders::setDeliveryDistance(int dist)

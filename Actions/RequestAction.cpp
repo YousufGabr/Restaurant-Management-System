@@ -79,7 +79,7 @@ void RequestAction::ACT()
 		neworder = new Deliveryorders(type, currentTimestep, ID, size, price, distance, TH);
 	}
 
-	RestPtr->AddPendingOrder(neworder);
+	RestPtr->AddPendingOrder(neworder , currentTimestep);
 }
 
 void RequestAction::print(ostream& os) const

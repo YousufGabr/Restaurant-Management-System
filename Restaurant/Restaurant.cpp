@@ -15,7 +15,7 @@ Restaurant::Restaurant() : Mode(-1)
 
 ////////////////////////  ADD and Cancel Functions //////////////////////
 
-void Restaurant::AddPendingOrder(Orders* neworder)
+void Restaurant::AddPendingOrder(Orders* neworder , int currentTimestep)
 {
     ORD_TYPE orderType = neworder->getType();
     if (dynamic_cast<ComboOrders*>(neworder))
@@ -23,6 +23,7 @@ void Restaurant::AddPendingOrder(Orders* neworder)
         ComboOrders* newCM = dynamic_cast<ComboOrders*>(neworder);
         if (newCM)
             PENDING_COMBO.enqueue(newCM, newCM->getpendingPriority());
+        newCM->setTQ(currentTimestep);
     }
     else if (dynamic_cast<Deliveryorders*>(neworder))
     {
@@ -33,6 +34,7 @@ void Restaurant::AddPendingOrder(Orders* neworder)
         case TYPE_OVC: PEND_OVC.enqueue(newOV); break;
         case TYPE_OVG: PEND_OVG.enqueue(newOV, (newOV->getOVGpriority() * 1000)); break;
         }
+        newOV->setTQ(currentTimestep);
 
     }
     else if (dynamic_cast<Dineorders*>(neworder))
@@ -43,13 +45,15 @@ void Restaurant::AddPendingOrder(Orders* neworder)
         case TYPE_ODG: PEND_ODG.enqueue(newOD); break;
         case TYPE_ODN: PEND_ODN.enqueue(newOD); break;
         }
-
+        newOD->setTQ(currentTimestep);
     }
     else if (dynamic_cast<Takeawayorders*>(neworder))
     {
         Takeawayorders* newOT = dynamic_cast<Takeawayorders*>(neworder);
         PEND_OT.enqueue(newOT);
+        newOT->setTQ(currentTimestep);
     }
+  
 }
 
 void Restaurant::CancelOVC(int orderID)
@@ -203,82 +207,192 @@ void Restaurant::loadInputFile()
     input.close();
 }
 
-void Restaurant::generateOutputFile() {
-	string filename = ui.getoutputfilename();
+void Restaurant::generateOutputFile(int currentTimestep)
+{
+    string filename = ui.getoutputfilename();
     ofstream outFile(filename);
-    if (!outFile.is_open()) {
-        cout << "Error: Could not create output file!" << endl;
-        return;
-    }
 
-    outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTc\tTw\tTserv\n";
+    outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTi\tTc\tTw\tTserv\n";
 
     Orders* pOrd = nullptr;
 
-    int total = 0;
-    double totalWait = 0, totalServ = 0;
-	ArrayStack<Orders*> tempStack = Finished_Orders;
+    int total_finished = 0;
+    int finished_OD = 0, finished_OT = 0, finished_OV = 0, finished_COMBO = 0;
 
-    // Popping from the Stack naturally prints in descending order of Finish Time (TF)
-    while (tempStack.pop(pOrd)) {
-        if (pOrd == nullptr) continue; // Safety check
+    double sum_Ti = 0, sum_Tc = 0, sum_Tw = 0, sum_Tserv = 0;
+    double total_chef_busy_time = 0;
+    double total_scooter_busy_time = 0;
 
-        int Tc = pOrd->getTR() - pOrd->getTA();
+    ArrayStack<Orders*> tempStack = Finished_Orders;
+
+    while (tempStack.pop(pOrd))
+    {
+        int TF = pOrd->getTF();
+        int TQ = pOrd->getTQ();
+        int TA = pOrd->getTA();
+        int TR = pOrd->getTR();
+        int Tc = pOrd->getTC();
+        int Ti = 0;
         int Tw = 0;
-        int Tserv = 0;
-        int printed_TS = 0; 
-
+        if (dynamic_cast<Takeawayorders*>(pOrd))
+        {
+            Takeawayorders* Pt = dynamic_cast<Takeawayorders*>(pOrd);
+            Ti = Pt->getTi();
+            Tw = Pt->getTW();
+        }
+        else
+        {
+            Ti = pOrd->getTi();
+            Tw = pOrd->getTW();
+        }
        
-        if (pOrd->getType() == TYPE_OT) {
-            Tw = pOrd->getTA() - pOrd->getTQ();
-            Tserv = pOrd->getTF() - pOrd->getTR();
-            printed_TS = 0;
+
+        int TS = 0;
+        int Tserv = 0;
+
+        ORD_TYPE type = pOrd->getType();
+
+        if (type == TYPE_OT)
+        {
+            finished_OT++;
+            Tserv = TF - TR;
+            total_chef_busy_time += Tc;
+            TS = 1;
         }
-        else {
-            
-            int TS_Value = 0;
+        else if (type == TYPE_COMBO)
+        {
+            finished_COMBO++;
+            ComboOrders* cmb = (ComboOrders*)pOrd;
 
-            if (pOrd->getType() == TYPE_ODG || pOrd->getType() == TYPE_ODN) {
-                Dineorders* pDine = dynamic_cast<Dineorders*>(pOrd);
-                if (pDine) TS_Value = pDine->getTS();
-            }
-            else {
-                
-                Deliveryorders* pDelv = dynamic_cast<Deliveryorders*>(pOrd);
-                if (pDelv) TS_Value = pDelv->getTS();
-            }
+            TS = cmb->getTs();
+            Tserv = TF - TS;
 
-            
-            Tw = (pOrd->getTA() - pOrd->getTQ()) + (TS_Value - pOrd->getTR());
-            Tserv = pOrd->getTF() - TS_Value;
-            printed_TS = TS_Value;
+            total_chef_busy_time += Tc * cmb->getChefsNumber();
+            total_scooter_busy_time += Tserv * cmb->getScootersNumber();
+        }
+        else if (type == TYPE_ODG || type == TYPE_ODN)
+        {
+            finished_OD++;
+            Dineorders* dine = (Dineorders*)pOrd;
+
+            TS = dine->getTS();
+            Tserv = TF - TS;
+
+            total_chef_busy_time += Tc;
+        }
+        else
+        {
+            finished_OV++;
+            Deliveryorders* delv = (Deliveryorders*)pOrd;
+
+            TS = delv->getTS();
+            Tserv = TF - TS;
+
+            total_chef_busy_time += Tc;
+            total_scooter_busy_time += Tserv;
         }
 
-        total++;
-        totalWait += Tw;
-        totalServ += Tserv;
+        sum_Ti += Ti;
+        sum_Tc += Tc;
+        sum_Tw += Tw;
+        sum_Tserv += Tserv;
+        total_finished++;
 
-        outFile << pOrd->getTF() << "\t"
+        outFile << TF << "\t"
             << pOrd->getID() << "\t"
-            << pOrd->getTQ() << "\t"
-            << pOrd->getTA() << "\t"
-            << pOrd->getTR() << "\t"
-            << printed_TS << "\t"
+            << TQ << "\t"
+            << TA << "\t"
+            << TR << "\t"
+            << TS << "\t"
+            << Ti << "\t"
             << Tc << "\t"
             << Tw << "\t"
             << Tserv << "\n";
     }
 
-    outFile << "\n------------------------------------------------\n";
-    outFile << "------------------ Statistics ------------------\n";
-    outFile << "------------------------------------------------\n";
-    outFile << "Total Orders: " << total << "\n";
-    outFile << "Avg Wait Time: " << (total ? totalWait / total : 0.0) << "\n";
-    outFile << "Avg Service Time: " << (total ? totalServ / total : 0.0) << "\n";
+    int total_CN = Free_CN.getcount();
+    int total_CS = Free_CS.getcount();
+    int total_chefs = total_CN + total_CS;
+
+    int total_scooters = Free_Scooters.getcount()
+        + Back_Scooters.getcount()
+        + Maint_Scooters.getcount()
+        + Resc_Scooters.getcount();
+
+    int total_cancelled = Canceled_Orders.getcount();
+    int total_overwait = Overwait_OVG.getcount();
+
+    int total_orders = total_finished + total_cancelled;
+
+    // --- Calculate Cancelled Order Types ---
+    int cancelled_OD = 0, cancelled_OT = 0, cancelled_OV = 0, cancelled_COMBO = 0;
+    ArrayStack<Orders*> tempStack2;
+    Orders* pOrd2;
+
+    // Loop through the stack to count types
+    while (!Canceled_Orders.isEmpty()) {
+        Canceled_Orders.pop(pOrd2);
+
+        if (pOrd2 != nullptr) {
+            // Replace 'GetType()' and 'TYPE_OD' etc., with your actual methods and enums
+            int type = pOrd2->getType();
+            if (type == TYPE_ODN) cancelled_OD++;
+            if (type == TYPE_ODG) cancelled_OD++;
+            else if (type == TYPE_OT) cancelled_OT++;
+            else if (type == TYPE_OVN) cancelled_OV++;
+            else if (type == TYPE_OVG) cancelled_OV++;
+            else if (type == TYPE_OVC) cancelled_OV++;
+            else if (type == TYPE_COMBO) cancelled_COMBO++;
+
+            tempStack2.push(pOrd2); // Keep it to restore later
+        }
+    }
+
+    // Restore the original Canceled_Orders stack
+    while (!tempStack2.isEmpty()) {
+        tempStack2.pop(pOrd2);
+        Canceled_Orders.push(pOrd2);
+    }
+    // ---------------------------------------
+
+    // Add finished and cancelled together
+    int total_OD = finished_OD + cancelled_OD;
+    int total_OT = finished_OT + cancelled_OT;
+    int total_OV = finished_OV + cancelled_OV;
+    int total_COMBO = finished_COMBO + cancelled_COMBO;
+
+    outFile << "\n------------------ Statistics ------------------\n";
+
+    outFile << "Total Orders: " << total_orders
+        << " (OD: " << total_OD
+        << ", OT: " << total_OT
+        << ", OV: " << total_OV
+        << ", COMBO: " << total_COMBO << ")\n";
+
+    outFile << "Total Chefs: " << total_chefs
+        << " (CN: " << total_CN
+        << ", CS: " << total_CS << ")\n";
+
+    outFile << "Total Scooters: " << total_scooters << "\n";
+
+    outFile << "Finished %: " << (double)total_finished / total_orders * 100 << "\n";
+    outFile << "Cancelled %: " << (double)total_cancelled / total_orders * 100 << "\n";
+
+    outFile << "Overwait %: " << (double)total_overwait / total_finished * 100 << "\n";
+
+    outFile << "Avg Ti: " << sum_Ti / total_finished << "\n";
+    outFile << "Avg Tc: " << sum_Tc / total_finished << "\n";
+    outFile << "Avg Tw: " << sum_Tw / total_finished << "\n";
+    outFile << "Avg Tserv: " << sum_Tserv / total_finished << "\n";
+
+    outFile << "Scooter Utilization: "
+        << total_scooter_busy_time / (currentTimestep * total_scooters) * 100 << "\n";
+
+    outFile << "Chef Utilization: "
+        << total_chef_busy_time / (currentTimestep * total_chefs) * 100 << "\n";
 
     outFile.close();
 }
-
 ////////////////////////// Logic functions /////////////////////////////////////////////
 
 
@@ -476,11 +590,8 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
     auto assignLogic = [&](Orders* ord, Chefs* chf) {
         ord->setAssignedChef(chf);
         ord->setTA(currentTimestep);
-        int cookPeriod = (ord->getSize() + chf->getSpeed() - 1) / chf->getSpeed();
-        int readyTime = currentTimestep + cookPeriod;
-        ord->setTR(readyTime);
-        chf->setFinishTime(readyTime);
-        Cooking_Orders.enqueue(ord, -readyTime);
+       
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
         };
 
     assignComboTochef(currentTimestep);
@@ -490,6 +601,7 @@ void Restaurant::AssignPendingToChef(int currentTimestep) {
     while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
         PEND_ODG.dequeue(pDine);
         Free_CS.dequeue(pChf);
+
         assignLogic(pDine, pChf);
     }
     while (!PEND_ODN.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
@@ -975,7 +1087,7 @@ void Restaurant::RunSimulator()
         currentTimestep++;
     }
     /// Generate output file 
-    generateOutputFile();
+    generateOutputFile(currentTimestep);
     /// print final status
     ui.simulation_ended(currentTimestep, Finished_Orders.getcount(), Canceled_Orders.getcount());
 }

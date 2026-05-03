@@ -81,7 +81,7 @@ public:
 	Restaurant();
 
 	//Actions called functions 
-	void AddPendingOrder(Orders *);
+	void AddPendingOrder(Orders * , int);
 	void CancelOVC(int orderID);
 
 
@@ -90,7 +90,7 @@ public:
 	void checkScootersAvailablity(int currentTimestep);
 	void checkFinishedOrders(int currentTimestep);
 	void loadInputFile();
-	void generateOutputFile();
+	void generateOutputFile(int);
 	void AssignPendingToChef(int currentTimestep);
 	void MoveToReady(int currentTimestep);
 	void checkOverwaitOVG(int currentTimestep);
