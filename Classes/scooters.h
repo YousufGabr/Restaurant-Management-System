@@ -4,6 +4,10 @@
 #include "Orders.h"
 using namespace std;
 
+enum SC_TYPE {
+	TYPE_NORMAL, TYPE_RESCUE
+};
+
 class Scooters
 {
 private:
@@ -17,14 +21,18 @@ private:
 	int Tstart;
 	int Tfinish;
     int maxTripsBeforeMaintenance;
-
+	bool isBroken;
+	SC_TYPE Type;
 	
 
 public:
-	Scooters(int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
+	Scooters(SC_TYPE type,int id, int speed, int Main_Dur, int threshold); // Edited: added threshold parameter
+	SC_TYPE getType() const { return Type; }
 	int get_Speed() const;
 	int get_Maintenance_Duration() const;
 	int getID() const;
+	void set_Breakdown(bool b) { isBroken = b; }
+	bool get_Breakdown() const { return isBroken; }
 
 	// set and get time steps for scooter per each trip
 	int get_StartTime() const;

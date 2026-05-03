@@ -54,7 +54,9 @@ void Deliveryorders::print(ostream& os) const
     }
     else if (getAssignedScooter() != nullptr)
     {
-        os << "[" << getID() << ",S" << getAssignedScooter()->getID() << "]";
+        if(getAssignedScooter()->getType() == SC_TYPE::TYPE_NORMAL) os << "[" << getID() << ",S" << getAssignedScooter()->getID() << "]";
+		else os << "[" << getID() << ",SR" << getAssignedScooter()->getID() << "]";
+        
     }
     else os << getID();
 }

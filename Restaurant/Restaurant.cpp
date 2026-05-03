@@ -90,13 +90,16 @@ void Restaurant::loadInputFile()
 
     while (!input.is_open()) {
         cout << "Error file cannot open\n";
+        cout << "\033[31m" << "----------------------" << RESET << endl;
+        cout << "\033[31m" << "Error file cannot open" << RESET << endl;
+        cout << "\033[31m" << "----------------------" << RESET << endl;
         filename = ui.getinputfilename();
         input.open(filename);
     }
 
     // 1. Declare all variables ONCE at the top
     int numCN, numCS, speedCN, speedCS;
-    int sCount, sSpeed, mainOrds, mainDur;
+    int snCount, srCount, sSpeed, mainOrds, mainDur;
     int totalTables;
     int tablecount, capacity;
     int TH;
@@ -117,10 +120,14 @@ void Restaurant::loadInputFile()
         Free_CS.enqueue(new Chefs(numCN + i + 1, Chefs::TYPE_CS, speedCS));
 
     
-    input >> sCount >> sSpeed >> mainOrds >> mainDur;
-    for (int i = 0; i < sCount; i++) {
-        Scooters* s = new Scooters(i + 1, sSpeed, mainDur, mainOrds);
+    input >> snCount >> srCount >> sSpeed >> mainOrds >> mainDur;
+    for (int i = 0; i < snCount; i++) {
+        Scooters* s = new Scooters(SC_TYPE::TYPE_NORMAL, i + 1, sSpeed, mainDur, mainOrds);
         Free_Scooters.enqueue(s, s->getFreePriority());
+    }
+    for (int i = 0; i < srCount; i++) {
+        Scooters* s = new Scooters(SC_TYPE::TYPE_RESCUE, i + 1, sSpeed, mainDur, mainOrds);
+        Resc_Scooters.enqueue(s);
     }
 
     
@@ -319,7 +326,8 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
             if (currentTimestep - 2* s->getfinish_time() + s->get_StartTime() >= s->get_Maintenance_Duration())
             {
                 Maint_Scooters.dequeue(s);
-                Free_Scooters.enqueue(s, s->getFreePriority());
+                if (s->getType() == SC_TYPE::TYPE_RESCUE) Resc_Scooters.enqueue(s);
+                else Free_Scooters.enqueue(s, s->getFreePriority());
             }
             else break;
         }
@@ -336,13 +344,18 @@ void Restaurant::checkScootersAvailablity(int currentTimestep)
             if (currentTimestep - s->getfinish_time() >= (s->getfinish_time() - s->get_StartTime()))
             {
                 Back_Scooters.dequeue(s, pri);
-                if (s->getCount() >= s->get_MaxTripsBeforaMaint())
+                if (s->getCount() >= s->get_MaxTripsBeforaMaint() || s->get_Breakdown())
                 {
                     // fix updates scooters abillity to to more Maint_Ords  orders ;
                     s->fix();
+                    s->set_Breakdown(false);
                     Maint_Scooters.enqueue(s);
                 }
-                else Free_Scooters.enqueue(s, s->getFreePriority());
+                else
+                {
+                    if(s->getType() == SC_TYPE::TYPE_RESCUE) Resc_Scooters.enqueue(s);
+					else Free_Scooters.enqueue(s, s->getFreePriority());
+                }
             }
             else break;
         }
@@ -815,6 +828,64 @@ bool Restaurant::moveComboToready(int currentTimestep , Orders*& pOrd)
 }
 
 
+void Restaurant::handleScooterBreakdown(int currentTimestep) {
+    // --- Phase 1: Process pending rescues ---
+    PriorityQueue<RescueEvent*> tempPending;
+    RescueEvent* evt = nullptr;
+    int pri;
+
+    while (pendingRescues.dequeue(evt, pri)) {
+        if (currentTimestep >= evt->arrivalTimestep) {
+            // Rescue arrived — NOW set timing so checkScootersAvailablity math is correct
+            evt->failedScooter->setstart_time(evt->breakdownTimestep); // return trip starts from breakdown moment
+            evt->failedScooter->setfinish_time(currentTimestep);       // rescue arrived = scooter ready to head back
+            Back_Scooters.enqueue(evt->failedScooter, evt->failedScooter->getBackPriority());
+            delete evt;
+        }
+        else {
+            tempPending.enqueue(evt, pri);
+        }
+    }
+    while (tempPending.dequeue(evt, pri)) pendingRescues.enqueue(evt, pri);
+
+    // --- Phase 2: New breakdowns ---
+    PriorityQueue<Orders*> tempInServ;
+    Orders* pOrd = nullptr;
+
+    while (InServ_Orders.dequeue(pOrd, pri)) {
+        Deliveryorders* delv = dynamic_cast<Deliveryorders*>(pOrd);
+
+        if (delv && delv->getAssignedScooter() != nullptr && delv->getAssignedScooter()->getType() == SC_TYPE::TYPE_NORMAL) 
+        {
+            if ((rand() % 100) < 25) {
+                Scooters* failedSc = delv->getAssignedScooter();
+                Scooters* rescueSc = nullptr;
+
+                if (Resc_Scooters.dequeue(rescueSc)) {
+                    int traveledTime = currentTimestep - failedSc->get_StartTime();
+                    int rescueArrival = currentTimestep + traveledTime;
+
+                    rescueSc->setstart_time(currentTimestep);
+                    rescueSc->updateTotalDistance(delv->getDistance());
+                    rescueSc->setTripdistance(delv->getDistance());
+                    delv->setAssignedScooter(rescueSc);
+
+                    failedSc->set_Breakdown(true);
+                    RescueEvent* newEvt = new RescueEvent();
+                    newEvt->failedScooter = failedSc;
+                    newEvt->rescueScooter = rescueSc;
+                    newEvt->order = delv;
+                    newEvt->breakdownTimestep = currentTimestep;
+                    newEvt->arrivalTimestep = rescueArrival;
+
+                    pendingRescues.enqueue(newEvt, rescueArrival);
+                }
+            }
+        }
+        tempInServ.enqueue(pOrd, pri);
+    }
+    while (tempInServ.dequeue(pOrd, pri)) InServ_Orders.enqueue(pOrd, pri);
+}
 
 
 
@@ -841,7 +912,7 @@ void Restaurant::RunSimulator()
             Cooking_Orders, InServ_Orders,
             Finished_Orders, Canceled_Orders,
             Free_Scooters, Back_Scooters,
-            Maint_Scooters,
+            Maint_Scooters, Resc_Scooters,
             Free_Tables, Busy_Sharable,
             Busy_NonSharable
         );
@@ -850,8 +921,11 @@ void Restaurant::RunSimulator()
     int currentTimestep = 1; 
     while (true)
     {
-        //loop on action lists 
+        ///loop on action lists 
         executeActions(currentTimestep);
+
+		/// Handle Scooter Breakdowns
+		handleScooterBreakdown(currentTimestep);
     
         /// check Scooters (Back , Maint) ->free
         checkScootersAvailablity(currentTimestep);
@@ -888,7 +962,7 @@ void Restaurant::RunSimulator()
                 Cooking_Orders, InServ_Orders,
                 Finished_Orders, Canceled_Orders,
                 Free_Scooters, Back_Scooters,
-                Maint_Scooters,
+                Maint_Scooters, Resc_Scooters,
                 Free_Tables, Busy_Sharable,
                 Busy_NonSharable
             );

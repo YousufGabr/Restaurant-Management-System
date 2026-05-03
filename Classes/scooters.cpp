@@ -1,8 +1,8 @@
 #include "Scooters.h"
 
-Scooters::Scooters(int id, int speed, int Main_Dur, int threshold)
-	: ID(id), Speed(speed), Maintenance_Duration(Main_Dur), Main_Ords_Threshold(threshold),
-	orders_delivered_count(0), Tfinish(0), TotalDistance(0) , Tstart(0) , Tripdistance(0), maxTripsBeforeMaintenance(threshold)  // Edited: initialize members
+Scooters::Scooters(SC_TYPE type, int id, int speed, int Main_Dur, int threshold)
+	: Type(type), ID(id), Speed(speed), Maintenance_Duration(Main_Dur), Main_Ords_Threshold(threshold),
+	orders_delivered_count(0), Tfinish(0), TotalDistance(0) , Tstart(0) , Tripdistance(0), maxTripsBeforeMaintenance(threshold), isBroken(false)  // Edited: initialize members
 {
 }
 
@@ -49,7 +49,9 @@ ostream& operator<<(ostream& os, const Scooters* scooter)
 {
 	if (scooter)
 	{
-		os << "S" << scooter->ID;
+		if (scooter->getType() == SC_TYPE::TYPE_NORMAL)os << "S" << scooter->ID;
+		else os << "SR" << scooter->ID;
+		
 	}
 	return os;
 }

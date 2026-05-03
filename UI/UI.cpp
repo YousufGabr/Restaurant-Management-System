@@ -15,7 +15,6 @@ void UI::PrintCurrentState(
     PriorityQueue<Orders*>& PEND_OVG,
     PriorityQueue<Orders*>& PENDING_COMBO,
 
-
     // Chefs
     LinkedQueue<Chefs*>& Free_CS,
     LinkedQueue<Chefs*>& Free_CN,
@@ -37,6 +36,7 @@ void UI::PrintCurrentState(
     PriorityQueue<Scooters*>& Free_Scooters,
     PriorityQueue<Scooters*>& Back_Scooters,
     LinkedQueue<Scooters*>& Maint_Scooters,
+    LinkedQueue<Scooters*>& Resc_Scooters,
 
     // Tables
     BestFitPriQueue& Free_Tables,
@@ -44,66 +44,84 @@ void UI::PrintCurrentState(
     BestFitPriQueue& Busy_NonSharable
 )
 {
-    cout << "\nCurrent Timestep: " << timestep << endl << endl;
-    cout << "=============== Actions List [Order Type/X, TQ/Tcancel, order ID] ================" << endl;
-    cout << Request.getcount() << " Request actions: "; print_queue(Request); cout << endl << endl;
-    cout << Cancel.getcount() << " Cancel actions: "; print_queue(Cancel); cout << endl << endl;
-    
-    cout << "------------- Pending Orders IDs ---------------------" << endl;
-    cout << PEND_ODG.getcount() << " ODG: "; print_queue(PEND_ODG);  cout << endl;
-    cout << PEND_ODN.getcount() << " ODN: "; print_queue(PEND_ODN);  cout << endl << endl;
-    cout << PEND_OT.getcount() << " OT:  "; print_queue(PEND_OT);   cout << endl << endl;
-    cout << PEND_OVN.getcount() << " OVN: "; print_queue(PEND_OVN);  cout << endl;
-    cout << PEND_OVC.getcount() << " OVC: "; print_queue(PEND_OVC); cout << endl;
-    cout << PEND_OVG.getcount() << " OVG: "; print_pqueue(PEND_OVG); cout << endl << endl;
-    cout << PENDING_COMBO.getcount() << " COMBO: "; print_pqueue(PENDING_COMBO); cout << endl << endl;
+    // ?? Timestep header ???????????????????????????????????????
+    cout << BOLD << YELLOW << "\n===============================================" << RESET << endl;
+    cout << BOLD << YELLOW << "  Current Timestep: " << WHITE << timestep << RESET << endl;
+    cout << BOLD << YELLOW << "===============================================" << RESET << endl << endl;
 
-    cout << "------------- Available chefs IDs ----------------------" << endl;
-    cout << Free_CS.getcount() << " CS : "; print_queue(Free_CS); cout << endl;
-    cout << Free_CN.getcount() << " CN : "; print_queue(Free_CN); cout << endl << endl;
+    // ?? Actions ???????????????????????????????????????????????
+    cout << BOLD << CYAN << "=============== Actions List [Order Type/X, TQ/Tcancel, order ID] ================" << RESET << endl;
+    cout << GREEN << Request.getcount() << RESET << " Request actions: "; print_queue(Request); cout << endl << endl;
+    cout << GREEN << Cancel.getcount() << RESET << " Cancel actions: ";  print_queue(Cancel);  cout << endl << endl;
 
-    cout << "------------- Cooking orders [Orders ID, chef ID] ---------------------" << endl;
-    cout << Cooking_Orders.getcount() << " cooking orders: "; print_pqueue(Cooking_Orders); cout << endl << endl;
+    // ?? Pending Orders ????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Pending Orders IDs ---------------------" << RESET << endl;
+    cout << GREEN << PEND_ODG.getcount() << RESET << " ODG: ";   print_queue(PEND_ODG);       cout << endl;
+    cout << GREEN << PEND_ODN.getcount() << RESET << " ODN: ";   print_queue(PEND_ODN);       cout << endl << endl;
+    cout << GREEN << PEND_OT.getcount() << RESET << " OT:  ";   print_queue(PEND_OT);        cout << endl << endl;
+    cout << GREEN << PEND_OVN.getcount() << RESET << " OVN: ";   print_queue(PEND_OVN);       cout << endl;
+    cout << GREEN << PEND_OVC.getcount() << RESET << " OVC: ";   print_queue(PEND_OVC);       cout << endl;
+    cout << GREEN << PEND_OVG.getcount() << RESET << " OVG: ";   print_pqueue(PEND_OVG);      cout << endl << endl;
+    cout << GREEN << PENDING_COMBO.getcount() << RESET << " COMBO: "; print_pqueue(PENDING_COMBO); cout << endl << endl;
 
-    cout << "------------- Ready Orders IDs ---------------------" << endl;
-    cout << READY_OD.getcount() << " OD: "; print_queue(READY_OD);  cout << endl;
-    cout << READY_OT.getcount() << " OT: "; print_queue(READY_OT);  cout << endl;
-    cout << READY_OV.getcount() << " OV: "; print_queue(READY_OV); cout << endl;
-    cout << Overwait_OVG.getcount() << " Overwait OVG: "; print_pqueue(Overwait_OVG); cout << endl << endl;
-    cout << READY_COMBO.getcount() << " COMBO: "; print_queue(READY_COMBO); cout << endl;
+    // ?? Chefs ?????????????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Available chefs IDs ----------------------" << RESET << endl;
+    cout << GREEN << Free_CS.getcount() << RESET << " CS : "; print_queue(Free_CS); cout << endl;
+    cout << GREEN << Free_CN.getcount() << RESET << " CN : "; print_queue(Free_CN); cout << endl << endl;
 
-    cout << "------------- Available scooters IDs ----------------------" << endl;
-    cout << Free_Scooters.getcount() << " Scooters : "; print_pqueue(Free_Scooters); cout << endl << endl;
+    // ?? Cooking Orders ????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Cooking orders [Orders ID, chef ID] ---------------------" << RESET << endl;
+    cout << GREEN << Cooking_Orders.getcount() << RESET << " cooking orders: "; print_pqueue(Cooking_Orders); cout << endl << endl;
 
-    cout << "------------- Available tables [ID, capacity, free seats] ----------------------" << endl;
-    cout << Free_Tables.getcount() + Busy_Sharable.getcount() << " tables : "; print_pqueue(Busy_Sharable);  print_pqueue(Free_Tables); cout << endl << endl;
+    // ?? Ready Orders ??????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Ready Orders IDs ---------------------" << RESET << endl;
+    cout << GREEN << READY_OD.getcount() << RESET << " OD: ";           print_queue(READY_OD);       cout << endl;
+    cout << GREEN << READY_OT.getcount() << RESET << " OT: ";           print_queue(READY_OT);       cout << endl;
+    cout << GREEN << READY_OV.getcount() << RESET << " OV: ";           print_queue(READY_OV);       cout << endl;
+    cout << GREEN << Overwait_OVG.getcount() << RESET << " Overwait OVG: "; print_pqueue(Overwait_OVG);  cout << endl << endl;
+    cout << GREEN << READY_COMBO.getcount() << RESET << " COMBO: ";        print_queue(READY_COMBO);    cout << endl;
 
-    cout << "------------- In-Service orders [order ID, scooter/Table ID] ------------------" << endl;
-    cout << InServ_Orders.getcount() << " Orders: "; print_pqueue(InServ_Orders); cout << endl << endl;
+    // ?? Scooters ??????????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Available scooters IDs ----------------------" << RESET << endl;
+    cout << GREEN << Free_Scooters.getcount() << RESET << " Normal : "; print_pqueue(Free_Scooters); cout << endl;
+    cout << GREEN << Resc_Scooters.getcount() << RESET << " Rescue : "; print_queue(Resc_Scooters);  cout << endl << endl;
 
-    cout << "------------- In-maintainance scooters IDs ----------------------" << endl;
-    cout << Maint_Scooters.getcount() << " scooters: "; print_queue(Maint_Scooters); cout << endl << endl;
+    // ?? Tables ????????????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Available tables [ID, capacity, free seats] ----------------------" << RESET << endl;
+    cout << GREEN << Free_Tables.getcount() + Busy_Sharable.getcount() << RESET << " tables : ";
+    print_pqueue(Busy_Sharable); print_pqueue(Free_Tables); cout << endl << endl;
 
-    cout << "------------- Scooters Back to Restaurant IDs ----------------------" << endl;
-    cout << Back_Scooters.getcount() << " scooters: "; print_pqueue(Back_Scooters); cout << endl << endl;
+    // ?? In-Service Orders ?????????????????????????????????????
+    cout << BOLD << CYAN << "------------- In-Service orders [order ID, scooter/Table ID] ------------------" << RESET << endl;
+    cout << GREEN << InServ_Orders.getcount() << RESET << " Orders: "; print_pqueue(InServ_Orders); cout << endl << endl;
 
-    cout << "------------- Cancelled Orders IDs ----------------------" << endl;
-    cout << Canceled_Orders.getcount() << " cancelled: "; print_stack(Canceled_Orders); cout << endl << endl;
+    // ?? Maintenance Scooters ??????????????????????????????????
+    cout << BOLD << CYAN << "------------- In-maintainance scooters IDs ----------------------" << RESET << endl;
+    cout << GREEN << Maint_Scooters.getcount() << RESET << " scooters: "; print_queue(Maint_Scooters); cout << endl << endl;
 
-    cout << "------------- Finished orders IDs----------------------------" << endl;
-    cout << Finished_Orders.getcount() << " Orders: "; print_stack(Finished_Orders); cout << endl << endl;
+    // ?? Back Scooters ?????????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Scooters Back to Restaurant IDs ----------------------" << RESET << endl;
+    cout << GREEN << Back_Scooters.getcount() << RESET << " scooters: "; print_pqueue(Back_Scooters); cout << endl << endl;
 
-    cout << "\nPRESS ANY KEY TO MOVE TO NEXT STEP !" << endl;
+    // ?? Cancelled Orders ??????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Cancelled Orders IDs ----------------------" << RESET << endl;
+    cout << GREEN << Canceled_Orders.getcount() << RESET << " cancelled: "; print_stack(Canceled_Orders); cout << endl << endl;
+
+    // ?? Finished Orders ???????????????????????????????????????
+    cout << BOLD << CYAN << "------------- Finished orders IDs----------------------------" << RESET << endl;
+    cout << GREEN << Finished_Orders.getcount() << RESET << " Orders: "; print_stack(Finished_Orders); cout << endl << endl;
+
+    cout << BOLD << YELLOW << "\nPRESS ANY KEY TO MOVE TO NEXT STEP !" << RESET << endl;
     cin.get();
 }
 
 string UI::getinputfilename() const
 {
-	cout << "Enter input file name: ";
-	string filename;
-	cin >> filename;
-	cin.ignore();
-	return filename + ".txt";
+    cout << "Enter input file name: ";
+    string filename;
+    cin >> filename;
+    cin.ignore();
+    return filename + ".txt";
 }
 
 string UI::getoutputfilename() const
@@ -119,30 +137,30 @@ int UI::GetMode() {
     int mode = -1;
 
     while (true) {
-        cout << "Please select the application mode:" << endl;
-        cout << "[I] Interactive Mode" << endl;
-        cout << "[S] Silent Mode" << endl;
-        cout << "Choice: ";
+        cout << BOLD << YELLOW << "Please select the application mode:" << RESET << endl;
+        cout << GREEN << "[I]" << WHITE << " Interactive Mode" << RESET << endl;
+        cout << GREEN << "[S]" << WHITE << " Silent Mode" << RESET << endl;
+        cout << BOLD << YELLOW << "Choice: " << RESET;
 
         cin >> input;
         cin.ignore();
 
-        // Convert input to uppercase to handle 's' or 'i'
         char choice = toupper(input[0]);
 
         if (choice == 'I') {
-            mode = 0; 
-            cout << "Interactive Mode selected." << endl;
+            mode = 0;
+            cout << GREEN << "Interactive Mode selected." << RESET << endl;
             break;
         }
         else if (choice == 'S') {
             mode = 1;
-            cout << "Silent Mode selected." << endl;
+            cout << GREEN << "Silent Mode selected." << RESET << endl;
             break;
         }
         else {
-            cout << "Invalid choice. Please enter 'S' or 'I'." << endl;
-            cout << "---------------------------------------" << endl;
+            cout << "\033[31m" << "---------------------------------------" << RESET << endl;
+            cout << "\033[31m" << "Invalid choice. Please enter 'S' or 'I'." << RESET << endl;
+            cout << "\033[31m" << "---------------------------------------" << RESET << endl;
         }
     }
     return mode;
@@ -150,14 +168,13 @@ int UI::GetMode() {
 
 void UI::simulation_ended(int timestep, int finishedorders, int canceledorders)
 {
-    cout << "\nSIMULATION ENDED AT TIMESTEP: " << timestep << endl;
-    cout << "Total Finished Orders: " << finishedorders << endl;
-    cout << "Total Canceled Orders: " << canceledorders << endl;
+    cout << BOLD << YELLOW << "\nSIMULATION ENDED AT TIMESTEP: " << WHITE << timestep << RESET << endl;
+    cout << GREEN << "Total Finished Orders: " << WHITE << finishedorders << RESET << endl;
+    cout << GREEN << "Total Canceled Orders: " << WHITE << canceledorders << RESET << endl;
     char input;
-    cout << "Type [X] then Enter to EXIT..." << endl;
+    cout << YELLOW << "Type [X] then Enter to EXIT..." << RESET << endl;
 
-   
     do {
         input = cin.get();
-    } while (toupper(input) != 'X'); 
+    } while (toupper(input) != 'X');
 }

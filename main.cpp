@@ -10,9 +10,17 @@ int main() {
    
     srand(static_cast<unsigned>(time(0)));
 
-    std::cout << "Starting Phase 1.2 Random Simulation..." << std::endl;
 
-   
+    // ANSI escape codes for colors
+    std::cout << "\033[33m"; // Yellow text
+    std::cout << "*******************************************" << std::endl;
+    std::cout << "*                                         *" << std::endl;
+    std::cout << "*       WELCOME TO Our Restaurant         *" << std::endl;
+    std::cout << "*                                         *" << std::endl;
+    std::cout << "*******************************************" << std::endl;
+    std::cout << "\033[0m"; // Reset to default color
+
+    std::cout << "\n\033[32m  Serving delicious code since 2024!\033[0m\n" << std::endl;
     myRestaurant.RunSimulator();
 
     return 0;

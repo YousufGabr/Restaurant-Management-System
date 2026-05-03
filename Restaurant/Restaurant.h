@@ -24,6 +24,13 @@ private:
 		int cancelTime;
 		int orderID;
 	};
+	struct RescueEvent {
+		Scooters* failedScooter;
+		Scooters* rescueScooter;
+		Deliveryorders* order;
+		int breakdownTimestep;
+		int arrivalTimestep; // when rescue scooter reaches the failed one
+	};
 
 	
 	UI ui;
@@ -62,6 +69,8 @@ private:
 	PriorityQueue<Scooters*> Free_Scooters;
 	PriorityQueue<Scooters*> Back_Scooters; 
 	LinkedQueue<Scooters*> Maint_Scooters; 
+	LinkedQueue<Scooters*> Resc_Scooters;
+	PriorityQueue<RescueEvent*> pendingRescues;
 
 	//Tables
 	BestFitPriQueue Free_Tables; 
@@ -89,7 +98,7 @@ public:
 	void finalizeTakeawayOrders(int currentTimestep);
 	void assignComboTochef(int currentTimestep);
 	bool moveComboToready(int currentTimestep , Orders*& Pord);
-	
+	void handleScooterBreakdown(int currentTimestep);
 
 
 };
