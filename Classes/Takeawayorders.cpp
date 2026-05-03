@@ -10,7 +10,7 @@ int Takeawayorders::getTW() const {
 }
 
 int Takeawayorders::getTi() const {
-    return (TA - TQ) - TR + 1;
+    return (TA - TQ) + 1;
 }
 
 void Takeawayorders::print(ostream& os) const
