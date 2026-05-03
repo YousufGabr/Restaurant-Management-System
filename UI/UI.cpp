@@ -70,7 +70,7 @@ void UI::PrintCurrentState(
     cout << GREEN << Free_CN.getcount() << RESET << " CN : "; print_queue(Free_CN); cout << endl << endl;
 
     // ?? Cooking Orders ????????????????????????????????????????
-    cout << BOLD << CYAN << "------------- Cooking orders [Orders ID, chef ID] ---------------------" << RESET << endl;
+    cout << BOLD << CYAN << "------------- Cooking orders [Orders ID, chef ID /(#CN,#CS)] ---------------------" << RESET << endl;
     cout << GREEN << Cooking_Orders.getcount() << RESET << " cooking orders: "; print_pqueue(Cooking_Orders); cout << endl << endl;
 
     // ?? Ready Orders ??????????????????????????????????????????
@@ -92,7 +92,7 @@ void UI::PrintCurrentState(
     print_pqueue(Busy_Sharable); print_pqueue(Free_Tables); cout << endl << endl;
 
     // ?? In-Service Orders ?????????????????????????????????????
-    cout << BOLD << CYAN << "------------- In-Service orders [order ID, scooter/Table ID] ------------------" << RESET << endl;
+    cout << BOLD << CYAN << "------------- In-Service orders [order ID, scooter ID/Table ID/#Scooters] ------------------" << RESET << endl;
     cout << GREEN << InServ_Orders.getcount() << RESET << " Orders: "; print_pqueue(InServ_Orders); cout << endl << endl;
 
     // ?? Maintenance Scooters ??????????????????????????????????
@@ -158,9 +158,9 @@ int UI::GetMode() {
             break;
         }
         else {
-            cout << "\033[31m" << "---------------------------------------" << RESET << endl;
-            cout << "\033[31m" << "Invalid choice. Please enter 'S' or 'I'." << RESET << endl;
-            cout << "\033[31m" << "---------------------------------------" << RESET << endl;
+            cout << RED << "---------------------------------------" << RESET << endl;
+            cout << RED << "Invalid choice. Please enter 'S' or 'I'." << RESET << endl;
+            cout << RED << "---------------------------------------" << RESET << endl;
         }
     }
     return mode;
@@ -170,7 +170,7 @@ void UI::simulation_ended(int timestep, int finishedorders, int canceledorders)
 {
     cout << BOLD << YELLOW << "\nSIMULATION ENDED AT TIMESTEP: " << WHITE << timestep << RESET << endl;
     cout << GREEN << "Total Finished Orders: " << WHITE << finishedorders << RESET << endl;
-    cout << GREEN << "Total Canceled Orders: " << WHITE << canceledorders << RESET << endl;
+    cout << RED << "Total Canceled Orders: " << WHITE << canceledorders << RESET << endl;
     char input;
     cout << YELLOW << "Type [X] then Enter to EXIT..." << RESET << endl;
 

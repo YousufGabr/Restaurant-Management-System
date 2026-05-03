@@ -134,11 +134,11 @@ void ComboOrders::print(ostream& os) const
 	if (getAssignedScooters() != nullptr)
 	{
 
-		os << "[" << getID() << ", S" << getScootersNumber() << "]";
+		os << "[" << getID() << ",S=" << getScootersNumber() << "]";
 	}
 	else if (getAssignedChefs() != nullptr)
 	{
-		os << "[" << getID() << ", CN" << getCN() << ",CS " <<getCS() << "]";
+		os << "[" << getID() << ",CN=" << getCN() << ",CS=" <<getCS() << "]";
 	}
 	else os << getID();
 }

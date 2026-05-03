@@ -90,9 +90,9 @@ void Restaurant::loadInputFile()
 
     while (!input.is_open()) {
         cout << "Error file cannot open\n";
-        cout << "\033[31m" << "----------------------" << RESET << endl;
-        cout << "\033[31m" << "Error file cannot open" << RESET << endl;
-        cout << "\033[31m" << "----------------------" << RESET << endl;
+        cout << RED << "----------------------" << RESET << endl;
+        cout << RED << "Error file cannot open" << RESET << endl;
+        cout << RED << "----------------------" << RESET << endl;
         filename = ui.getinputfilename();
         input.open(filename);
     }
