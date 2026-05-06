@@ -1,7 +1,7 @@
 #include "Tables.h"
 
 Tables::Tables(int id, int capacity)
-	: ID(id), Capacity(capacity), free_Seats(capacity), finish_time(0), currentOrder(nullptr) // Edited: initialize members
+	: ID(id), Capacity(capacity), free_Seats(capacity), finish_time(0)
 {
 }
 

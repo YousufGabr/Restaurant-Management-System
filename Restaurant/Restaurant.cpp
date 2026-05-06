@@ -1,4 +1,4 @@
-#include "Restaurant.h"
+ï»¿#include "Restaurant.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -32,7 +32,7 @@ void Restaurant::AddPendingOrder(Orders* neworder , int currentTimestep)
         {
         case TYPE_OVN: PEND_OVN.enqueue(newOV); break;
         case TYPE_OVC: PEND_OVC.enqueue(newOV); break;
-        case TYPE_OVG: PEND_OVG.enqueue(newOV, (newOV->getOVGpriority() * 1000)); break;
+        case TYPE_OVG: PEND_OVG.enqueue(newOV, (newOV->getOVGpriority())); break;
         }
         newOV->setTQ(currentTimestep);
 
@@ -212,8 +212,6 @@ void Restaurant::generateOutputFile(int currentTimestep)
     string filename = ui.getoutputfilename();
     ofstream outFile(filename);
 
-    outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTi\tTc\tTw\tTserv\n";
-
     Orders* pOrd = nullptr;
 
     int total_finished = 0;
@@ -255,17 +253,18 @@ void Restaurant::generateOutputFile(int currentTimestep)
         if (type == TYPE_OT)
         {
             finished_OT++;
-            Tserv = TF - TR;
             total_chef_busy_time += Tc;
-            TS = 1;
+            Tserv = 1;
+            TS = TR; // service begins once Ready (Packing)
+           
         }
         else if (type == TYPE_COMBO)
         {
             finished_COMBO++;
-            ComboOrders* cmb = (ComboOrders*)pOrd;
+            ComboOrders* cmb = dynamic_cast<ComboOrders*> (pOrd);
 
             TS = cmb->getTs();
-            Tserv = TF - TS;
+            Tserv = cmb->getTserv();
 
             total_chef_busy_time += Tc * cmb->getChefsNumber();
             total_scooter_busy_time += Tserv * cmb->getScootersNumber();
@@ -273,23 +272,26 @@ void Restaurant::generateOutputFile(int currentTimestep)
         else if (type == TYPE_ODG || type == TYPE_ODN)
         {
             finished_OD++;
-            Dineorders* dine = (Dineorders*)pOrd;
+            Dineorders* dine = dynamic_cast<Dineorders*> (pOrd);
 
             TS = dine->getTS();
-            Tserv = TF - TS;
+            Tserv = dine->getorderDuration();
 
             total_chef_busy_time += Tc;
         }
         else
         {
             finished_OV++;
-            Deliveryorders* delv = (Deliveryorders*)pOrd;
+            Deliveryorders* delv = dynamic_cast<Deliveryorders *> (pOrd);
+            
+            
+             TS = delv->getTS();
+             Tserv = delv->getTserv();
 
-            TS = delv->getTS();
-            Tserv = TF - TS;
-
-            total_chef_busy_time += Tc;
-            total_scooter_busy_time += Tserv;
+             total_chef_busy_time += Tc;
+             total_scooter_busy_time += Tserv;
+           
+            
         }
 
         sum_Ti += Ti;
@@ -298,16 +300,23 @@ void Restaurant::generateOutputFile(int currentTimestep)
         sum_Tserv += Tserv;
         total_finished++;
 
-        outFile << TF << "\t"
-            << pOrd->getID() << "\t"
-            << TQ << "\t"
-            << TA << "\t"
-            << TR << "\t"
-            << TS << "\t"
-            << Ti << "\t"
-            << Tc << "\t"
-            << Tw << "\t"
-            << Tserv << "\n";
+        outFile << "================== ORDER REPORT ==================\n";
+
+        outFile << " -> Order ID        : " << pOrd->getID() << "\n";
+        outFile << " -> Request Time (TQ): " << TQ << "\n";
+        outFile << " -> Finish Time (TF) : " << TF << "\n";
+        outFile << "--------------------------------------------------\n";
+
+        outFile << " Processing Timeline\n";
+        outFile << "  -> Arrival Time     : " << TA << "\n";
+        outFile << "  -> Ready Time       : " << TR << "\n";
+        outFile << "  -> Service Start    : " << TS << "\n";
+        outFile << "  -> Cooking Time     : " << Tc << "\n";
+        outFile << "  -> Idle Time        : " << Ti << "\n";
+        outFile << "  -> Waiting Time     : " << Tw << "\n";
+        outFile << "  -> Service Duration : " << Tserv << "\n";
+
+        outFile << "==================================================\n\n";
     }
 
     int total_CN = Free_CN.getcount();
@@ -324,17 +333,14 @@ void Restaurant::generateOutputFile(int currentTimestep)
 
     int total_orders = total_finished + total_cancelled;
 
-    // --- Calculate Cancelled Order Types ---
     int cancelled_OD = 0, cancelled_OT = 0, cancelled_OV = 0, cancelled_COMBO = 0;
     ArrayStack<Orders*> tempStack2;
     Orders* pOrd2;
 
-    // Loop through the stack to count types
     while (!Canceled_Orders.isEmpty()) {
         Canceled_Orders.pop(pOrd2);
 
         if (pOrd2 != nullptr) {
-            // Replace 'GetType()' and 'TYPE_OD' etc., with your actual methods and enums
             int type = pOrd2->getType();
             if (type == TYPE_ODN) cancelled_OD++;
             if (type == TYPE_ODG) cancelled_OD++;
@@ -348,51 +354,66 @@ void Restaurant::generateOutputFile(int currentTimestep)
         }
     }
 
-    // Restore the original Canceled_Orders stack
+    
     while (!tempStack2.isEmpty()) {
         tempStack2.pop(pOrd2);
         Canceled_Orders.push(pOrd2);
     }
-    // ---------------------------------------
 
-    // Add finished and cancelled together
     int total_OD = finished_OD + cancelled_OD;
     int total_OT = finished_OT + cancelled_OT;
     int total_OV = finished_OV + cancelled_OV;
     int total_COMBO = finished_COMBO + cancelled_COMBO;
 
-    outFile << "\n------------------ Statistics ------------------\n";
+    outFile << "\n=====================================================\n";
+    outFile << "           RESTAURANT SIMULATION REPORT \n";
+    outFile << "=====================================================\n\n";
 
-    outFile << "Total Orders: " << total_orders
-        << " (OD: " << total_OD
-        << ", OT: " << total_OT
-        << ", OV: " << total_OV
-        << ", COMBO: " << total_COMBO << ")\n";
+    outFile << "------------------ ORDER SUMMARY ------------------\n";
+    outFile << "Total Orders     : " << total_orders << "\n";
+    outFile << "   -> Dine-in (OD): " << total_OD << "\n";
+    outFile << "   -> Takeaway   : " << total_OT << "\n";
+    outFile << "   -> Delivery   : " << total_OV << "\n";
+    outFile << "   -> Combo      : " << total_COMBO << "\n\n";
 
-    outFile << "Total Chefs: " << total_chefs
-        << " (CN: " << total_CN
-        << ", CS: " << total_CS << ")\n";
+    outFile << "------------------ RESOURCE SUMMARY ------------------\n";
+    outFile << "Total Chefs      : " << total_chefs << "\n";
+    outFile << "    -> Normal (CN): " << total_CN << "\n";
+    outFile << "    -> Special(CS): " << total_CS << "\n";
+    outFile << "Total Scooters   : " << total_scooters << "\n\n";
 
-    outFile << "Total Scooters: " << total_scooters << "\n";
+    outFile << "------------------ PERFORMANCE STATS ------------------\n";
+    outFile << " Finished Orders : "
+        << ((total_finished * 1.0) / total_orders) * 100 << "%\n";
+    outFile << " Cancelled Orders: "
+        << ((total_cancelled * 1.0) / total_orders) * 100 << "%\n";
+    outFile << " Overwait Orders : "
+        << ((total_overwait * 1.0) / total_finished) * 100 << "%\n\n";
 
-    outFile << "Finished %: " << (double)total_finished / total_orders * 100 << "\n";
-    outFile << "Cancelled %: " << (double)total_cancelled / total_orders * 100 << "\n";
+    outFile << "------------------ TIME ANALYSIS ------------------\n";
+    outFile << "Avg Idle Time (Ti)    : " << (sum_Ti * 1.0) / total_finished << "\n";
+    outFile << "Avg Cooking Time (Tc)  : " << (sum_Tc * 1.0) / total_finished << "\n";
+    outFile << "Avg Wait Time (Tw)     : " << (sum_Tw * 1.0) / total_finished << "\n";
+    outFile << "Avg Service Time       : " << (sum_Tserv * 1.0) / total_finished << "\n\n";
 
-    outFile << "Overwait %: " << (double)total_overwait / total_finished * 100 << "\n";
+    outFile << "------------------ UTILIZATION ------------------\n";
+    outFile << " Scooters Utilization: "
+        << ((total_scooter_busy_time * 1.0) /
+            (currentTimestep * total_scooters)) * 100
+        << "%\n";
 
-    outFile << "Avg Ti: " << sum_Ti / total_finished << "\n";
-    outFile << "Avg Tc: " << sum_Tc / total_finished << "\n";
-    outFile << "Avg Tw: " << sum_Tw / total_finished << "\n";
-    outFile << "Avg Tserv: " << sum_Tserv / total_finished << "\n";
+    outFile << " Chefs Utilization   : "
+        << ((total_chef_busy_time * 1.0) /
+            (currentTimestep * total_chefs)) * 100
+        << "%\n\n";
 
-    outFile << "Scooter Utilization: "
-        << total_scooter_busy_time / (currentTimestep * total_scooters) * 100 << "\n";
+    outFile << "=====================================================\n";
+    outFile << "               END OF SIMULATION REPORT\n";
+    outFile << "=====================================================\n";
 
-    outFile << "Chef Utilization: "
-        << total_chef_busy_time / (currentTimestep * total_chefs) * 100 << "\n";
-
-    outFile.close();
+    outFile.close();;
 }
+
 ////////////////////////// Logic functions /////////////////////////////////////////////
 
 
@@ -756,7 +777,7 @@ void Restaurant::MovetoInservice(int currentTimestep) {
                 }
 
             }
-            cmb->setAVGscooters(AssignedScooters[0]->getSpeed());
+            cmb->setAVGscooters(AssignedScooters[0]->get_Speed());
             cmb->setAssignedScooters(AssignedScooters);
             cmb->setTS(currentTimestep);
             InServ_Orders.enqueue(ord, cmb->getServicePriority());
@@ -935,22 +956,23 @@ bool Restaurant::moveComboToready(int currentTimestep , Orders*& pOrd)
             cmb->setAssignedChefs(nullptr);
             return true;
         }
+        else return false;
     }
     else return false;
 }
 
 
 void Restaurant::handleScooterBreakdown(int currentTimestep) {
-    // --- Phase 1: Process pending rescues ---
+    
     PriorityQueue<RescueEvent*> tempPending;
     RescueEvent* evt = nullptr;
     int pri;
 
     while (pendingRescues.dequeue(evt, pri)) {
         if (currentTimestep >= evt->arrivalTimestep) {
-            // Rescue arrived — NOW set timing so checkScootersAvailablity math is correct
-            evt->failedScooter->setstart_time(evt->breakdownTimestep); // return trip starts from breakdown moment
-            evt->failedScooter->setfinish_time(currentTimestep);       // rescue arrived = scooter ready to head back
+            
+            evt->failedScooter->setstart_time(evt->breakdownTimestep); 
+            evt->failedScooter->setfinish_time(currentTimestep);       
             Back_Scooters.enqueue(evt->failedScooter, evt->failedScooter->getBackPriority());
             delete evt;
         }
@@ -960,7 +982,7 @@ void Restaurant::handleScooterBreakdown(int currentTimestep) {
     }
     while (tempPending.dequeue(evt, pri)) pendingRescues.enqueue(evt, pri);
 
-    // --- Phase 2: New breakdowns ---
+  
     PriorityQueue<Orders*> tempInServ;
     Orders* pOrd = nullptr;
 
@@ -1059,8 +1081,6 @@ void Restaurant::RunSimulator()
 
         /// Assign Ready orders
 		MovetoInservice(currentTimestep); 
-
-        /// To Do 6: Collect stats (technically done in generateOutputFile) ->need more details 
 
         /// print current stats
         if (Mode == 0) {

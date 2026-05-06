@@ -15,22 +15,23 @@ public:
 
 	void setAssignedScooter(Scooters* sct);
 	void setDeliveryDistance(int dist);
-	void setTS(int t);
-
-
 	int getDistance() const;
 	Scooters* getAssignedScooter() const;
+	
+
+	void setTS(int t);
 	int getTS() const { return TS; }
 	int getTH() const { return TH; }
 
 	int getTserv() const; // Tserv = TF - TC 
 	virtual int getTi() const;
 	virtual int getTW() const;
+	int getDeliveryDuration() const;
 
 
 	int getOVGpriority() const;
 	int getServicePriority() const;
-	int getDeliveryDuration() const;
+	
 
 
 	virtual void print(ostream& os) const override;

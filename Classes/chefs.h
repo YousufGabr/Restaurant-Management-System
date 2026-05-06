@@ -13,8 +13,7 @@ private:
     int ID;
     CHFTYPE type;
     int speed;
-    int busyTime;
-    int finishTime;  // Timestep when the chef will finish the current order
+    int finishTime;
 
 public:
     Chefs(int id, CHFTYPE t, int spd);
@@ -23,10 +22,9 @@ public:
     CHFTYPE getType() const;
     int getSpeed() const;
 
-    // --- Added to track when the chef becomes free ---
+    
     void setFinishTime(int time);
-    bool isAvailable(int currentTimestep) const;
-    void makeAvailable(); // Used for cancellation
+
 
     friend std::ostream& operator<<(std::ostream& os, const Chefs* pChf);
 };

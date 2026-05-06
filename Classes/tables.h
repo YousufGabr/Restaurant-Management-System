@@ -11,7 +11,6 @@ private:
 	int Capacity;
 	int free_Seats;
 	int finish_time;
-	Orders* currentOrder; 
 
 public:
 	Tables(int id, int capacity);

@@ -39,7 +39,7 @@ int Dineorders::getTW() const {
     return getTi() + getTC();
 }
 
-//priority , To be revised
+
 int Dineorders::getServicePriority()
 {
     return -1 * orderDuration;

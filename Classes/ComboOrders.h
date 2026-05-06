@@ -12,7 +12,8 @@ private:
 	int CS;
 	int TS;
 	int distance;
-	int averageCookingPeriod; // added to be usen in cooking duration 
+	//holds average periods
+	int averageCookingPeriod; 
 	int averageDeliveryPeriod;
 public:
 	ComboOrders(int tq, int id, int sz, double pr, int distance , int Chefsumber , int cn , int cs , int scootersnumber);
@@ -45,10 +46,8 @@ public:
 	virtual int getTW() const;
 	int getDeliveryDuration() const;
 
-	virtual int getCookingpriority() const override;
+	
 	virtual int getCookingOrderDuration() const override;
-
-	//delivery related functions 
 	void setDeliveryDistance(int dist);
 
 	
@@ -56,6 +55,7 @@ public:
    //priorities
 	int getpendingPriority() const; //least numver of both chefs and scooters 
 	int getServicePriority() const;
+	virtual int getCookingpriority() const override;
 	
 
 	virtual void print(ostream& os) const override;
