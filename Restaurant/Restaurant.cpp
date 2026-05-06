@@ -369,10 +369,10 @@ void Restaurant::generateOutputFile(int currentTimestep)
     outFile << "------------------ RESOURCE SUMMARY ------------------\n";
     outFile << "Total Chefs      : " << total_chefs << "\n";
     outFile << "    -> Normal (CN): " << total_CN << "\n";
-    outFile << "    -> Special(CS): " << total_CS << "\n";
+    outFile << "    -> Special (CS): " << total_CS << "\n";
     outFile << "Total Scooters   : " << total_scooters << "\n";
     outFile << "    -> Normal (S): " << Free_Scooters.getcount() << "\n";
-    outFile << "    -> Special(SR): " << Resc_Scooters.getcount() << "\n\n";
+    outFile << "    -> Rescue (SR): " << Resc_Scooters.getcount() << "\n\n";
 
     outFile << "------------------ PERFORMANCE STATS ------------------\n";
     outFile << " Finished Orders : "

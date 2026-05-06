@@ -80,8 +80,8 @@ void UI::PrintCurrentState(
     cout << GREEN << Resc_Scooters.getcount() << RESET << " Rescue : "; print_queue(Resc_Scooters);  cout << endl << endl;
 
     cout << BOLD << CYAN << "------------- Available tables [ID, capacity, free seats] ----------------------" << RESET << endl;
-    cout << GREEN << Free_Tables.getcount() + Busy_Sharable.getcount() << RESET << " tables : ";
-    print_pqueue(Busy_Sharable); print_pqueue(Free_Tables); cout << endl << endl;
+    cout << GREEN << Free_Tables.getcount() << RESET << " Free Tables : "; print_pqueue(Free_Tables); cout << endl;
+    cout << GREEN << Busy_Sharable.getcount() << RESET << " Busy Sharable Tables : "; print_pqueue(Busy_Sharable); cout << endl << endl;
 
     cout << BOLD << CYAN << "------------- In-Service orders [order ID, scooter ID/Table ID/#Scooters] ------------------" << RESET << endl;
     cout << GREEN << InServ_Orders.getcount() << RESET << " Orders: "; print_pqueue(InServ_Orders); cout << endl << endl;

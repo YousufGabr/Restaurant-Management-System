@@ -1,0 +1,6 @@
+Input_1 (50 Actions no cancel): (20 combo, 30 mix) tests Combo orders with other kinds to ensure correct priority assignment
+Input_2 (100 Actions no cancel): (60 OVG, 40 mix , 4 scooters, Overwait Threshold= 5) Tests Overwait OVG When left too long in ready OV to ensure Correct Logic
+Input_3 (100 actions 50 cancel): (mixed) half of OD are sharable the other is not to test table assignment logic
+Input_4 (200 actions 50 cancel): (100 OV , 100 mixed) Maintenance threshold and number of scooters are low to test scooter maintenance cycle and increase the possibility of Scooter breakdown to test Rescue Scooters
+Input_5 (250 actions no cancel): (100 OV, 150 mixed) number of scooters is low to check for high utilization for scooters (will be high due to high order count w.r.t. scooters count).
+Input_6 (250 actions 50 cancel): general testing file (has everything).
