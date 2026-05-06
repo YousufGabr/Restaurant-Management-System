@@ -98,5 +98,6 @@ class UI
 		string getoutputfilename() const;
         int GetMode();
         void simulation_ended(int timestep, int finishedorders, int canceledorders);
+        void welcome_msg();
 };
 
