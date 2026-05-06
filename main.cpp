@@ -20,7 +20,7 @@ int main() {
     std::cout << "*******************************************" << std::endl;
     std::cout << "\033[0m"; // Reset to default color
 
-    std::cout << "\n\033[32m  Serving delicious code since 2024!\033[0m\n" << std::endl;
+    std::cout << "\n\033[32m  Serving delicious code since 2026!\033[0m\n" << std::endl;
     myRestaurant.RunSimulator();
 
     return 0;

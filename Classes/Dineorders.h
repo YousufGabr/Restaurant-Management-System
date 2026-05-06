@@ -20,14 +20,14 @@ public :
     int getNoOfSeats() const;
     Tables* getAssignedTable() const;
     bool isSharable() const;
-    int getTS() const { return this->TS;}
-
-
     void setAssignedTable(Tables* tbl);
-    void setTS(int t);
-    int getorderDuration() const;
+    
 
-    int getTserv() const; // = TF-TS
+    int getTS() const { return this->TS; }
+    void setTS(int t);
+    
+    int getorderDuration() const;
+    int getTserv() const; 
     virtual int getTi() const;
     virtual int getTW() const;
 

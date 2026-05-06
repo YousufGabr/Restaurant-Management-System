@@ -4,11 +4,12 @@ Takeawayorders::Takeawayorders(int tq, int id, int sz, double pr) : Orders(TYPE_
 {
 }
 
-// there is a timestep for packing so we add 1 instead of TS
+
 int Takeawayorders::getTW() const {
     return getTi() + getTC();
 }
 
+//Ti = (Ta - Tq) + (Ts - TR) -> in takeaway TS-TR = 1 (packing timestep)
 int Takeawayorders::getTi() const {
     return (TA - TQ) + 1;
 }

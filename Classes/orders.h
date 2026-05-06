@@ -26,13 +26,14 @@ protected:
     Chefs* assignedChef;
     
 public:
-    Orders(ORD_TYPE type ,int tq, int id, int sz, double pr);
+    Orders(ORD_TYPE type ,int Tq, int Id, int size, double price);
 
     int getID() const;
     int getSize() const;
     double getPrice() const;
+    ORD_TYPE getType() const;
     
-// Instant time steps 
+    // Instant time steps 
     int getTA() const { return TA; }
     int getTR() const { return TR; } 
     int getTF() const { return TF; }
@@ -42,11 +43,11 @@ public:
     void setTR(int t);
     void setTF(int t);
     void setTQ(int t);
-// Time periods
     
-    int getTC() const; // setting cooking time period = TR-TA 
-    virtual int getTW() const = 0;  // = TI + TC , diff implementation for OT
-    virtual int getTi() const = 0; //idle time = (TA - TQ) + (TS - TR) , pure virual -> different implementation for OT
+    // Time periods
+    int getTC() const; // the exact cooking time 
+    virtual int getTW() const = 0;
+    virtual int getTi() const = 0; 
    
     void setAssignedChef(Chefs* chf);
     Chefs* getAssignedChef() const;
@@ -55,8 +56,7 @@ public:
    virtual int getCookingpriority() const;
    virtual int getCookingOrderDuration() const;
 
-    ORD_TYPE getType() const;
-
+   
     friend ostream& operator<<(ostream& os, const Orders* ord);
 	virtual void print(ostream& os) const = 0;
 

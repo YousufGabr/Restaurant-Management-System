@@ -1,0 +1,1536 @@
+================== ORDER REPORT ==================
+ -> Order ID        : 97
+ -> Request Time (TQ): 97
+ -> Finish Time (TF) : 713
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 97
+  -> Ready Time       : 102
+  -> Service Start    : 693
+  -> Cooking Time     : 5
+  -> Idle Time        : 591
+  -> Waiting Time     : 596
+  -> Service Duration : 20
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 81
+ -> Request Time (TQ): 81
+ -> Finish Time (TF) : 688
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 81
+  -> Ready Time       : 87
+  -> Service Start    : 628
+  -> Cooking Time     : 6
+  -> Idle Time        : 541
+  -> Waiting Time     : 547
+  -> Service Duration : 60
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 89
+ -> Request Time (TQ): 89
+ -> Finish Time (TF) : 688
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 89
+  -> Ready Time       : 97
+  -> Service Start    : 666
+  -> Cooking Time     : 8
+  -> Idle Time        : 569
+  -> Waiting Time     : 577
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 98
+ -> Request Time (TQ): 98
+ -> Finish Time (TF) : 688
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 98
+  -> Ready Time       : 100
+  -> Service Start    : 675
+  -> Cooking Time     : 2
+  -> Idle Time        : 575
+  -> Waiting Time     : 577
+  -> Service Duration : 13
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 100
+ -> Request Time (TQ): 100
+ -> Finish Time (TF) : 685
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 100
+  -> Ready Time       : 102
+  -> Service Start    : 677
+  -> Cooking Time     : 2
+  -> Idle Time        : 575
+  -> Waiting Time     : 577
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 93
+ -> Request Time (TQ): 93
+ -> Finish Time (TF) : 667
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 93
+  -> Ready Time       : 95
+  -> Service Start    : 646
+  -> Cooking Time     : 2
+  -> Idle Time        : 551
+  -> Waiting Time     : 553
+  -> Service Duration : 21
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 94
+ -> Request Time (TQ): 94
+ -> Finish Time (TF) : 667
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 94
+  -> Ready Time       : 97
+  -> Service Start    : 659
+  -> Cooking Time     : 3
+  -> Idle Time        : 562
+  -> Waiting Time     : 565
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 96
+ -> Request Time (TQ): 96
+ -> Finish Time (TF) : 661
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 96
+  -> Ready Time       : 97
+  -> Service Start    : 655
+  -> Cooking Time     : 1
+  -> Idle Time        : 558
+  -> Waiting Time     : 559
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 85
+ -> Request Time (TQ): 85
+ -> Finish Time (TF) : 642
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 85
+  -> Ready Time       : 87
+  -> Service Start    : 628
+  -> Cooking Time     : 2
+  -> Idle Time        : 541
+  -> Waiting Time     : 543
+  -> Service Duration : 14
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 90
+ -> Request Time (TQ): 90
+ -> Finish Time (TF) : 642
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 90
+  -> Ready Time       : 92
+  -> Service Start    : 629
+  -> Cooking Time     : 2
+  -> Idle Time        : 537
+  -> Waiting Time     : 539
+  -> Service Duration : 13
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 92
+ -> Request Time (TQ): 92
+ -> Finish Time (TF) : 642
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 92
+  -> Ready Time       : 94
+  -> Service Start    : 635
+  -> Cooking Time     : 2
+  -> Idle Time        : 541
+  -> Waiting Time     : 543
+  -> Service Duration : 7
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 88
+ -> Request Time (TQ): 88
+ -> Finish Time (TF) : 632
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 88
+  -> Ready Time       : 89
+  -> Service Start    : 629
+  -> Cooking Time     : 1
+  -> Idle Time        : 540
+  -> Waiting Time     : 541
+  -> Service Duration : 3
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 84
+ -> Request Time (TQ): 84
+ -> Finish Time (TF) : 628
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 84
+  -> Ready Time       : 87
+  -> Service Start    : 620
+  -> Cooking Time     : 3
+  -> Idle Time        : 533
+  -> Waiting Time     : 536
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 82
+ -> Request Time (TQ): 82
+ -> Finish Time (TF) : 619
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 82
+  -> Ready Time       : 84
+  -> Service Start    : 610
+  -> Cooking Time     : 2
+  -> Idle Time        : 526
+  -> Waiting Time     : 528
+  -> Service Duration : 9
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 86
+ -> Request Time (TQ): 86
+ -> Finish Time (TF) : 615
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 86
+  -> Ready Time       : 87
+  -> Service Start    : 610
+  -> Cooking Time     : 1
+  -> Idle Time        : 523
+  -> Waiting Time     : 524
+  -> Service Duration : 5
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 78
+ -> Request Time (TQ): 78
+ -> Finish Time (TF) : 603
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 78
+  -> Ready Time       : 81
+  -> Service Start    : 588
+  -> Cooking Time     : 3
+  -> Idle Time        : 507
+  -> Waiting Time     : 510
+  -> Service Duration : 15
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 80
+ -> Request Time (TQ): 80
+ -> Finish Time (TF) : 594
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 80
+  -> Ready Time       : 81
+  -> Service Start    : 588
+  -> Cooking Time     : 1
+  -> Idle Time        : 507
+  -> Waiting Time     : 508
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 69
+ -> Request Time (TQ): 69
+ -> Finish Time (TF) : 585
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 69
+  -> Ready Time       : 75
+  -> Service Start    : 563
+  -> Cooking Time     : 6
+  -> Idle Time        : 488
+  -> Waiting Time     : 494
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 76
+ -> Request Time (TQ): 76
+ -> Finish Time (TF) : 585
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 76
+  -> Ready Time       : 78
+  -> Service Start    : 572
+  -> Cooking Time     : 2
+  -> Idle Time        : 494
+  -> Waiting Time     : 496
+  -> Service Duration : 13
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 77
+ -> Request Time (TQ): 77
+ -> Finish Time (TF) : 581
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 77
+  -> Ready Time       : 79
+  -> Service Start    : 574
+  -> Cooking Time     : 2
+  -> Idle Time        : 495
+  -> Waiting Time     : 497
+  -> Service Duration : 7
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 65
+ -> Request Time (TQ): 65
+ -> Finish Time (TF) : 562
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 65
+  -> Ready Time       : 69
+  -> Service Start    : 530
+  -> Cooking Time     : 4
+  -> Idle Time        : 461
+  -> Waiting Time     : 465
+  -> Service Duration : 32
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 70
+ -> Request Time (TQ): 70
+ -> Finish Time (TF) : 562
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 70
+  -> Ready Time       : 72
+  -> Service Start    : 540
+  -> Cooking Time     : 2
+  -> Idle Time        : 468
+  -> Waiting Time     : 470
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 73
+ -> Request Time (TQ): 73
+ -> Finish Time (TF) : 562
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 73
+  -> Ready Time       : 75
+  -> Service Start    : 552
+  -> Cooking Time     : 2
+  -> Idle Time        : 477
+  -> Waiting Time     : 479
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 72
+ -> Request Time (TQ): 72
+ -> Finish Time (TF) : 556
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 72
+  -> Ready Time       : 75
+  -> Service Start    : 548
+  -> Cooking Time     : 3
+  -> Idle Time        : 473
+  -> Waiting Time     : 476
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 74
+ -> Request Time (TQ): 74
+ -> Finish Time (TF) : 544
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 74
+  -> Ready Time       : 75
+  -> Service Start    : 540
+  -> Cooking Time     : 1
+  -> Idle Time        : 465
+  -> Waiting Time     : 466
+  -> Service Duration : 4
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 62
+ -> Request Time (TQ): 62
+ -> Finish Time (TF) : 534
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 62
+  -> Ready Time       : 65
+  -> Service Start    : 515
+  -> Cooking Time     : 3
+  -> Idle Time        : 450
+  -> Waiting Time     : 453
+  -> Service Duration : 19
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 66
+ -> Request Time (TQ): 66
+ -> Finish Time (TF) : 534
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 66
+  -> Ready Time       : 69
+  -> Service Start    : 526
+  -> Cooking Time     : 3
+  -> Idle Time        : 457
+  -> Waiting Time     : 460
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 64
+ -> Request Time (TQ): 64
+ -> Finish Time (TF) : 522
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 64
+  -> Ready Time       : 65
+  -> Service Start    : 514
+  -> Cooking Time     : 1
+  -> Idle Time        : 449
+  -> Waiting Time     : 450
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 68
+ -> Request Time (TQ): 68
+ -> Finish Time (TF) : 522
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 68
+  -> Ready Time       : 69
+  -> Service Start    : 518
+  -> Cooking Time     : 1
+  -> Idle Time        : 449
+  -> Waiting Time     : 450
+  -> Service Duration : 4
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 53
+ -> Request Time (TQ): 53
+ -> Finish Time (TF) : 507
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 53
+  -> Ready Time       : 59
+  -> Service Start    : 484
+  -> Cooking Time     : 6
+  -> Idle Time        : 425
+  -> Waiting Time     : 431
+  -> Service Duration : 23
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 60
+ -> Request Time (TQ): 60
+ -> Finish Time (TF) : 507
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 60
+  -> Ready Time       : 62
+  -> Service Start    : 499
+  -> Cooking Time     : 2
+  -> Idle Time        : 437
+  -> Waiting Time     : 439
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 61
+ -> Request Time (TQ): 61
+ -> Finish Time (TF) : 507
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 61
+  -> Ready Time       : 63
+  -> Service Start    : 500
+  -> Cooking Time     : 2
+  -> Idle Time        : 437
+  -> Waiting Time     : 439
+  -> Service Duration : 7
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 57
+ -> Request Time (TQ): 57
+ -> Finish Time (TF) : 496
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 57
+  -> Ready Time       : 59
+  -> Service Start    : 484
+  -> Cooking Time     : 2
+  -> Idle Time        : 425
+  -> Waiting Time     : 427
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 45
+ -> Request Time (TQ): 45
+ -> Finish Time (TF) : 483
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 45
+  -> Ready Time       : 53
+  -> Service Start    : 456
+  -> Cooking Time     : 8
+  -> Idle Time        : 403
+  -> Waiting Time     : 411
+  -> Service Duration : 27
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 56
+ -> Request Time (TQ): 56
+ -> Finish Time (TF) : 483
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 56
+  -> Ready Time       : 59
+  -> Service Start    : 477
+  -> Cooking Time     : 3
+  -> Idle Time        : 418
+  -> Waiting Time     : 421
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 58
+ -> Request Time (TQ): 58
+ -> Finish Time (TF) : 478
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 58
+  -> Ready Time       : 59
+  -> Service Start    : 472
+  -> Cooking Time     : 1
+  -> Idle Time        : 413
+  -> Waiting Time     : 414
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 49
+ -> Request Time (TQ): 49
+ -> Finish Time (TF) : 467
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 49
+  -> Ready Time       : 51
+  -> Service Start    : 444
+  -> Cooking Time     : 2
+  -> Idle Time        : 393
+  -> Waiting Time     : 395
+  -> Service Duration : 23
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 54
+ -> Request Time (TQ): 54
+ -> Finish Time (TF) : 467
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 54
+  -> Ready Time       : 56
+  -> Service Start    : 457
+  -> Cooking Time     : 2
+  -> Idle Time        : 401
+  -> Waiting Time     : 403
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 50
+ -> Request Time (TQ): 50
+ -> Finish Time (TF) : 465
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 50
+  -> Ready Time       : 53
+  -> Service Start    : 456
+  -> Cooking Time     : 3
+  -> Idle Time        : 403
+  -> Waiting Time     : 406
+  -> Service Duration : 9
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 52
+ -> Request Time (TQ): 52
+ -> Finish Time (TF) : 459
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 52
+  -> Ready Time       : 53
+  -> Service Start    : 456
+  -> Cooking Time     : 1
+  -> Idle Time        : 403
+  -> Waiting Time     : 404
+  -> Service Duration : 3
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 48
+ -> Request Time (TQ): 48
+ -> Finish Time (TF) : 448
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 48
+  -> Ready Time       : 50
+  -> Service Start    : 440
+  -> Cooking Time     : 2
+  -> Idle Time        : 390
+  -> Waiting Time     : 392
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 37
+ -> Request Time (TQ): 37
+ -> Finish Time (TF) : 439
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 37
+  -> Ready Time       : 45
+  -> Service Start    : 422
+  -> Cooking Time     : 8
+  -> Idle Time        : 377
+  -> Waiting Time     : 385
+  -> Service Duration : 17
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 42
+ -> Request Time (TQ): 42
+ -> Finish Time (TF) : 439
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 42
+  -> Ready Time       : 45
+  -> Service Start    : 422
+  -> Cooking Time     : 3
+  -> Idle Time        : 377
+  -> Waiting Time     : 380
+  -> Service Duration : 17
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 46
+ -> Request Time (TQ): 46
+ -> Finish Time (TF) : 439
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 46
+  -> Ready Time       : 47
+  -> Service Start    : 434
+  -> Cooking Time     : 1
+  -> Idle Time        : 387
+  -> Waiting Time     : 388
+  -> Service Duration : 5
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 33
+ -> Request Time (TQ): 33
+ -> Finish Time (TF) : 418
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 33
+  -> Ready Time       : 37
+  -> Service Start    : 389
+  -> Cooking Time     : 4
+  -> Idle Time        : 352
+  -> Waiting Time     : 356
+  -> Service Duration : 29
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 41
+ -> Request Time (TQ): 41
+ -> Finish Time (TF) : 418
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 41
+  -> Ready Time       : 43
+  -> Service Start    : 406
+  -> Cooking Time     : 2
+  -> Idle Time        : 363
+  -> Waiting Time     : 365
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 44
+ -> Request Time (TQ): 44
+ -> Finish Time (TF) : 418
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 44
+  -> Ready Time       : 45
+  -> Service Start    : 412
+  -> Cooking Time     : 1
+  -> Idle Time        : 367
+  -> Waiting Time     : 368
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 40
+ -> Request Time (TQ): 40
+ -> Finish Time (TF) : 404
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 40
+  -> Ready Time       : 42
+  -> Service Start    : 396
+  -> Cooking Time     : 2
+  -> Idle Time        : 354
+  -> Waiting Time     : 356
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 38
+ -> Request Time (TQ): 38
+ -> Finish Time (TF) : 399
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 38
+  -> Ready Time       : 40
+  -> Service Start    : 392
+  -> Cooking Time     : 2
+  -> Idle Time        : 352
+  -> Waiting Time     : 354
+  -> Service Duration : 7
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 25
+ -> Request Time (TQ): 25
+ -> Finish Time (TF) : 388
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 25
+  -> Ready Time       : 33
+  -> Service Start    : 374
+  -> Cooking Time     : 8
+  -> Idle Time        : 341
+  -> Waiting Time     : 349
+  -> Service Duration : 14
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 34
+ -> Request Time (TQ): 34
+ -> Finish Time (TF) : 386
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 34
+  -> Ready Time       : 37
+  -> Service Start    : 376
+  -> Cooking Time     : 3
+  -> Idle Time        : 339
+  -> Waiting Time     : 342
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 30
+ -> Request Time (TQ): 30
+ -> Finish Time (TF) : 378
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 30
+  -> Ready Time       : 33
+  -> Service Start    : 367
+  -> Cooking Time     : 3
+  -> Idle Time        : 334
+  -> Waiting Time     : 337
+  -> Service Duration : 11
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 36
+ -> Request Time (TQ): 36
+ -> Finish Time (TF) : 378
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 36
+  -> Ready Time       : 37
+  -> Service Start    : 374
+  -> Cooking Time     : 1
+  -> Idle Time        : 337
+  -> Waiting Time     : 338
+  -> Service Duration : 4
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 17
+ -> Request Time (TQ): 17
+ -> Finish Time (TF) : 363
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 17
+  -> Ready Time       : 27
+  -> Service Start    : 346
+  -> Cooking Time     : 10
+  -> Idle Time        : 319
+  -> Waiting Time     : 329
+  -> Service Duration : 17
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 29
+ -> Request Time (TQ): 29
+ -> Finish Time (TF) : 362
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 29
+  -> Ready Time       : 31
+  -> Service Start    : 350
+  -> Cooking Time     : 2
+  -> Idle Time        : 319
+  -> Waiting Time     : 321
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 28
+ -> Request Time (TQ): 28
+ -> Finish Time (TF) : 362
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 28
+  -> Ready Time       : 30
+  -> Service Start    : 350
+  -> Cooking Time     : 2
+  -> Idle Time        : 320
+  -> Waiting Time     : 322
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 32
+ -> Request Time (TQ): 32
+ -> Finish Time (TF) : 362
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 32
+  -> Ready Time       : 33
+  -> Service Start    : 358
+  -> Cooking Time     : 1
+  -> Idle Time        : 325
+  -> Waiting Time     : 326
+  -> Service Duration : 4
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 24
+ -> Request Time (TQ): 24
+ -> Finish Time (TF) : 351
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 24
+  -> Ready Time       : 27
+  -> Service Start    : 345
+  -> Cooking Time     : 3
+  -> Idle Time        : 318
+  -> Waiting Time     : 321
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 9
+ -> Request Time (TQ): 9
+ -> Finish Time (TF) : 333
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 9
+  -> Ready Time       : 17
+  -> Service Start    : 308
+  -> Cooking Time     : 8
+  -> Idle Time        : 291
+  -> Waiting Time     : 299
+  -> Service Duration : 25
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 22
+ -> Request Time (TQ): 22
+ -> Finish Time (TF) : 333
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 22
+  -> Ready Time       : 24
+  -> Service Start    : 321
+  -> Cooking Time     : 2
+  -> Idle Time        : 297
+  -> Waiting Time     : 299
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 18
+ -> Request Time (TQ): 18
+ -> Finish Time (TF) : 330
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 18
+  -> Ready Time       : 21
+  -> Service Start    : 320
+  -> Cooking Time     : 3
+  -> Idle Time        : 299
+  -> Waiting Time     : 302
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 21
+ -> Request Time (TQ): 21
+ -> Finish Time (TF) : 330
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 21
+  -> Ready Time       : 23
+  -> Service Start    : 320
+  -> Cooking Time     : 2
+  -> Idle Time        : 297
+  -> Waiting Time     : 299
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 26
+ -> Request Time (TQ): 26
+ -> Finish Time (TF) : 330
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 26
+  -> Ready Time       : 27
+  -> Service Start    : 324
+  -> Cooking Time     : 1
+  -> Idle Time        : 297
+  -> Waiting Time     : 298
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 20
+ -> Request Time (TQ): 20
+ -> Finish Time (TF) : 321
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 20
+  -> Ready Time       : 21
+  -> Service Start    : 318
+  -> Cooking Time     : 1
+  -> Idle Time        : 297
+  -> Waiting Time     : 298
+  -> Service Duration : 3
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 14
+ -> Request Time (TQ): 14
+ -> Finish Time (TF) : 311
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 14
+  -> Ready Time       : 17
+  -> Service Start    : 302
+  -> Cooking Time     : 3
+  -> Idle Time        : 285
+  -> Waiting Time     : 288
+  -> Service Duration : 9
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 16
+ -> Request Time (TQ): 16
+ -> Finish Time (TF) : 303
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 16
+  -> Ready Time       : 17
+  -> Service Start    : 298
+  -> Cooking Time     : 1
+  -> Idle Time        : 281
+  -> Waiting Time     : 282
+  -> Service Duration : 5
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 95
+ -> Request Time (TQ): 95
+ -> Finish Time (TF) : 287
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 95
+  -> Ready Time       : 102
+  -> Service Start    : 261
+  -> Cooking Time     : 7
+  -> Idle Time        : 159
+  -> Waiting Time     : 166
+  -> Service Duration : 26
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 13
+ -> Request Time (TQ): 13
+ -> Finish Time (TF) : 287
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 13
+  -> Ready Time       : 15
+  -> Service Start    : 276
+  -> Cooking Time     : 2
+  -> Idle Time        : 261
+  -> Waiting Time     : 263
+  -> Service Duration : 11
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 12
+ -> Request Time (TQ): 12
+ -> Finish Time (TF) : 284
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 12
+  -> Ready Time       : 14
+  -> Service Start    : 276
+  -> Cooking Time     : 2
+  -> Idle Time        : 262
+  -> Waiting Time     : 264
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 99
+ -> Request Time (TQ): 99
+ -> Finish Time (TF) : 276
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 99
+  -> Ready Time       : 101
+  -> Service Start    : 261
+  -> Cooking Time     : 2
+  -> Idle Time        : 160
+  -> Waiting Time     : 162
+  -> Service Duration : 15
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 83
+ -> Request Time (TQ): 83
+ -> Finish Time (TF) : 254
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 83
+  -> Ready Time       : 87
+  -> Service Start    : 209
+  -> Cooking Time     : 4
+  -> Idle Time        : 122
+  -> Waiting Time     : 126
+  -> Service Duration : 45
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 87
+ -> Request Time (TQ): 87
+ -> Finish Time (TF) : 254
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 87
+  -> Ready Time       : 97
+  -> Service Start    : 232
+  -> Cooking Time     : 10
+  -> Idle Time        : 135
+  -> Waiting Time     : 145
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 91
+ -> Request Time (TQ): 91
+ -> Finish Time (TF) : 235
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 91
+  -> Ready Time       : 93
+  -> Service Start    : 219
+  -> Cooking Time     : 2
+  -> Idle Time        : 126
+  -> Waiting Time     : 128
+  -> Service Duration : 16
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 59
+ -> Request Time (TQ): 59
+ -> Finish Time (TF) : 219
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 59
+  -> Ready Time       : 65
+  -> Service Start    : 163
+  -> Cooking Time     : 6
+  -> Idle Time        : 98
+  -> Waiting Time     : 104
+  -> Service Duration : 56
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 75
+ -> Request Time (TQ): 75
+ -> Finish Time (TF) : 219
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 75
+  -> Ready Time       : 81
+  -> Service Start    : 193
+  -> Cooking Time     : 6
+  -> Idle Time        : 112
+  -> Waiting Time     : 118
+  -> Service Duration : 26
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 67
+ -> Request Time (TQ): 67
+ -> Finish Time (TF) : 202
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 67
+  -> Ready Time       : 75
+  -> Service Start    : 182
+  -> Cooking Time     : 8
+  -> Idle Time        : 107
+  -> Waiting Time     : 115
+  -> Service Duration : 20
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 71
+ -> Request Time (TQ): 71
+ -> Finish Time (TF) : 197
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 71
+  -> Ready Time       : 73
+  -> Service Start    : 175
+  -> Cooking Time     : 2
+  -> Idle Time        : 102
+  -> Waiting Time     : 104
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 79
+ -> Request Time (TQ): 79
+ -> Finish Time (TF) : 197
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 79
+  -> Ready Time       : 81
+  -> Service Start    : 185
+  -> Cooking Time     : 2
+  -> Idle Time        : 104
+  -> Waiting Time     : 106
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 35
+ -> Request Time (TQ): 35
+ -> Finish Time (TF) : 157
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 35
+  -> Ready Time       : 45
+  -> Service Start    : 121
+  -> Cooking Time     : 10
+  -> Idle Time        : 76
+  -> Waiting Time     : 86
+  -> Service Duration : 36
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 55
+ -> Request Time (TQ): 55
+ -> Finish Time (TF) : 157
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 55
+  -> Ready Time       : 59
+  -> Service Start    : 132
+  -> Cooking Time     : 4
+  -> Idle Time        : 73
+  -> Waiting Time     : 77
+  -> Service Duration : 25
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 47
+ -> Request Time (TQ): 47
+ -> Finish Time (TF) : 153
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 47
+  -> Ready Time       : 53
+  -> Service Start    : 131
+  -> Cooking Time     : 6
+  -> Idle Time        : 78
+  -> Waiting Time     : 84
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 63
+ -> Request Time (TQ): 63
+ -> Finish Time (TF) : 151
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 63
+  -> Ready Time       : 65
+  -> Service Start    : 137
+  -> Cooking Time     : 2
+  -> Idle Time        : 72
+  -> Waiting Time     : 74
+  -> Service Duration : 14
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 51
+ -> Request Time (TQ): 51
+ -> Finish Time (TF) : 140
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 51
+  -> Ready Time       : 53
+  -> Service Start    : 127
+  -> Cooking Time     : 2
+  -> Idle Time        : 74
+  -> Waiting Time     : 76
+  -> Service Duration : 13
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 43
+ -> Request Time (TQ): 43
+ -> Finish Time (TF) : 116
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 43
+  -> Ready Time       : 45
+  -> Service Start    : 105
+  -> Cooking Time     : 2
+  -> Idle Time        : 60
+  -> Waiting Time     : 62
+  -> Service Duration : 11
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 15
+ -> Request Time (TQ): 15
+ -> Finish Time (TF) : 95
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 15
+  -> Ready Time       : 27
+  -> Service Start    : 53
+  -> Cooking Time     : 12
+  -> Idle Time        : 26
+  -> Waiting Time     : 38
+  -> Service Duration : 42
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 27
+ -> Request Time (TQ): 27
+ -> Finish Time (TF) : 95
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 27
+  -> Ready Time       : 33
+  -> Service Start    : 69
+  -> Cooking Time     : 6
+  -> Idle Time        : 36
+  -> Waiting Time     : 42
+  -> Service Duration : 26
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 19
+ -> Request Time (TQ): 19
+ -> Finish Time (TF) : 95
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 19
+  -> Ready Time       : 27
+  -> Service Start    : 59
+  -> Cooking Time     : 8
+  -> Idle Time        : 32
+  -> Waiting Time     : 40
+  -> Service Duration : 36
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 39
+ -> Request Time (TQ): 39
+ -> Finish Time (TF) : 95
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 39
+  -> Ready Time       : 41
+  -> Service Start    : 79
+  -> Cooking Time     : 2
+  -> Idle Time        : 38
+  -> Waiting Time     : 40
+  -> Service Duration : 16
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 31
+ -> Request Time (TQ): 31
+ -> Finish Time (TF) : 81
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 31
+  -> Ready Time       : 33
+  -> Service Start    : 67
+  -> Cooking Time     : 2
+  -> Idle Time        : 34
+  -> Waiting Time     : 36
+  -> Service Duration : 14
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 7
+ -> Request Time (TQ): 7
+ -> Finish Time (TF) : 57
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 7
+  -> Ready Time       : 17
+  -> Service Start    : 35
+  -> Cooking Time     : 10
+  -> Idle Time        : 18
+  -> Waiting Time     : 28
+  -> Service Duration : 22
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 23
+ -> Request Time (TQ): 23
+ -> Finish Time (TF) : 57
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 23
+  -> Ready Time       : 25
+  -> Service Start    : 47
+  -> Cooking Time     : 2
+  -> Idle Time        : 22
+  -> Waiting Time     : 24
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 3
+ -> Request Time (TQ): 3
+ -> Finish Time (TF) : 37
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 3
+  -> Ready Time       : 5
+  -> Service Start    : 5
+  -> Cooking Time     : 2
+  -> Idle Time        : 0
+  -> Waiting Time     : 2
+  -> Service Duration : 32
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 11
+ -> Request Time (TQ): 11
+ -> Finish Time (TF) : 37
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 11
+  -> Ready Time       : 13
+  -> Service Start    : 25
+  -> Cooking Time     : 2
+  -> Idle Time        : 12
+  -> Waiting Time     : 14
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 6
+ -> Request Time (TQ): 6
+ -> Finish Time (TF) : 31
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 6
+  -> Ready Time       : 9
+  -> Service Start    : 19
+  -> Cooking Time     : 3
+  -> Idle Time        : 10
+  -> Waiting Time     : 13
+  -> Service Duration : 12
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 10
+ -> Request Time (TQ): 10
+ -> Finish Time (TF) : 31
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 10
+  -> Ready Time       : 11
+  -> Service Start    : 25
+  -> Cooking Time     : 1
+  -> Idle Time        : 14
+  -> Waiting Time     : 15
+  -> Service Duration : 6
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 8
+ -> Request Time (TQ): 8
+ -> Finish Time (TF) : 21
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 8
+  -> Ready Time       : 9
+  -> Service Start    : 17
+  -> Cooking Time     : 1
+  -> Idle Time        : 8
+  -> Waiting Time     : 9
+  -> Service Duration : 4
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 2
+ -> Request Time (TQ): 2
+ -> Finish Time (TF) : 15
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 2
+  -> Ready Time       : 5
+  -> Service Start    : 5
+  -> Cooking Time     : 3
+  -> Idle Time        : 0
+  -> Waiting Time     : 3
+  -> Service Duration : 10
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 5
+ -> Request Time (TQ): 5
+ -> Finish Time (TF) : 15
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 5
+  -> Ready Time       : 7
+  -> Service Start    : 7
+  -> Cooking Time     : 2
+  -> Idle Time        : 0
+  -> Waiting Time     : 2
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 1
+ -> Request Time (TQ): 1
+ -> Finish Time (TF) : 11
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 1
+  -> Ready Time       : 3
+  -> Service Start    : 3
+  -> Cooking Time     : 2
+  -> Idle Time        : 0
+  -> Waiting Time     : 2
+  -> Service Duration : 8
+==================================================
+
+================== ORDER REPORT ==================
+ -> Order ID        : 4
+ -> Request Time (TQ): 4
+ -> Finish Time (TF) : 11
+--------------------------------------------------
+ Processing Timeline
+  -> Arrival Time     : 4
+  -> Ready Time       : 5
+  -> Service Start    : 5
+  -> Cooking Time     : 1
+  -> Idle Time        : 0
+  -> Waiting Time     : 1
+  -> Service Duration : 6
+==================================================
+
+
+=====================================================
+           RESTAURANT SIMULATION REPORT 
+=====================================================
+
+------------------ ORDER SUMMARY ------------------
+Total Orders     : 100
+   -> Dine-in (OD): 0
+   -> Takeaway   : 0
+   -> Delivery   : 100
+   -> Combo      : 0
+
+------------------ RESOURCE SUMMARY ------------------
+Total Chefs      : 10
+    -> Normal (CN): 5
+    -> Special(CS): 5
+Total Scooters   : 5
+
+------------------ PERFORMANCE STATS ------------------
+ Finished Orders : 100%
+ Cancelled Orders: 0%
+ Overwait Orders : 0%
+
+------------------ TIME ANALYSIS ------------------
+Avg Idle Time (Ti)    : 305.07
+Avg Cooking Time (Tc)  : 3.25
+Avg Wait Time (Tw)     : 308.32
+Avg Service Time       : 14.72
+
+------------------ UTILIZATION ------------------
+ Scooters Utilization: 41.2903%
+ Chefs Utilization   : 4.5582%
+
+=====================================================
+               END OF SIMULATION REPORT
+=====================================================

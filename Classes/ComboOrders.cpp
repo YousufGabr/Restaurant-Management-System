@@ -1,7 +1,8 @@
 #include "ComboOrders.h"
 
 ComboOrders::ComboOrders(int tq, int id, int sz, double pr, int distance, int Chefsumber, int cn, int cs, int scootersnumber) : Orders(TYPE_COMBO, tq, id, sz, pr),
-AssignedScooters(nullptr), ScootersNumber(scootersnumber), chefsNumber(Chefsumber), distance(distance) , CN(cn) , CS(cs), TS(0) , Assignedchefs(nullptr)
+AssignedScooters(nullptr), ScootersNumber(scootersnumber), chefsNumber(Chefsumber), distance(distance) , CN(cn) , CS(cs), TS(0) , Assignedchefs(nullptr),
+averageCookingPeriod(0) , averageDeliveryPeriod(0)
 {
 
 }
@@ -65,13 +66,13 @@ Chefs** ComboOrders::getAssignedChefs() const
 
 void ComboOrders::setAVGcooking(int n, int s)
 {
-	if(CN == 0) this->averageCookingPeriod = ceil((size) / ((s / CS)));
-	this->averageCookingPeriod = ceil((size) / ((n / CN) + (s / CS)));
+	if(CN == 0) this->averageCookingPeriod = ceil((size * 1.0) / ((s / CS)));
+	this->averageCookingPeriod = ceil((size * 1.0) / ((n / CN) + (s / CS)));
 }
 
 void ComboOrders::setAVGscooters(int s)
 {
-	averageDeliveryPeriod = ceil(distance / (getScootersNumber() * s));
+	averageDeliveryPeriod = ceil(distance * 1.0/ (getScootersNumber() * s));
 }
 
 void ComboOrders::setDeliveryDistance(int dist)

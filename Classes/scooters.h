@@ -21,6 +21,7 @@ private:
 	int Tstart;
 	int Tfinish;
     int maxTripsBeforeMaintenance;
+    //added for rescue scooters
 	bool isBroken;
 	SC_TYPE Type;
 	
@@ -48,13 +49,14 @@ public:
 	int getFreePriority();
 	int getBackPriority();
 
+    //trips parameters
 	int getTotalDistance();
+	void updateTotalDistance(int);
 	void updateCount();
 	int getCount();
-	void updateTotalDistance(int);
-	int getSpeed() { return Speed; }
-
-
+	
+	
+    //maintnance -> increase abbility to do more trips
 	int get_MaxTripsBeforaMaint() const;
 	void updateMaxTrips();
 	void fix();
