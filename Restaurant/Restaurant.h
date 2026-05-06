@@ -96,7 +96,7 @@ public:
 	void checkOverwaitOVG(int currentTimestep);
 	void MovetoInservice(int currentTimestep);
 	void finalizeTakeawayOrders(int currentTimestep);
-	void assignComboTochef(int currentTimestep);
+	bool assignComboTochef(int currentTimestep);
 	bool moveComboToready(int currentTimestep , Orders*& Pord);
 	void handleScooterBreakdown(int currentTimestep);
 
