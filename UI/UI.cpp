@@ -121,7 +121,7 @@ string UI::getinputfilename() const
     string filename;
     cin >> filename;
     cin.ignore();
-    return filename + ".txt";
+    return "Input_Files/" + filename + ".txt";
 }
 
 string UI::getoutputfilename() const
@@ -129,7 +129,7 @@ string UI::getoutputfilename() const
     cout << "Enter output file name: ";
     string filename;
     cin >> filename;
-    return filename + ".txt";
+    return "Output_Files/" + filename + ".txt";
 }
 
 int UI::GetMode() {
