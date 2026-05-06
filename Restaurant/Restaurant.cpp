@@ -215,6 +215,8 @@ void Restaurant::generateOutputFile(int currentTimestep)
     Orders* pOrd = nullptr;
 
     int total_finished = 0;
+    int total_overwait = 0;
+    int total_ovg = 0;
     int finished_OD = 0, finished_OT = 0, finished_OV = 0, finished_COMBO = 0;
 
     double sum_Ti = 0, sum_Tc = 0, sum_Tw = 0, sum_Tserv = 0;
@@ -222,6 +224,8 @@ void Restaurant::generateOutputFile(int currentTimestep)
     double total_scooter_busy_time = 0;
 
     ArrayStack<Orders*> tempStack = Finished_Orders;
+    outFile << "================== ORDERS REPORT ==================\n";
+    outFile << "TF\tID\tTQ\tTA\tTR\tTS\tTi\tTc\tTw\tTserv\n";
 
     while (tempStack.pop(pOrd))
     {
@@ -284,12 +288,13 @@ void Restaurant::generateOutputFile(int currentTimestep)
             finished_OV++;
             Deliveryorders* delv = dynamic_cast<Deliveryorders *> (pOrd);
             
-            
+            if (delv->getow()) total_overwait++;
+            if (pOrd->getType() == TYPE_OVG) total_ovg++;
              TS = delv->getTS();
              Tserv = delv->getTserv();
 
              total_chef_busy_time += Tc;
-             total_scooter_busy_time += Tserv;
+             total_scooter_busy_time += 2*Tserv;
            
             
         }
@@ -299,37 +304,22 @@ void Restaurant::generateOutputFile(int currentTimestep)
         sum_Tw += Tw;
         sum_Tserv += Tserv;
         total_finished++;
+        
 
-        outFile << "================== ORDER REPORT ==================\n";
+        outFile << TF << "\t" << pOrd->getID() << "\t" << TQ << 
+            "\t" << TA << "\t" << TR << "\t" << TS << 
+            "\t" << Ti << "\t" << Tc << "\t" << Tw << "\t" << Tserv << "\n";
 
-        outFile << " -> Order ID        : " << pOrd->getID() << "\n";
-        outFile << " -> Request Time (TQ): " << TQ << "\n";
-        outFile << " -> Finish Time (TF) : " << TF << "\n";
-        outFile << "--------------------------------------------------\n";
-
-        outFile << " Processing Timeline\n";
-        outFile << "  -> Arrival Time     : " << TA << "\n";
-        outFile << "  -> Ready Time       : " << TR << "\n";
-        outFile << "  -> Service Start    : " << TS << "\n";
-        outFile << "  -> Cooking Time     : " << Tc << "\n";
-        outFile << "  -> Idle Time        : " << Ti << "\n";
-        outFile << "  -> Waiting Time     : " << Tw << "\n";
-        outFile << "  -> Service Duration : " << Tserv << "\n";
-
-        outFile << "==================================================\n\n";
     }
 
     int total_CN = Free_CN.getcount();
     int total_CS = Free_CS.getcount();
     int total_chefs = total_CN + total_CS;
 
-    int total_scooters = Free_Scooters.getcount()
-        + Back_Scooters.getcount()
-        + Maint_Scooters.getcount()
-        + Resc_Scooters.getcount();
+    int total_scooters = Free_Scooters.getcount() + Resc_Scooters.getcount();
 
     int total_cancelled = Canceled_Orders.getcount();
-    int total_overwait = Overwait_OVG.getcount();
+    
 
     int total_orders = total_finished + total_cancelled;
 
@@ -380,7 +370,9 @@ void Restaurant::generateOutputFile(int currentTimestep)
     outFile << "Total Chefs      : " << total_chefs << "\n";
     outFile << "    -> Normal (CN): " << total_CN << "\n";
     outFile << "    -> Special(CS): " << total_CS << "\n";
-    outFile << "Total Scooters   : " << total_scooters << "\n\n";
+    outFile << "Total Scooters   : " << total_scooters << "\n";
+    outFile << "    -> Normal (S): " << Free_Scooters.getcount() << "\n";
+    outFile << "    -> Special(SR): " << Resc_Scooters.getcount() << "\n\n";
 
     outFile << "------------------ PERFORMANCE STATS ------------------\n";
     outFile << " Finished Orders : "
@@ -388,7 +380,7 @@ void Restaurant::generateOutputFile(int currentTimestep)
     outFile << " Cancelled Orders: "
         << ((total_cancelled * 1.0) / total_orders) * 100 << "%\n";
     outFile << " Overwait Orders : "
-        << ((total_overwait * 1.0) / total_finished) * 100 << "%\n\n";
+        << ((total_overwait * 1.0) / total_ovg) * 100 << "%\n\n";
 
     outFile << "------------------ TIME ANALYSIS ------------------\n";
     outFile << "Avg Idle Time (Ti)    : " << (sum_Ti * 1.0) / total_finished << "\n";
@@ -608,54 +600,59 @@ void Restaurant::checkFinishedOrders(int currentTimestep)
 void Restaurant::AssignPendingToChef(int currentTimestep) {
     Chefs* pChf = nullptr;
 
-    auto assignLogic = [&](Orders* ord, Chefs* chf) {
-        ord->setAssignedChef(chf);
-        ord->setTA(currentTimestep);
-       
-        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
-        };
+    Orders* ord = nullptr;
 
-    assignComboTochef(currentTimestep);
+    if (!assignComboTochef(currentTimestep) && !PENDING_COMBO.isEmpty()) return;
 
-
-    Orders* pDine = nullptr;
     while (!PEND_ODG.isEmpty() && !Free_CS.isEmpty()) {
-        PEND_ODG.dequeue(pDine);
+        PEND_ODG.dequeue(ord);
         Free_CS.dequeue(pChf);
-
-        assignLogic(pDine, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
     }
     while (!PEND_ODN.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
-        PEND_ODN.dequeue(pDine);
+        PEND_ODN.dequeue(ord);
         if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
         else Free_CS.dequeue(pChf);
-        assignLogic(pDine, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
+        
     }
 
-    Orders* pTake = nullptr;
+   
     while (!PEND_OT.isEmpty() && !Free_CN.isEmpty()) {
-        PEND_OT.dequeue(pTake);
+        PEND_OT.dequeue(ord);
         Free_CN.dequeue(pChf);
-        assignLogic(pTake, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
     }
 
-    Orders* pDelv = nullptr;
     int pri;
     while (!PEND_OVG.isEmpty() && !Free_CS.isEmpty()) {
-        PEND_OVG.dequeue(pDelv, pri);
+        PEND_OVG.dequeue(ord, pri);
         Free_CS.dequeue(pChf);
-        assignLogic(pDelv, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
     }
     while (!PEND_OVC.isEmpty() && (!Free_CN.isEmpty() || !Free_CS.isEmpty())) {
-        PEND_OVC.dequeue(pDelv);
+        PEND_OVC.dequeue(ord);
         if (!Free_CN.isEmpty()) Free_CN.dequeue(pChf);
         else Free_CS.dequeue(pChf);
-        assignLogic(pDelv, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
+        
     }
     while (!PEND_OVN.isEmpty() && !Free_CN.isEmpty()) {
-        PEND_OVN.dequeue(pDelv);
+        PEND_OVN.dequeue(ord);
         Free_CN.dequeue(pChf);
-        assignLogic(pDelv, pChf);
+        ord->setAssignedChef(pChf);
+        ord->setTA(currentTimestep);
+        Cooking_Orders.enqueue(ord, ord->getCookingpriority());
     }
 }
 
@@ -720,6 +717,7 @@ void Restaurant::checkOverwaitOVG(int currentTimestep) {
             int waitTime = currentTimestep - delv->getTR();
             if (waitTime >= delv->getTH())
             {
+                delv->setow(true);
                 Overwait_OVG.enqueue(pOV, waitTime);
             }
             else
@@ -752,6 +750,44 @@ void Restaurant::finalizeTakeawayOrders(int currentTimestep) {
 
 void Restaurant::MovetoInservice(int currentTimestep) {
 
+    //OD First
+    while (!READY_OD.isEmpty()) {
+        Orders* ord = nullptr;
+        READY_OD.peek(ord);
+        Dineorders* dine = dynamic_cast<Dineorders*>(ord);
+        Tables* tbl = nullptr;
+
+        
+        if (dine->isSharable() && !Busy_Sharable.isEmpty()) {
+            tbl = Busy_Sharable.getBest(dine);
+        }
+
+       
+        if (tbl == nullptr && !Free_Tables.isEmpty()) {
+            tbl = Free_Tables.getBest(dine);
+        }
+
+       
+        if (tbl != nullptr) {
+            READY_OD.dequeue(ord); 
+            dine->setAssignedTable(tbl);
+
+            if (dine->isSharable()) {
+                tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
+                if (tbl->get_free_Seats() == 0) Busy_NonSharable.enqueue(tbl, tbl->getPriority());
+                else Busy_Sharable.enqueue(tbl, tbl->getPriority());
+            }
+            else {
+                tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
+                Busy_NonSharable.enqueue(tbl, tbl->getPriority());
+            }
+
+            dine->setTS(currentTimestep);
+            InServ_Orders.enqueue(ord, dine->getServicePriority());
+        }
+        else break;
+    }
+
     //handling combo orders
     while (!READY_COMBO.isEmpty() && !Free_Scooters.isEmpty())
     {
@@ -783,12 +819,11 @@ void Restaurant::MovetoInservice(int currentTimestep) {
             InServ_Orders.enqueue(ord, cmb->getServicePriority());
             
         }
-        else break;
+        else return;
         
     }
 
-
-    //Overwait OVG First
+    //Overwait OVG 
     while (!Overwait_OVG.isEmpty() && !Free_Scooters.isEmpty()) {
         Orders* ord = nullptr;
         int pri = 0;
@@ -809,45 +844,9 @@ void Restaurant::MovetoInservice(int currentTimestep) {
         }
     }
     
-     //OD Second
-     while (!READY_OD.isEmpty()) {
-         Orders* ord = nullptr;
-         READY_OD.peek(ord);
-         Dineorders* dine = dynamic_cast<Dineorders*>(ord);
-         Tables* tbl = nullptr;
+    
 
-         // 1. Opt for table sharing first
-         if (dine->isSharable() && !Busy_Sharable.isEmpty()) {
-             tbl = Busy_Sharable.getBest(dine);
-         }
-
-         // 2. If no suitable busy table was found, check Free_Tables
-         if (tbl == nullptr && !Free_Tables.isEmpty()) {
-             tbl = Free_Tables.getBest(dine);
-         }
-
-         // 3. If a table was successfully found in EITHER list
-         if (tbl != nullptr) {
-             READY_OD.dequeue(ord); // Safe to remove from ready list now
-             dine->setAssignedTable(tbl);
-
-             if (dine->isSharable()) {
-                 tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
-                 if (tbl->get_free_Seats() == 0) Busy_NonSharable.enqueue(tbl, tbl->getPriority());
-                 else Busy_Sharable.enqueue(tbl, tbl->getPriority());
-             }
-             else {
-                 tbl->set_free_Seats(tbl->get_free_Seats() - dine->getNoOfSeats());
-                 Busy_NonSharable.enqueue(tbl, tbl->getPriority());
-             }
-
-             dine->setTS(currentTimestep);
-             InServ_Orders.enqueue(ord, dine->getServicePriority());
-         }
-         else break;
-     }
-
-     //Rest Of OV Third
+     //Rest Of OV 
      while (!READY_OV.isEmpty() && !Free_Scooters.isEmpty()) {
          Orders* ord = nullptr;
          int pri = 0;
@@ -870,13 +869,14 @@ void Restaurant::MovetoInservice(int currentTimestep) {
 }
 
 
-// combo orders 
-void Restaurant::assignComboTochef(int currentTimestep)
+// combo related functions //
+bool Restaurant::assignComboTochef(int currentTimestep)
 {
     Orders* ord = nullptr;
     int pri = 0;
     int Cnspeed = 0;
     int Csspeed = 0;
+    bool assigned = false;
    
     while (PENDING_COMBO.peek(ord, pri) && ord->getTQ() <= currentTimestep)
     {
@@ -919,6 +919,7 @@ void Restaurant::assignComboTochef(int currentTimestep)
                 Assignedchefs[i - 1]->getSpeed();
                 cmb->setAVGcooking(Cnspeed, Csspeed);
                 Cooking_Orders.enqueue(cmb, cmb->getCookingpriority( )); 
+                assigned = true;
 
             }
             else break;
@@ -926,7 +927,7 @@ void Restaurant::assignComboTochef(int currentTimestep)
         }
         else break;
     }
-    
+    return assigned;
 
 }
 bool Restaurant::moveComboToready(int currentTimestep , Orders*& pOrd)
@@ -1102,7 +1103,7 @@ void Restaurant::RunSimulator()
   
         /// Check if simulation ends
         int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount() + PENDING_COMBO.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount() + READY_COMBO.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount() + READY_COMBO.getcount() + Back_Scooters.getcount() + Maint_Scooters.getcount();
         if (pending == 0 && active == 0) break;
         currentTimestep++;
     }
