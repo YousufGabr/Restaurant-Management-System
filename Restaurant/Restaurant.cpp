@@ -215,6 +215,8 @@ void Restaurant::generateOutputFile(int currentTimestep)
     Orders* pOrd = nullptr;
 
     int total_finished = 0;
+    int total_overwait = 0;
+    int total_ovg = 0;
     int finished_OD = 0, finished_OT = 0, finished_OV = 0, finished_COMBO = 0;
 
     double sum_Ti = 0, sum_Tc = 0, sum_Tw = 0, sum_Tserv = 0;
@@ -286,12 +288,13 @@ void Restaurant::generateOutputFile(int currentTimestep)
             finished_OV++;
             Deliveryorders* delv = dynamic_cast<Deliveryorders *> (pOrd);
             
-            
+            if (delv->getow()) total_overwait++;
+            if (pOrd->getType() == TYPE_OVG) total_ovg++;
              TS = delv->getTS();
              Tserv = delv->getTserv();
 
              total_chef_busy_time += Tc;
-             total_scooter_busy_time += Tserv;
+             total_scooter_busy_time += 2*Tserv;
            
             
         }
@@ -313,13 +316,10 @@ void Restaurant::generateOutputFile(int currentTimestep)
     int total_CS = Free_CS.getcount();
     int total_chefs = total_CN + total_CS;
 
-    int total_scooters = Free_Scooters.getcount()
-        + Back_Scooters.getcount()
-        + Maint_Scooters.getcount()
-        + Resc_Scooters.getcount();
+    int total_scooters = Free_Scooters.getcount() + Resc_Scooters.getcount();
 
     int total_cancelled = Canceled_Orders.getcount();
-    int total_overwait = Overwait_OVG.getcount();
+    
 
     int total_orders = total_finished + total_cancelled;
 
@@ -370,7 +370,9 @@ void Restaurant::generateOutputFile(int currentTimestep)
     outFile << "Total Chefs      : " << total_chefs << "\n";
     outFile << "    -> Normal (CN): " << total_CN << "\n";
     outFile << "    -> Special(CS): " << total_CS << "\n";
-    outFile << "Total Scooters   : " << total_scooters << "\n\n";
+    outFile << "Total Scooters   : " << total_scooters << "\n";
+    outFile << "    -> Normal (S): " << Free_Scooters.getcount() << "\n";
+    outFile << "    -> Special(SR): " << Resc_Scooters.getcount() << "\n\n";
 
     outFile << "------------------ PERFORMANCE STATS ------------------\n";
     outFile << " Finished Orders : "
@@ -378,7 +380,7 @@ void Restaurant::generateOutputFile(int currentTimestep)
     outFile << " Cancelled Orders: "
         << ((total_cancelled * 1.0) / total_orders) * 100 << "%\n";
     outFile << " Overwait Orders : "
-        << ((total_overwait * 1.0) / total_finished) * 100 << "%\n\n";
+        << ((total_overwait * 1.0) / total_ovg) * 100 << "%\n\n";
 
     outFile << "------------------ TIME ANALYSIS ------------------\n";
     outFile << "Avg Idle Time (Ti)    : " << (sum_Ti * 1.0) / total_finished << "\n";
@@ -715,6 +717,7 @@ void Restaurant::checkOverwaitOVG(int currentTimestep) {
             int waitTime = currentTimestep - delv->getTR();
             if (waitTime >= delv->getTH())
             {
+                delv->setow(true);
                 Overwait_OVG.enqueue(pOV, waitTime);
             }
             else
@@ -1100,7 +1103,7 @@ void Restaurant::RunSimulator()
   
         /// Check if simulation ends
         int pending = PEND_ODG.getcount() + PEND_ODN.getcount() + PEND_OT.getcount() + PEND_OVN.getcount() + PEND_OVC.getcount() + PEND_OVG.getcount() + Request.getcount() + Cancel.getcount() + PENDING_COMBO.getcount();
-        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount() + READY_COMBO.getcount();
+        int active = Cooking_Orders.getcount() + READY_OD.getcount() + READY_OT.getcount() + READY_OV.getcount() + Overwait_OVG.getcount() + InServ_Orders.getcount() + READY_COMBO.getcount() + Back_Scooters.getcount() + Maint_Scooters.getcount();
         if (pending == 0 && active == 0) break;
         currentTimestep++;
     }

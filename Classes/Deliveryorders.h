@@ -8,6 +8,7 @@ private:
 	int TH;
 	int distance;
 	int TS;
+	bool isow;
 
 	Scooters* AssignedScooter;
 public:
@@ -27,6 +28,9 @@ public:
 	virtual int getTi() const;
 	virtual int getTW() const;
 	int getDeliveryDuration() const;
+
+	void setow(bool ow) { isow = ow; }
+	bool getow() const { return isow; }
 
 
 	int getOVGpriority() const;
