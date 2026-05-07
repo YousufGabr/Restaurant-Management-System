@@ -3,11 +3,11 @@
 ---
 
 # 🍽️ RMS
-## utomated Restaurant Management System
+## Restaurant Management System
 
 *A High-Performance Restaurant Workflow Simulation Engine*
 
-![ARMS Cover](c56ec1df-2690-4fc2-a95d-818f64f74d6e.jpg)
+![ARMS Cover](Cover.jpeg)
 
 ---
 
