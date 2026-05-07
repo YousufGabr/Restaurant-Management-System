@@ -19,11 +19,11 @@
 
 ### 👨‍💻 Development Team
 
-| Name | Role |
-| :---: | :---: |
-| **Mohamed Ahmed Mohamed** | Team Member |
-| **Yousuf Safwat** | Team Member |
-| **Anton Azer** | Team Member |
+| Name | 
+| :---: |
+| **Mohamed Ahmed Mohamed** 
+| **Yousuf Safwat** | 
+| **Anton Azer** 
 
 ---
 
@@ -86,6 +86,6 @@ The system generates a final report including:
 
 - **Object-Oriented Programming:** Architect a modular, extensible codebase by applying core OOP principles—encapsulation, inheritance, and polymorphism—across all domain entities.
 
-- **DSA Implementation:** Design and implement purpose-built data structures (linked queues, priority queues, augmented lists) selected for optimal performance at each layer of the simulation.
+- **DSA Implementation:** Implement purpose-built data structures (linked queues, priority queues, Stacks, and other derived ADTs) selected for optimal performance at each layer of the simulation.
 
 - **System Design:** Build a coherent, event-driven simulation engine that synchronizes concurrent workflows across multiple resource domains via a global timestep.
