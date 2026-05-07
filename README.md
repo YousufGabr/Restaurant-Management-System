@@ -1,17 +1,46 @@
-# 🍽️ Automated Restaurant Management System (ARMS)
-
-A high-performance simulation engine developed for the **Data Structures & Algorithms** course (Spring 2026). This project models complex restaurant workflows using optimized, custom-built data structures.
+<div align="center">
 
 ---
 
-## 👨‍💻 Team Members
-* **Mohamed Ahmed Mohamed**
-* **Yousuf Safwat**
-* **Anton Azer**
+# 🍽️ ARMS
+## Automated Restaurant Management System
+
+*A High-Performance Restaurant Workflow Simulation Engine*
+
+![ARMS Cover](./cover.png)
+
+---
+
+**Course:** Data Structures & Algorithms — Spring 2026
+
+**Institution:** Faculty of Engineering, Computer & Systems Engineering Department
+
+---
+
+### 👨‍💻 Development Team
+
+| Name | Role |
+| :---: | :---: |
+| **Mohamed Ahmed Mohamed** | Team Member |
+| **Yousuf Safwat** | Team Member |
+| **Anton Azer** | Team Member |
+
+---
+
+*Submitted in partial fulfillment of the requirements for the Data Structures & Algorithms course*
+
+*Spring 2026*
+
+---
+
+</div>
+
+<br/>
 
 ---
 
 ## 📌 Project Overview
+
 This system simulates a multi-channel restaurant environment supporting **Dine-in**, **Takeaway**, and **Delivery** logistics. It focuses on the mathematical optimization of resource allocation—specifically chefs, tables, and scooters—through event-driven simulation.
 
 ### Core Capabilities:
@@ -43,19 +72,8 @@ This system simulates a multi-channel restaurant environment supporting **Dine-i
 
 ---
 
-## 🧠 Data Structure Architecture
-To ensure maximum efficiency, the project avoids standard libraries in favor of custom-engineered structures:
-
-| Data Structure | Implementation Use Case |
-| :--- | :--- |
-| **Linked Queue** | Standard FCFS pending lists (Takeaway/Normal). |
-| **Priority Queue** | Handling **OVG (Urgent)** orders, Table Best-Fit selection, and Scooter assignment. |
-| **Augmented List** | Custom cancellation logic for orders in the pending/cooking phase. |
-| **In-Service PQ** | Tracking completion times to trigger "Ready" events. |
-
----
-
 ## 📊 Statistics & Reporting
+
 The system generates a final report including:
 - **Wait Time ($T_w$):** Delay before service begins.
 - **Service Time ($T_s$):** Active preparation or delivery duration.
@@ -65,6 +83,9 @@ The system generates a final report including:
 ---
 
 ## 🎯 Learning Objectives
-- **Object-Oriented Programming:** Modular design for orders, staff, and resources.
-- **Algorithm Optimization:** Transitioning from $O(n)$ searches to $O(\log n)$ heap operations.
-- **Simulation Logic:** Synchronizing concurrent events via a global time-step.
+
+- **Object-Oriented Programming:** Architect a modular, extensible codebase by applying core OOP principles—encapsulation, inheritance, and polymorphism—across all domain entities.
+
+- **DSA Implementation:** Design and implement purpose-built data structures (linked queues, priority queues, augmented lists) selected for optimal performance at each layer of the simulation.
+
+- **System Design:** Build a coherent, event-driven simulation engine that synchronizes concurrent workflows across multiple resource domains via a global timestep.
